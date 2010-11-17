@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -17,7 +18,12 @@ import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import org.omg.IOP.Encoding;
+
+import com.parse.ParseURL;
+import com.parse.parseXML;
 
 public class MSNConnection {
 	
@@ -62,7 +68,7 @@ public class MSNConnection {
 //	}
 	
 	protected void ConnectSocket(String host,int port){
-		System.out.println("Connecting to the host");
+		System.out.println("Connecting to the host :       " + host);
 		
 		_transactionID = 0;
 		try {
@@ -76,10 +82,8 @@ public class MSNConnection {
 			_doc = new DataOutputStream(_socket.getOutputStream());
 			
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -90,12 +94,12 @@ public class MSNConnection {
 	/// <param name="line">The Message</param>
 	/// <param name="writeNewLine">Determine if you write a line, or only a message (with or withhout ending character</param>
 	private void WriteLine(String line,boolean writeNewLine) throws IOException{
-		System.out.println("Writing" + line);
+		System.out.println("Writing                :       " + line);
 		
 		if(writeNewLine){
-//			_writer.println(line);
-//			_writer.flush();
-			_doc.writeUTF(line);
+			_writer.println(line);
+			_writer.flush();
+//			_doc.writeUTF(line);
 			//_doc.close();
 		}else{
 			_writer.print(line);
@@ -112,10 +116,11 @@ public class MSNConnection {
 	/// <param name="bSendId">Sometimes you don't have to send an transactionID</param>
 	protected void WriteCommand(String command,String parameters,boolean bSendId) throws IOException {
 		String line;
-		System.out.println(command+"   " +parameters+"   " +bSendId);
+
 		if(bSendId){
-			line = command + "," + _transactionID + "," + parameters;
-			System.out.println(line);
+
+			line = command +  parameters;
+
 		}else{
 			line = String.format("{0},{1}", command,parameters);
 		}
@@ -127,17 +132,48 @@ public class MSNConnection {
 	/// and if it read something it returns a new ServerCommand object
 	/// </summary>
 	/// <returns>if there is something return new ServerCommand object</returns>
-	protected ServerCommand readCommand() throws IOException {
-		
-		String line = _reader.readLine();
-		
-		System.out.println("Reading from server" + line);
-		if(line == null){
-			System.out.println("nothing readed form server!");
-			return new ServerCommand();
-		}else{
-			return new ServerCommand(line);
+	protected ServerCommand readCommand(){
+		try{
+			
+			String line = "";
+			line = _reader.readLine();
+//			
+			
+			System.out.println("Response received!             the length:" + line.length());
+			System.out.println("Reading from server    :       " + line);
+			if(line == null){
+				System.out.println("nothing readed form server!");
+				return new ServerCommand();
+			}else{
+				return new ServerCommand(line);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
+		return null;
+		
+	}
+	
+	protected String readCommand2(){
+		try{
+			
+			String line = "";
+			line = _reader.readLine();
+//			
+			
+			System.out.println("Response received!             the length:" + line.length());
+			System.out.println("Reading from server    :       " + line);
+			if(line == null){
+				System.out.println("nothing readed form server!");
+				return "";
+			}else{
+				return line;
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+		
 	}
 	
 	/// <summary>
@@ -153,7 +189,6 @@ public class MSNConnection {
 				_stream.close();
 				_socket.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			_socket = null;
@@ -170,35 +205,76 @@ public class MSNConnection {
 			while(true){
 				ConnectSocket(host, port);
 				
-				WriteCommand("VER", "MSNP15 CVR0", true);
+				WriteCommand("VER 1 ", "MSNP21 CVR0", true);
 				
 				serCom = readCommand();
 				
-				if(serCom.CommandName()!= "VER"){
+				if(!serCom.CommandName().equals("VER")){
+		
 					return 1;
 				}
 				
-				WriteCommand("CVR", "0x0409 win 4.10 i386 MSNMSGR 5.0.0544 MSNSGS" + userName, true);
+				WriteCommand("CVR 2 ", "0x0804 winnt 6.1.0 i386 MSNMSGR 15.4.3502.0922 MSNMSGR " + userName + " 0", true);
+
+				//WriteCommand("USR 3 ", "SSO I " + userName, true);
 				
 				serCom = readCommand();
-				
-				if(serCom.CommandName() !="CVR"){
+
+				if(!serCom.CommandName().equals("CVR")){
 					return 1;
 				}
 				
 
-				WriteCommand("USR",
-						"TWN I `"
+				WriteCommand("USR 3 ",
+						"SSO I "
 								+ userName, true);
-
+				
 				serCom = readCommand();
 				
-				if(serCom.CommandName() =="USR"){
+				if(serCom.CommandName().equals("USR")){
 					challengeString = serCom.Param(3);
 					break;
+				}else if(serCom.CommandName().equals("GCF")){
+					try {
+						URL url = new URL("https://login.live.com/RST.srf");
+						
+						HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+						huc.setDoInput(true);
+						huc.setDoOutput(true);
+						byte[] request = ParseURL.getXML("taoliang1985@126.com","taolovesun");
+						//huc.setRequestMethod("post");
+						OutputStream oStream = huc.getOutputStream();
+						oStream.write(request);
+						oStream.flush();
+						
+						int responseCode = huc.getResponseCode();
+						String responseMessageString = huc.getResponseMessage();
+						
+						BufferedReader br = new BufferedReader(new InputStreamReader(huc.getInputStream()));
+						
+						String sCurrentLine;  
+				        String sTotalString;  
+				        sCurrentLine = "";  
+				        sTotalString = "";  
+				        InputStream l_urlStream;  
+
+//				        while ((sCurrentLine = br.readLine()) != null) {  
+//				            sTotalString += sCurrentLine + "\r\n";  
+//				  
+//				        }  
+//				       // System.out.println(sTotalString);  
+				        
+				        challengeString = parseXML.parsexml(huc.getInputStream());
+						
+				        break;
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 				
-				if(serCom.CommandName() !="XFR"){
+				if(!serCom.CommandName().equals("XFR")){
 					return 1;
 				}else{
 					System.out.println("Redirected to another Server!");
@@ -211,17 +287,25 @@ public class MSNConnection {
 				Dispose();
 			}
 			
-			String clientticketString = GetClientTicket(password,userName ,challengeString);
+			//String clientticketString = GetClientTicket(password,userName ,challengeString);
 			
-			if(clientticketString == "401"){
+			
+			if(challengeString == "401"){
 				return 401;
-			}else if(clientticketString == "0"){
+			}else if(challengeString == "0"){
 				return 1;
 			}else{
-				WriteCommand("USR", "TWN S "+clientticketString, true);
+				
+//				WriteCommand("USR 3 ",
+//						"SSO I "
+//								+ userName, true);
+
 				serCom = readCommand();
 				
-				if(serCom.CommandName() != "USR" && serCom.Param(1) != "OK"){
+				WriteCommand("USR 4 ", "SSO S "+challengeString, true);
+				serCom = readCommand();
+				
+				if(!serCom.CommandName().equals("USR") && !serCom.Param(1).equals("OK")){
 					return 1;
 				}
 				
@@ -243,12 +327,12 @@ public class MSNConnection {
 	/// </summary>
 	/// <returns>true if succeed</returns>
 	public boolean GetLoginServerAddres() throws IOException
-	{
+	{		
 		// Make a request to the server, this adresses are being used in the MSN messenger
 		URL url = new URL("https://nexus.passport.com/rdr/pprdr.asp");
 		HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-		huc.setRequestMethod("get");
-		huc.setRequestProperty("Content-Type", "text/html;charset=UTF-8");
+		//huc.setRequestMethod("get");
+		//huc.setRequestProperty("Content-Type", "text/html;charset=UTF-8");
 		
 		System.out.println("httpUrlConnection Started!");
 		//HttpWebRequest ServerRequest = (HttpWebRequest)WebRequest.Create("https://nexus.passport.com/rdr/pprdr.asp");
@@ -285,6 +369,7 @@ public class MSNConnection {
 	/// <returns>a valid ticket, that you send back to the server to get connected</returns>
 	public String GetClientTicket(String Password, String Username, String ChallengeString) throws IOException
 	{
+
 		// First get a valid login adres for the initial server
 		if (GetLoginServerAddres())
 		{
@@ -299,7 +384,7 @@ public class MSNConnection {
 				while( true )
 				{
 			
-					System.out.println("Connecting to:  " + uri);
+					System.out.println("Connecting to          :        " + uri);
 					// Make a new request
 					ServerRequest = (HttpURLConnection) url.openConnection();
 					ServerRequest.setInstanceFollowRedirects(false);

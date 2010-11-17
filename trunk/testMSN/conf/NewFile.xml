@@ -1,0 +1,145 @@
+<Policies>
+	<Policy type="SHIELDS" checksum="C07599DC4FEB6928EC55797D18268F17">
+		<config>
+			<shield>
+				<cli maj="14" min="0" minbld="0" maxbld="9999" deny="hotlinks" />
+			</shield>
+			<block>
+				<hashes>
+				</hashes>
+				<regexp>
+					<imtext value="cGhvdG8yMzRcLnppcA==" />
+					<imtext value="aW1nMDIxXC56aXA=" />
+					<imtext value="dGFueWFiYWJlXC56aXA=" />
+					<imtext value="c3R1ZmZcLnppcA==" />
+					<imtext value="Zm90b3NcLnppcA==" />
+					<imtext value="dHVmb3Rv" />
+					<imtext value="Z2V0LW1lc3Nlbmdlcg==" />
+					<imtext value="Mm5udmM3" />
+					<imtext value="YmxvY2tpbnJpbw==" />
+					<imtext value="bWVzc2FnaW5nLW5hbWVz" />
+					<imtext value="cGljdHVyYTAwMg==" />
+					<imtext value="bWVzc2VuZ2VyLXNjYW4=" />
+					<imtext value="c3VtbWVyMjAwOA==" />
+					<imtext value="bWVzc2VuZ2VyZGVsZXRlY2hlY2tlcg==" />
+					<imtext value="cGhvdG9hbGJ1bTIwMDc=" />
+					<imtext value="aW1hZ2UwMjlcLnppcA==" />
+					<imtext value="Zm90b183ODFcLnppcA==" />
+					<imtext value="Y2hpcnN0bWFzLTIwMDdcLnppcA==" />
+					<imtext value="cGhvdG8yMDA3LTEyXC56aXA=" />
+					<imtext value="aW1nNS0yMDA3XC56aXA=" />
+					<imtext value="bXlwaWN0dXJlcy0wMTA4XC56aXA=" />
+					<imtext value="cGhvdG9zMS0yMDA4XC56aXA=" />
+					<imtext value="aGFwcHkyMDA4XC5leGU=" />
+					<imtext value="aGFwcHlfMjAwOFwuZXhl" />
+					<imtext value="aGFwcHktMjAwOFwuZXhl" />
+					<imtext value="bmV3X3llYXJzX2xldHRlcl9mbGFzaFwuZXhl" />
+					<imtext value="bWFpbm1zblwuY29t" />
+					<imtext value="bWFpbm1zblwubmV0" />
+					<imtext value="Zm1jb25zdWx0aW5n" />
+					<imtext value="YmV6Z2lcLmluZm8=" />
+					<imtext value="c3VsYW5kaXJtYQ==" />
+					<imtext value="dHVuYWJhbGlnaQ==" />
+					<imtext value="eW9ydW5nZXNlbA==" />
+					<imtext value="dHVoYWZraW1zZQ==" />
+					<imtext value="YWNpc2FsY2FwXC5pbmZv" />
+					<imtext value="Ym95YW1hZ3VjdQ==" />
+					<imtext value="dHV0dXNrYW5saWs=" />
+					<imtext value="bXltc25nYWxsZXJ5" />
+					<imtext value="aW1hZ2UwMzFcLnppcA==" />
+					<imtext value="Zm90bzcyMmE2" />
+					<imtext value="cGhvdG8yMVwuemlw" />
+					<imtext value="cGljdHVyZTIyXC56aXA=" />
+					<imtext value="cGljdHVyZXo5MjNcLnppcA==" />
+					<imtext value="cGhvdG9fNjg4LWpwZ1wuemlw" />
+					<imtext value="bXlwaG90bzk0XC56aXA=" />
+					<imtext value="dmlkZW9cLmV4ZQ==" />
+					<imtext value="a3V6ZW5cLmV4ZQ==" />
+					<imtext value="bWlyY1wuZXhl" />
+					<imtext value="YmFja2Rvb3I6aXJjL2Zsb29kXC5jYw==" />
+					<imtext value="Zm90b18wMjdcLnppcA==" />
+					<imtext value="Zm90bzcwOGs2XC56aXA=" />
+					<imtext value="bXNuYmxvY2tsaXN0XC5jb20=" />
+					<imtext value="bXNuLWZyaWVuZFwuY29t" />
+					<imtext value="cXVpZW50ZWFkbWl0ZVwuY29t" />
+					<imtext value="Y2hlY2ttZXNzZW5nZXJcLm5ldA==" />
+					<imtext value="bXNuYmxvY2tlcmxpc3RcLmNvbQ==" />
+					<imtext value="bXNubGlzdHN0YXR1c1wuY29t" />
+					<imtext value="ZnJpZW5kbHktb2ZmZXJcLmNvbQ==" />
+					<imtext value="c2V0dXBcLmV4ZQ==" />
+					<imtext value="aG9zdGlsZWFwcGxldA==" />
+					<imtext value="Z3NkYWdkZmdhc2RnczI0NTc0NTIyNDdcLmV4ZQ==" />
+					<imtext value="Z3NkZGFzMjQ1ODcyMTRnc2RcLmV4ZQ==" />
+					<imtext value="Zm90by0zMTFfanBlZw==" />
+					<imtext value="aW1hZ2UyMDZcLmpwZy13d3dcLnBob3Rvc2hhcmVcWzFdXC5jb20=" />
+					<imtext value="aW1hZ2UyMDZcLmpwZw==" />
+					<imtext value="YnVzaFwuY29t" />
+					<imtext value="Y2FtZGFcLmV4ZQ==" />
+					<imtext value="eW91dHViZV9naXJpc19wcm9ncmFtaVwuZXhl" />
+					<imtext value="cjU3OWRrYTkyalwuemlw" />
+					<imtext value="bW9uY2xvY2hlclwuY29t" />
+					<imtext value="aW1hZ2Vzd2l0Y2hcLmluZm8=" />
+					<imtext value="bmV3ZXN0cGljdHVyZTAzXC5qcGc=" />
+					<imtext
+						value="bm90aWNpYXNkb2JyYXNpbFwuY29tXC5zYXBvXC5wdC9ub3RpY2lhdXJnZW50ZWJyYXNpbG51bWVybzk4MjFcLmNvbQ==" />
+					<imtext value="d2luZG93c215X3Bob3Rvc18xNTMwMVwuemlw" />
+					<imtext value="cGhvdG9zXzE1MzAxXC56aXA=" />
+					<imtext value="aW1wbGF5XC5jb20=" />
+					<imtext value="Ym9ieXVwXC5jb20=" />
+					<imtext value="Ym9iYmxha1wuY29t" />
+					<imtext value="cGljcy1hdC10aGUtcGFydHlcLmNvbQ==" />
+					<imtext value="Ym9iem9wXC5jb20=" />
+					<imtext value="bW9vcnNoXC5jb20=" />
+					<imtext value="Ym9ieXVw" />
+					<imtext value="d293YmFtXC5jb20=" />
+					<imtext value="Zm90b1wuZXhl" />
+					<imtext value="ZHNjMjAwOTAxMTdcLmpwZ1wuZXhl" />
+					<imtext value="ZnJpZW5kaW1zXC5jb20=" />
+					<imtext value="bm93cG91bmRzXC5jb20=" />
+					<imtext value="Y2xpcGRlZXBzXC5jb20=" />
+					<imtext value="L3VyYmxvY2s=" />
+					<imtext value="aW1hZ2VzXC5jb29scGFnZVwuYml6L2ltYWdlc1wucGhw" />
+					<imtext value="Y2FzYTFcLmV4ZQ==" />
+					<imtext value="YW5pbWFjaW9uXC5leGU=" />
+				</regexp>
+			</block>
+		</config>
+	</Policy>
+	<Policy type="ABCH" checksum="03DC55910A9CB79133F1576221A80346">
+		<policy>
+			<set id="push" service="ABCH" priority="200">
+				<r id="pushstorage" threshold="180000" />
+			</set>
+			<set id="delaysup" service="ABCH" priority="150">
+				<r id="whatsnew" threshold="1800000" />
+				<r id="whatsnew_storage_ABCH_delay" timer="1800000" />
+				<r id="whatsnewt_link" threshold="900000" trigger="QueryActivities" />
+			</set>
+			<c id="PROFILE_Rampup">100</c>
+		</policy>
+	</Policy>
+	<Policy type="ERRORRESPONSETABLE" checksum="6127EEDCE860F45C1692896F5248AF6F">
+		<Policy>
+			<Feature type="3" name="P2P">
+				<Entry hr="0x81000398" action="3" />
+				<Entry hr="0x82000020" action="3" />
+			</Feature>
+			<Feature type="4">
+				<Entry hr="0x81000440" />
+			</Feature>
+			<Feature type="6" name="TURN">
+				<Entry hr="0x8007274C" action="3" />
+				<Entry hr="0x82000020" action="3" />
+				<Entry hr="0x8007274A" action="3" />
+			</Feature>
+		</Policy>
+	</Policy>
+	<Policy type="P2P" checksum="815D4F1FF8E39A85F1F97C4B16C45177">
+		<ObjStr SndDly="1" />
+	</Policy>
+	<Policy type="CIRCLES" checksum="9208C5655F8D96CBBD9873181E5E79BD">
+		<Policy type="CIRCLES">
+			<Msgr cMember="40" />
+		</Policy>
+	</Policy>
+</Policies>
