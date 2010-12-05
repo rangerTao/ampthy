@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/rlDetail"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<TextView android:id="@+id/tvTitle" android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:lines="1" android:background="#ff7e9667"
+		android:layout_alignParentTop="true" android:text=""
+		android:layout_centerVertical="true" android:layout_alignParentLeft="true" android:visibility="gone">
+		
+	</TextView>
+	<TextView android:id="@+id/tvDate" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text=""
+		android:layout_below="@+id/tvTitle" android:layout_alignParentLeft="true">
+	</TextView>
+	<TextView android:id="@+id/tvDetail" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text=""
+		android:layout_below="@+id/tvDate" android:layout_alignParentLeft="true">
+	</TextView>
+	<TextView android:id="@+id/tvAuthor" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text=""
+		android:layout_below="@+id/tvDetail" android:layout_alignParentLeft="true">
+	</TextView>
+	<TextView android:id="@+id/tvUrl" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="" android:layout_below="@+id/tvAuthor"
+		android:layout_alignParentLeft="true">
+	</TextView>
+
+</RelativeLayout>
