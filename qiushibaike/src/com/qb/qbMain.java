@@ -8,55 +8,97 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.adapter.QbAdapter;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.adapter.QbAdapter;
+
 public class qbMain extends Activity {
-	Button btnfresh;
+
 	private static qbMain appRef;
-	public static ArrayList<Element> nodeList = new ArrayList<Element>();
+	public static ArrayList<Node> nodeList = new ArrayList<Node>();
 	private ListView lvAll;
 	private QbAdapter qba;
+	private String url = "";
+	
+	//the handler
+	private Handler handle = new Handler();
+	
+	private static int menu_refresh = Menu.FIRST;
+	private static int menu_detail = Menu.FIRST + 1;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.main);
 		appRef = this;
 		lvAll = (ListView)findViewById(R.id.lvAll);
 		qba = new QbAdapter(appRef);
 		qba.notifyDataSetChanged();
-		btnfresh = (Button) findViewById(R.id.refresh);
-		btnfresh.setOnClickListener(new OnClickListener() {
-		StringBuffer result = new StringBuffer();
-			public void onClick(View v) {
+		
+	}
 
-				Log.v("Initialing", "start");
+	public static qbMain getApp() {
+		return appRef;
+	}
 
-				String url = "http://feed.feedsky.com/orz_";
-				Log.v("URL ", url);
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		
+		menu.add(0, menu_refresh, 0, R.string.menu_refresh);
+		menu.add(0, menu_detail, 0, R.string.menu_detail);
+		
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		
+		switch(item.getItemId()){
+		case Menu.FIRST:
+			refreshAll();
+			break;
+		case Menu.FIRST + 1 :
+			startActivity(new Intent(qbMain.this,rssDetail.class));
+		}
+		return true;
+	}
+	
+	public void refreshAll(){
+		Log.v("Initialing", "start");
+		
+		setProgressBarIndeterminateVisibility(true);
+		nodeList.clear();
+		url = "http://news.163.com/special/00011K6L/rss_newstop.xml";
+		//url = "http://feed.feedsky.com/orz_";
+		Log.v("URL ", url);
+		new Thread(new Runnable(){
+
+			@Override
+			public void run() {
 				//HttpHost proxy = new HttpHost("10.0.0.172", 80, "http");
 				HttpClient hc = new DefaultHttpClient();
 				hc.getParams().setIntParameter(
@@ -77,30 +119,57 @@ public class qbMain extends Activity {
 					Document document = db.parse(is);
 					System.out.println(document.toString());
 					NodeList nl = document.getElementsByTagName("item");
+					StringBuffer sbResult = new StringBuffer();
 
 					Log.v("the size of nodelist", nl.getLength() + "");
 					for (int i = 0; i < nl.getLength(); i++) {
-						Element el = (Element) nl.item(i);
+						Node el = nl.item(i);
 						nodeList.add(el);
 					}
 					is.close();
-					lvAll.setAdapter(qba);
+					setTheAdapterOfListView();
+					invisTheProcessbar();
 				} catch (ClientProtocolException e) {
 					Toast.makeText(appRef, "服务器连接不通", 50);
+
 					e.printStackTrace();
 				} catch (IOException e) {
+
 					e.printStackTrace();
 				} catch (ParserConfigurationException e) {
+
 					e.printStackTrace();
 				} catch (SAXException e) {
+
 					e.printStackTrace();
 				}
+				
+			}
+			
+		}).start();
+		
+	}
+	
+	//set the content of the listview
+	public void setTheAdapterOfListView() {
+		handle.post(new Runnable() {
 
+			public void run() {
+				lvAll.setAdapter(qba);
 			}
 		});
 	}
+	
+	//Set the processBar as invisiablity
+	public void invisTheProcessbar(){
+		handle.post(new Runnable() {
 
-	public static qbMain getApp() {
-		return appRef;
+			public void run() {
+				setProgressBarIndeterminateVisibility(false);
+			}
+		});
+		
 	}
+	
+	
 }
