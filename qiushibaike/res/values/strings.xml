@@ -2,4 +2,7 @@
 <resources>
     <string name="hello">Hello World, qbMain!</string>
     <string name="app_name">qiushibaike</string>
+    <!-- Menu Items -->
+    <string name="menu_refresh">刷新</string>
+    <string name="menu_detail">详细</string>
 </resources>
