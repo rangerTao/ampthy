@@ -1,4 +1,4 @@
-package com.qb.viewer;
+package com.qb.activity.viewer;
 
 import com.qb.R;
 
