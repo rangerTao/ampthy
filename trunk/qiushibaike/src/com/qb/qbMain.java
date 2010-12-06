@@ -58,7 +58,7 @@ public class qbMain extends Activity {
 		lvAll = (ListView)findViewById(R.id.lvAll);
 		qba = new QbAdapter(appRef);
 		qba.notifyDataSetChanged();
-		
+		refreshAll();
 	}
 
 	public static qbMain getApp() {
@@ -97,7 +97,6 @@ public class qbMain extends Activity {
 		Log.v("URL ", url);
 		new Thread(new Runnable(){
 
-			@Override
 			public void run() {
 				//HttpHost proxy = new HttpHost("10.0.0.172", 80, "http");
 				HttpClient hc = new DefaultHttpClient();

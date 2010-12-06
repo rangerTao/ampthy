@@ -3,7 +3,11 @@ package com.qb;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.qb.viewer.NewsViewer;
+
+
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +33,7 @@ public class rssDetail extends Activity{
 	
 	//THe index of the listview
 	private int index = 0;
+	
 	//OnCreate
 	
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,31 +78,14 @@ public class rssDetail extends Activity{
 		
 		tvUrl.setOnClickListener(new OnClickListener(){
 
-			@Override
 			public void onClick(View v) {
-				WebView wv = new WebView(getApp());
+				String urlString = tvUrl.getText().toString();
 				
-				 // Let's display the progress in the activity title bar, like the
-				 // browser app does.
-				 
-
-				 wv.getSettings().setJavaScriptEnabled(true);
-
-				 final Activity activity = getApp();
-				 wv.setWebChromeClient(new WebChromeClient() {
-				   public void onProgressChanged(WebView view, int progress) {
-				     // Activities and WebViews measure progress with different scales.
-				     // The progress meter will automatically disappear when we reach 100%
-				     activity.setProgress(progress * 1000);
-				   }
-				 });
-				 wv.setWebViewClient(new WebViewClient() {
-				   public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-				     Toast.makeText(activity, "Oh no! " + description, Toast.LENGTH_SHORT).show();
-				   }
-				 });
-				
-				wv.loadUrl(tvUrl.getText().toString());
+				Bundle bundle = new Bundle();
+				bundle.putString("url", urlString);
+				Intent newIntent = new	Intent(getApp(),NewsViewer.class);
+				newIntent.putExtras(bundle);
+				getApp().startActivity(newIntent);
 			}
 			
 		});
