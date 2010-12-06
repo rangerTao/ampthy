@@ -27,10 +27,8 @@ public class NewsViewer extends Activity {
 		Bundle bundle = this.getIntent().getExtras();
 		String urlString = bundle.getString("url");
 		setTitle(urlString);
-		// wView.loadUrl(urlString);
 
 		setProgressBarIndeterminateVisibility(false);
-
 
 		wView.getSettings().setJavaScriptEnabled(true);
 
