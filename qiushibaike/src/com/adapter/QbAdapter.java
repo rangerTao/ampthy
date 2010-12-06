@@ -51,7 +51,6 @@ public class QbAdapter extends BaseAdapter{
 		view = am.getLayoutInflater().inflate(R.layout.qblist, null);
 		view.setOnClickListener(new OnClickListener(){
 
-			@Override
 			public void onClick(View v) {
 				Bundle bIndex = new Bundle();
 				bIndex.putInt("index", position_temp);
