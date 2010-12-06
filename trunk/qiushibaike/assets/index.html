@@ -1,0 +1,41 @@
+<DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>demo</title>
+<script language="javascript"> 
+    function GetList(){
+        var i=window.javatojs.getSize();
+        for(var n=0;n<i;n++){
+        var jsdata= window.javatojs.getObject(n);//拿到activity里面的属性javadata
+        var datalistdiv = document.getElementById("datalist"); //得到页面的div
+        pnode = document.createElement("p");//创建一个p标签，再建个textnode
+        tnode = document.createTextNode(jsdata);
+        pnode.appendChild(tnode);//p中加入数据
+        datalistdiv.appendChild(pnode);//div中键入新的p
+      }
+}
+    function logintojava(){
+        var name = document.getElementById("name").value;
+        var passwd = document.getElementById("passwd").value;
+
+        window.javatojs.login(name,passwd);
+    }
+</script>
+<head>
+<body>//调用java方法
+<div id = "datalist">
+this is a demo
+<table>
+<tr><input id="name"></input>
+</tr>
+<tr><input id="passwd"></input>
+</tr>
+<tr>
+<input type="button" onclick="logintojava()"></input></tr>
+</table>
+
+
+</div>
+<body>
+<html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<feed>
+	<index>5</index>
+	<item>
+		<name>163</name>
+		<url>http://news.163.com/special/00011K6L/rss_newstop.xml</url>
+		<id>2</id>
+	</item>
+	<item>
+		<name>163</name>
+		<url>http://news.163.com/special/00011K6L/rss_newstop.xml</url>
+		<id>3</id>
+	</item>
+	<item>
+		<name>163</name>
+		<url>http://news.163.com/special/00011K6L/rss_newstop.xml</url>
+		<id>4</id>
+	</item>
+	<item>
+		<name>q </name>
+		<url>wef</url>
+		<id>2</id>
+	</item>
+	<item>
+		<name>q </name>
+		<url>wef</url>
+		<id>5</id>
+	</item>
+</feed>

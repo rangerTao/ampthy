@@ -33,6 +33,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.adapter.QbAdapter;
+import com.qb.activity.viewer.IndexViewer;
 
 public class qbMain extends Activity {
 
@@ -82,7 +83,7 @@ public class qbMain extends Activity {
 			refreshAll();
 			break;
 		case Menu.FIRST + 1 :
-			startActivity(new Intent(qbMain.this,rssDetail.class));
+			startActivity(new Intent(qbMain.this,IndexViewer.class));
 		}
 		return true;
 	}

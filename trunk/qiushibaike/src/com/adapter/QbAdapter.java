@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.qb.R;
 import com.qb.qbMain;
-import com.qb.rssDetail;
+import com.qb.activity.rssDetail;
 
 public class QbAdapter extends BaseAdapter{
 

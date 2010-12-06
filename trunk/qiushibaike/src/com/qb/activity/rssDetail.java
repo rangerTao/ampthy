@@ -1,9 +1,13 @@
-package com.qb;
+package com.qb.activity;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.qb.viewer.NewsViewer;
+import com.qb.R;
+import com.qb.qbMain;
+import com.qb.R.id;
+import com.qb.R.layout;
+import com.qb.activity.viewer.NewsViewer;
 
 
 import android.app.Activity;
