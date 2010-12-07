@@ -120,7 +120,7 @@ public class parseXML {
 		}
 	}
 
-	public void addNode() {
+	public void addNode(String[] input) {
 		String[] result = null;
 		StringBuffer sbresult = new StringBuffer();
 		
