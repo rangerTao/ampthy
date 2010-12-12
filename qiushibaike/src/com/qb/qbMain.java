@@ -4,63 +4,67 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import android.R.integer;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnCreateContextMenuListener;
 import android.view.Window;
-import android.view.View.OnClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.adapter.QbAdapter;
+import com.adapter.FeedList;
 import com.qb.activity.feed.AddRss;
 import com.qb.activity.viewer.IndexViewer;
+import com.qb.parse.parseXML;
 
 public class qbMain extends Activity {
 
 	private static qbMain appRef;
 	public static ArrayList<Node> nodeList = new ArrayList<Node>();
 	private ListView lvAll;
-	private QbAdapter qba;
-	private String url = "";
+	private FeedList feedL;
+	public static String[] feedList;
+	
+	//file
+	AssetManager aManager = null;
 	
 	//the handler
 	private Handler handle = new Handler();
 	
-	private static int menu_refresh = Menu.FIRST;
-	private static int menu_detail = Menu.FIRST + 1;
-	private static int menu_add = Menu.FIRST + 2;
+	private static int menu_edit = Menu.FIRST;
+	private static int menu_delete = Menu.FIRST + 2;
+	private static int menu_add = Menu.FIRST + 1;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.main);
+		setTitle("天天RSS");
 		appRef = this;
 		lvAll = (ListView)findViewById(R.id.lvAll);
-		qba = new QbAdapter(appRef);
-		qba.notifyDataSetChanged();
+
+		lvAll.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+			
+			public void onCreateContextMenu(ContextMenu menu, View v,
+					ContextMenuInfo menuInfo) {
+				menu.add(0, menu_edit, 0, R.string.menu_edit);
+				menu.add(0, menu_add, 0, R.string.menu_add);
+				menu.add(0, menu_delete, 0, R.string.menu_delete);
+				
+			}
+		});
+		feedL = new FeedList(appRef);
+		feedL.notifyDataSetChanged();
 		refreshAll();
 	}
 
@@ -68,15 +72,15 @@ public class qbMain extends Activity {
 		return appRef;
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		
-		menu.add(0, menu_refresh, 0, R.string.menu_refresh);
-		menu.add(0, menu_detail, 0, R.string.menu_detail);
-		menu.add(0, menu_add, 0, R.string.menu_add);
-		
-		return super.onCreateOptionsMenu(menu);
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		
+//		menu.add(0, menu_refresh, 0, R.string.menu_refresh);
+//		menu.add(0, menu_detail, 0, R.string.menu_detail);
+//		menu.add(0, menu_add, 0, R.string.menu_add);
+//		
+//		return super.onCreateOptionsMenu(menu);
+//	}
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
@@ -98,60 +102,17 @@ public class qbMain extends Activity {
 		
 		setProgressBarIndeterminateVisibility(true);
 		nodeList.clear();
-		url = "http://news.163.com/special/00011K6L/rss_newstop.xml";
-		//url = "http://feed.feedsky.com/orz_";
-		Log.v("URL ", url);
-		new Thread(new Runnable(){
-
-			public void run() {
-				//HttpHost proxy = new HttpHost("10.0.0.172", 80, "http");
-				HttpClient hc = new DefaultHttpClient();
-				hc.getParams().setIntParameter(
-						HttpConnectionParams.CONNECTION_TIMEOUT, 10000);
-				hc.getParams().setIntParameter(HttpConnectionParams.SO_TIMEOUT,
-						10000);
-				//hc.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,proxy);
-				HttpGet gm = new HttpGet(url);
-				try {
-					Log.v("Getting data.", "start");
-					HttpResponse hr = hc.execute(gm);
-					InputStream is = hr.getEntity().getContent();
-					// ad1.wait();
-					Log.v("Getting data.", "end");
-					DocumentBuilderFactory dbf = DocumentBuilderFactory
-							.newInstance();
-					DocumentBuilder db = dbf.newDocumentBuilder();
-					Document document = db.parse(is);
-					System.out.println(document.toString());
-					NodeList nl = document.getElementsByTagName("item");
-					StringBuffer sbResult = new StringBuffer();
-
-					Log.v("the size of nodelist", nl.getLength() + "");
-					for (int i = 0; i < nl.getLength(); i++) {
-						Node el = nl.item(i);
-						nodeList.add(el);
-					}
-					is.close();
-					setTheAdapterOfListView();
-					invisTheProcessbar();
-				} catch (ClientProtocolException e) {
-					Toast.makeText(appRef, "服务器连接不通", 50);
-
-					e.printStackTrace();
-				} catch (IOException e) {
-
-					e.printStackTrace();
-				} catch (ParserConfigurationException e) {
-
-					e.printStackTrace();
-				} catch (SAXException e) {
-
-					e.printStackTrace();
-				}
-				
-			}
-			
-		}).start();
+		
+		aManager = getAssets();
+		InputStream iStream;
+		try {
+			iStream = aManager.open("feed.xml");
+			feedList = parseXML.readXML(iStream);
+			setTheAdapterOfListView();
+			invisTheProcessbar();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -160,7 +121,7 @@ public class qbMain extends Activity {
 		handle.post(new Runnable() {
 
 			public void run() {
-				lvAll.setAdapter(qba);
+				lvAll.setAdapter(feedL);
 			}
 		});
 	}

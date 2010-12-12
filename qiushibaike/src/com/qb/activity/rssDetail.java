@@ -7,6 +7,7 @@ import com.qb.R;
 import com.qb.qbMain;
 import com.qb.R.id;
 import com.qb.R.layout;
+import com.qb.activity.viewer.FeedViewer;
 import com.qb.activity.viewer.NewsViewer;
 
 
@@ -59,7 +60,7 @@ public class rssDetail extends Activity{
 		tvUrl  = (TextView)findViewById(R.id.tvUrl);
 		
 		//get the intent of the qbMain
-		final qbMain am = qbMain.getApp();
+		final FeedViewer am = FeedViewer.getApp();
 		Node el = am.nodeList.get(index);
 		NodeList nlmeta = el.getChildNodes();
 		Log.v("debug", index+"       " + nlmeta.getLength());
