@@ -19,6 +19,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.adapter.QbAdapter;
+import com.qb.activity.feed.AddRss;
 import com.qb.activity.viewer.IndexViewer;
 
 public class qbMain extends Activity {
@@ -48,7 +50,7 @@ public class qbMain extends Activity {
 	
 	private static int menu_refresh = Menu.FIRST;
 	private static int menu_detail = Menu.FIRST + 1;
-
+	private static int menu_add = Menu.FIRST + 2;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,7 @@ public class qbMain extends Activity {
 		
 		menu.add(0, menu_refresh, 0, R.string.menu_refresh);
 		menu.add(0, menu_detail, 0, R.string.menu_detail);
+		menu.add(0, menu_add, 0, R.string.menu_add);
 		
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -84,6 +87,8 @@ public class qbMain extends Activity {
 			break;
 		case Menu.FIRST + 1 :
 			startActivity(new Intent(qbMain.this,IndexViewer.class));
+		case Menu.FIRST + 2 :
+			startActivity(new Intent(qbMain.this,AddRss.class));
 		}
 		return true;
 	}
