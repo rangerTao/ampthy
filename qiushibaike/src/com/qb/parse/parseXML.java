@@ -1,6 +1,7 @@
 package com.qb.parse;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -104,6 +105,8 @@ public class parseXML {
 			
 			StreamResult streamResult = new StreamResult(new File("E:\\workspace\\qiushibaike\\assets\\feed.xml"));
 			transformer.transform(domSource, streamResult);
+			FileOutputStream fos = new FileOutputStream(new File("E:\\workspace\\qiushibaike\\assets\\feed.xml"));
+			
 			
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
@@ -120,7 +123,7 @@ public class parseXML {
 		}
 	}
 
-	public void addNode(String[] input) {
+	public static void addNode(String[] input) {
 		String[] result = null;
 		StringBuffer sbresult = new StringBuffer();
 		

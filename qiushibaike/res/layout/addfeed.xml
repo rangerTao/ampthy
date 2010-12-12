@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/widget29"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<Button android:id="@+id/btnSave" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:text="保存"
+		android:textSize="20sp" android:gravity="left"
+		android:layout_alignTop="@+id/btnCancel" android:layout_toLeftOf="@+id/btnCancel">
+	</Button>
+	<Button android:id="@+id/btnCancel" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:text="取消"
+		android:textSize="20sp" android:gravity="center" android:layout_below="@+id/etUrl"
+		android:layout_alignParentRight="true">
+	</Button>
+	<AutoCompleteTextView android:id="@+id/etUrl"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:text="AutoComplete" android:textSize="18sp" android:gravity="left"
+		android:layout_below="@+id/tvUrl" android:layout_alignParentLeft="true">
+	</AutoCompleteTextView>
+	<TextView android:id="@+id/tvUrl" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="TextView"
+		android:textSize="20sp" android:gravity="left" android:layout_below="@+id/etName"
+		android:layout_alignParentLeft="true">
+	</TextView>
+	<EditText android:id="@+id/etName" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="EditText"
+		android:textSize="18sp" android:gravity="left" android:layout_below="@+id/tvTitle"
+		android:layout_alignParentLeft="true">
+	</EditText>
+	<TextView android:id="@+id/tvTitle" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="TextView"
+		android:textSize="20sp" android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true">
+	</TextView>
+</RelativeLayout>
