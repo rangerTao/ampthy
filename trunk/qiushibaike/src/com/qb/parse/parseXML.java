@@ -3,6 +3,7 @@ package com.qb.parse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,9 +22,12 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
-public class parseXML {
+import android.util.Log;
 
-	public static String[] readXML() {
+public class parseXML {
+	public static String filePath = "file:///android_assets/feed.xml";
+	
+	public static String[] readXML(InputStream is) {
 
 		String[] result = null;
 		StringBuffer sbresult = new StringBuffer();
@@ -35,11 +39,11 @@ public class parseXML {
 			// Document document =
 			// dBuilder.parse("file:///android_asset/feed.xml");
 			Document document = dBuilder
-					.parse("E:\\workspace\\qiushibaike\\assets\\feed.xml");
+					.parse(is);
 
 			NodeList nList = document.getElementsByTagName("item");
 			result = new String[nList.getLength()];
-
+			
 			for (int i = 0; i < nList.getLength(); i++) {
 				sbresult = new StringBuffer();
 				Node node = nList.item(i);
@@ -56,6 +60,7 @@ public class parseXML {
 						sbresult.append(node2.getFirstChild().getNodeValue());
 					}
 				}
+				Log.v("debug", sbresult.toString());
 				result[i] = sbresult.toString();
 			}
 
@@ -77,8 +82,8 @@ public class parseXML {
 		try {
 			DocumentBuilder dBuilder = dbf.newDocumentBuilder();
 
-			//Document document = dBuilder.parse("file:///android_asset/feed.xml");
-			Document document = dBuilder.parse("E:\\workspace\\qiushibaike\\assets\\feed.xml");
+			Document document = dBuilder.parse(filePath);
+			///Document document = dBuilder.parse("E:\\workspace\\qiushibaike\\assets\\feed.xml");
 
 			NodeList nList = document.getElementsByTagName("item");
 			result = new String[nList.getLength()];
@@ -103,9 +108,9 @@ public class parseXML {
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource domSource = new DOMSource(document);
 			
-			StreamResult streamResult = new StreamResult(new File("E:\\workspace\\qiushibaike\\assets\\feed.xml"));
+			StreamResult streamResult = new StreamResult(new File(filePath));
 			transformer.transform(domSource, streamResult);
-			FileOutputStream fos = new FileOutputStream(new File("E:\\workspace\\qiushibaike\\assets\\feed.xml"));
+			FileOutputStream fos = new FileOutputStream(new File(filePath));
 			
 			
 		} catch (ParserConfigurationException e) {
@@ -131,7 +136,7 @@ public class parseXML {
 		try {
 			DocumentBuilder dBuilder = dbf.newDocumentBuilder();
 
-			Document document = dBuilder.parse("E:\\workspace\\qiushibaike\\assets\\feed.xml");
+			Document document = dBuilder.parse(filePath);
 
 			//get the lasted index of id
 			int id = Integer.parseInt(document.getElementsByTagName("index").item(0).getFirstChild().getNodeValue());
@@ -159,7 +164,7 @@ public class parseXML {
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource domSource = new DOMSource(document);
 			
-			StreamResult streamResult = new StreamResult(new File("E:\\workspace\\qiushibaike\\assets\\feed.xml"));
+			StreamResult streamResult = new StreamResult(new File(filePath));
 			transformer.transform(domSource, streamResult);
 			
 		} catch (ParserConfigurationException e) {
@@ -178,6 +183,6 @@ public class parseXML {
 	}
 
 	public static void main(String args[]) {
-		readXML();
+		//readXML();
 	}
 }
