@@ -1,5 +1,8 @@
 package com.adapter;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,18 +24,15 @@ public class FeedList extends BaseAdapter{
 	}
 
 	public int getCount() {
-		// TODO Auto-generated method stub
 		Log.v("debug", qbTemp.feedList.length+"");
 		return qbTemp.feedList.length;
 	}
 
 	public Object getItem(int position) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -44,21 +44,32 @@ public class FeedList extends BaseAdapter{
 		tvName.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				Intent newFeedIntent = new Intent(qbTemp,FeedViewer.class);
+				Intent newFeedIntent = new Intent(qbTemp, FeedViewer.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("url", qbTemp.feedList[position_temp].split(";")[1].toString());
-				bundle.putString("name", qbTemp.feedList[position_temp].split(";")[0].toString());
-				Log.v("debug", qbTemp.feedList[position_temp].split(";")[1].toString());
+				String ipRegex = "^http://*";
+				String url = qbTemp.feedList[position_temp].split(";")[1]
+						.toString();
+				// Pattern pattern =
+				// Pattern.compile(ipRegex,Pattern.CASE_INSENSITIVE);
+				// Matcher matcher = pattern.matcher(url);
+				// if(matcher.find()){
+				bundle.putString("url", url);
+
+				bundle.putString("name", qbTemp.feedList[position_temp]
+						.split(";")[0].toString());
+				Log.v("debug", qbTemp.feedList[position_temp].split(";")[1]
+						.toString());
 				newFeedIntent.putExtras(bundle);
 				qbTemp.startActivity(newFeedIntent);
+				// }else{
+				// //Toast.makeText(, "url", 2000);
+				// }
+
 			}
 		});
 		
 		String name = qbTemp.feedList[position].split(";")[0].toString();
 		tvName.setText(name);
-		
 		return view;
-		
 	}
-
 }
