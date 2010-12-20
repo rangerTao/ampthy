@@ -3,15 +3,22 @@ package com.qb.activity.viewer;
 import com.qb.R;
 
 import android.app.Activity;
+import android.gesture.GestureOverlayView;
+import android.gesture.GestureOverlayView.OnGestureListener;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-public class NewsViewer extends Activity {
-
+public class NewsViewer extends Activity{
+	
+	GestureDetector mGestureDetector = new GestureDetector((android.view.GestureDetector.OnGestureListener) this);
 	// The main of the activity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,7 +29,8 @@ public class NewsViewer extends Activity {
 		setContentView(R.layout.newsviewer);
 
 		setProgressBarIndeterminateVisibility(true);
-
+		
+		
 		WebView wView = (WebView) findViewById(R.id.wvNews);
 		Bundle bundle = this.getIntent().getExtras();
 		String urlString = bundle.getString("url");
@@ -52,5 +60,6 @@ public class NewsViewer extends Activity {
 
 		wView.loadUrl(urlString);
 	}
+	
 
 }

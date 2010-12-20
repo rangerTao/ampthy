@@ -9,26 +9,35 @@ import com.qb.R.id;
 import com.qb.R.layout;
 import com.qb.activity.viewer.FeedViewer;
 import com.qb.activity.viewer.NewsViewer;
+import com.qb.listener.LearnGestureListener;
 
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.gesture.GestureOverlayView;
+import android.gesture.GestureOverlayView.OnGestureListener;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class rssDetail extends Activity{
+public class rssDetail extends Activity implements OnTouchListener,OnGestureListener{
 
 	private SharedPreferences mysh;
 	
+	GestureDetector mGestureDetector;
 	//The view on the layout
 	private TextView tvTitle;
 	private TextView tvDate;
@@ -48,10 +57,14 @@ public class rssDetail extends Activity{
 		index = bIndex.getInt("index");
 		getWindow().requestFeature(Window.FEATURE_PROGRESS);
 		setContentView(R.layout.detail);
-		setTextViewContent();
+		mGestureDetector  = new GestureDetector(this,new LearnGestureListener(this));
+		RelativeLayout rldeLayout = (RelativeLayout) findViewById(R.id.rlDetail);
+		rldeLayout.setOnTouchListener(this);
+		rldeLayout.setLongClickable(true);
+		setTextViewContent(index);
 	}
 	
-	public void setTextViewContent(){
+	public void setTextViewContent(int index){
 		
 		tvTitle = (TextView)findViewById(R.id.tvTitle);
 		tvDate  = (TextView)findViewById(R.id.tvDate);
@@ -96,8 +109,41 @@ public class rssDetail extends Activity{
 		});
 	}
 	
+	public void viewLast(){
+		if(index >= 1){
+			setTextViewContent(index - 1);
+		}else {
+			Toast.makeText(this, "This is the first rss", 2000);
+		}
+	}
+	
+	
 	public rssDetail getApp(){
 		return this;
+	}
+
+	public void onGesture(GestureOverlayView overlay, MotionEvent event) {
+		Toast.makeText(this, "test1", 2000);
+		
+	}
+
+	public void onGestureCancelled(GestureOverlayView overlay, MotionEvent event) {
+		Toast.makeText(this, "test12", 2000);
+		
+	}
+
+	public void onGestureEnded(GestureOverlayView overlay, MotionEvent event) {
+		Toast.makeText(this, "test13", 2000);
+		
+	}
+
+	public void onGestureStarted(GestureOverlayView overlay, MotionEvent event) {
+		Toast.makeText(this, "test14", 2000);
+		
+	}
+
+	public boolean onTouch(View v, MotionEvent event) {
+		return mGestureDetector.onTouchEvent(event);
 	}
 	
 	
