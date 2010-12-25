@@ -27,6 +27,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -56,13 +61,29 @@ public class FeedViewer extends Activity {
 		setContentView(R.layout.newslist);
 		appRef = this;
 		lvAll = (ListView) findViewById(R.id.lvAll);
+		
+		AnimationSet set = new AnimationSet(true);
+        Animation animation = new AlphaAnimation(0.0f, 1.0f);
+        animation.setDuration(50);
+        set.addAnimation(animation);
+        animation = new TranslateAnimation(
+            Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, -1.0f,Animation.RELATIVE_TO_SELF, 0.0f
+        );
+        animation.setDuration(100);
+        set.addAnimation(animation);
+        LayoutAnimationController controller = new LayoutAnimationController(set, 0.5f);
+		
 		Bundle bundle = this.getIntent().getExtras();
 		url = bundle.getString("url");
 		setTitle(bundle.getString("name"));
 
 		qba = new QbAdapter(appRef);
 		qba.notifyDataSetChanged();
+				
 		refreshAll();
+		
+		lvAll.setLayoutAnimation(controller);
 	}
 
 	public static FeedViewer getApp() {

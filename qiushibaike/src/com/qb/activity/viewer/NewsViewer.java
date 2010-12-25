@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 public class NewsViewer extends Activity{
 	
-	GestureDetector mGestureDetector = new GestureDetector((android.view.GestureDetector.OnGestureListener) this);
 	// The main of the activity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
