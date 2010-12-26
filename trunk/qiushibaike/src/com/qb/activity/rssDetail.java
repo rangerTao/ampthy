@@ -192,6 +192,24 @@ class RssDetailGestureListener extends GestureDetector.SimpleOnGestureListener {
 			// Fling left
 			rssDetail rDetail = rssDetail.getApp();
 			FeedViewer am = FeedViewer.getApp();
+			if (rDetail.index <= am.nodeList.size() - 1) {
+				int intindex = rDetail.index + 1;
+				rDetail.index -= 1;
+				Bundle bIndex = new Bundle();
+				bIndex.putInt("index", intindex);
+				Intent new_detail = new Intent(am, rssDetail.class);
+				new_detail.putExtras(bIndex);
+				am.startActivity(new_detail);
+				rDetail.finish();
+			} else {
+				Toast.makeText(context, "已经是最后一条了！", Toast.LENGTH_SHORT).show();
+			}
+		} else if (e2.getX() - e1.getX() > 10 && Math.abs(velocityX) > 10) {
+			// Fling right
+			
+			
+			rssDetail rDetail = rssDetail.getApp();
+			FeedViewer am = FeedViewer.getApp();
 			if (rDetail.index >= 1) {
 				int intindex = rDetail.index - 1;
 				rDetail.index -= 1;
@@ -205,22 +223,6 @@ class RssDetailGestureListener extends GestureDetector.SimpleOnGestureListener {
 				Toast.makeText(context, "已经是第一条了！", Toast.LENGTH_SHORT).show();
 			}
 
-		} else if (e2.getX() - e1.getX() > 10 && Math.abs(velocityX) > 10) {
-			// Fling right
-			rssDetail rDetail = rssDetail.getApp();
-			FeedViewer am = FeedViewer.getApp();
-			if (rDetail.index <= am.nodeList.size() - 1) {
-				int intindex = rDetail.index + 1;
-				rDetail.index -= 1;
-				Bundle bIndex = new Bundle();
-				bIndex.putInt("index", intindex);
-				Intent new_detail = new Intent(am, rssDetail.class);
-				new_detail.putExtras(bIndex);
-				am.startActivity(new_detail);
-				rDetail.finish();
-			} else {
-				Toast.makeText(context, "已经是最后一条了！", Toast.LENGTH_SHORT).show();
-			}
 		}
 		return false;
 	}

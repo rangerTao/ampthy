@@ -41,32 +41,6 @@ public class FeedList extends BaseAdapter{
 		final int position_temp = position;
 		view = qbTemp.getLayoutInflater().inflate(R.layout.feedlist,null);
 		TextView tvName = (TextView) view.findViewById(R.id.tvName);
-		tvName.setOnClickListener(new OnClickListener() {
-			
-			public void onClick(View v) {
-				Intent newFeedIntent = new Intent(qbTemp, FeedViewer.class);
-				Bundle bundle = new Bundle();
-				String ipRegex = "^http://*";
-				String url = qbTemp.feedList[position_temp].split(";")[1]
-						.toString();
-				// Pattern pattern =
-				// Pattern.compile(ipRegex,Pattern.CASE_INSENSITIVE);
-				// Matcher matcher = pattern.matcher(url);
-				// if(matcher.find()){
-				bundle.putString("url", url);
-
-				bundle.putString("name", qbTemp.feedList[position_temp]
-						.split(";")[0].toString());
-				Log.v("debug", qbTemp.feedList[position_temp].split(";")[1]
-						.toString());
-				newFeedIntent.putExtras(bundle);
-				qbTemp.startActivity(newFeedIntent);
-				// }else{
-				// //Toast.makeText(, "url", 2000);
-				// }
-
-			}
-		});
 		
 		String name = qbTemp.feedList[position].split(";")[0].toString();
 		tvName.setText(name);
