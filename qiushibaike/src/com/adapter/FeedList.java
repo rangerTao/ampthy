@@ -24,7 +24,6 @@ public class FeedList extends BaseAdapter{
 	}
 
 	public int getCount() {
-		Log.v("debug", qbTemp.feedList.length+"");
 		return qbTemp.feedList.length;
 	}
 
