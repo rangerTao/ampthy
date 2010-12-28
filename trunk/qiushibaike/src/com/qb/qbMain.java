@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.w3c.dom.Node;
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -37,6 +39,7 @@ public class qbMain extends Activity {
 	public static ArrayList<Node> nodeList = new ArrayList<Node>();
 	private ListView lvAll;
 	private FeedList feedL;
+	private static final int cmIndex = Menu.FIRST + 10;
 	public static String[] feedList;
 
 	// file
@@ -46,8 +49,8 @@ public class qbMain extends Activity {
 	private Handler handle = new Handler();
 
 	private static int menu_edit = Menu.FIRST;
-	private static int menu_delete = Menu.FIRST + 2;
-	private static int menu_add = Menu.FIRST + 1;
+	private static int menu_delete = Menu.FIRST + 1;
+	private static int menu_add = Menu.FIRST + 2;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -72,29 +75,18 @@ public class qbMain extends Activity {
 	}
 
 	public void initlvAllListener() {
-		
-		//context menu
+
+		// context menu
 		lvAll.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
 
 			public void onCreateContextMenu(ContextMenu menu, View v,
 					ContextMenuInfo menuInfo) {
 				menu.setHeaderTitle("");
-				menu.add(0, 0, 0, R.string.menu_edit);
-				menu.add(0, 1, 0, R.string.menu_delete);
-				menu.add(0, 2, 0, R.string.menu_add);
-				Log.v("debug", "on create context menu");
+				menu.add(0, cmIndex, 0, R.string.menu_edit);
+				menu.add(0, cmIndex + 1, 1, R.string.menu_delete);
+				menu.add(0, cmIndex + 2, 2, R.string.menu_add);
 			}
 		});
-//
-//		lvAll.setOnItemLongClickListener(new OnItemLongClickListener() {
-//
-//			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-//					int arg2, long arg3) {
-//				Log.v("debug", "item long click");
-//				lvAll.showContextMenu();
-//				return true;
-//			}
-//		});
 
 		lvAll.setOnItemClickListener(new OnItemClickListener() {
 
@@ -109,7 +101,6 @@ public class qbMain extends Activity {
 
 				bundle.putString("name",
 						appRef.feedList[arg2].split(";")[0].toString());
-				Log.v("debug", appRef.feedList[arg2].split(";")[1].toString());
 				newFeedIntent.putExtras(bundle);
 				appRef.startActivity(newFeedIntent);
 
@@ -120,7 +111,7 @@ public class qbMain extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		menu.add(0, menu_edit, 0, R.string.menu_edit);
+		menu.add(0, menu_edit, 0, R.string.menu_refresh);
 		menu.add(0, menu_delete, 0, R.string.menu_delete);
 		menu.add(0, menu_add, 0, R.string.menu_add);
 
@@ -129,36 +120,36 @@ public class qbMain extends Activity {
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-
 		switch (item.getItemId()) {
 		case Menu.FIRST:
 			refreshAll();
 			break;
 		case Menu.FIRST + 1:
 			startActivity(new Intent(qbMain.this, IndexViewer.class));
+			break;
 		case Menu.FIRST + 2:
 			startActivity(new Intent(qbMain.this, AddRss.class));
-		}
-		return true;
-	}
+			break;
+		case cmIndex:
+			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+					.getMenuInfo();
+			Bundle eIndex = new Bundle();
 
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
-		switch (item.getItemId()) {
-		case 0:
-			
+			eIndex.putString("editIndex", info.position + "");
+			Intent editIntent = new Intent(appRef, AddRss.class);
+			editIntent.putExtras(eIndex);
+			appRef.startActivity(editIntent);
 			break;
-		
-		case 1:
-			
+
+		case cmIndex + 1:
+
 			break;
-			
-		case 2:
+
+		case cmIndex + 2:
 			startActivity(new Intent(qbMain.this, AddRss.class));
 			break;
 		}
-		return super.onContextItemSelected(item);
+		return true;
 	}
 
 	public void refreshAll() {
@@ -171,6 +162,7 @@ public class qbMain extends Activity {
 		InputStream iStream;
 		try {
 			iStream = aManager.open("feed.xml");
+			Log.v("test", "the locales"+aManager.getLocales());
 			feedList = parseXML.readXML(iStream);
 			setTheAdapterOfListView();
 			invisTheProcessbar();
