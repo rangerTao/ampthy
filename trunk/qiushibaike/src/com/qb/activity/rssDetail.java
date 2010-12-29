@@ -79,7 +79,7 @@ public class rssDetail extends Activity implements OnTouchListener,
 		final FeedViewer am = FeedViewer.getApp();
 		Node el = am.nodeList.get(index);
 		NodeList nlmeta = el.getChildNodes();
-		Log.v("debug", index + "       " + nlmeta.getLength());
+		Log.v("qb", index + "       " + nlmeta.getLength());
 		for (int i = 0; i < nlmeta.getLength(); i++) {
 			Node elmeta = nlmeta.item(i);
 			if (elmeta.getNodeName().equalsIgnoreCase("title")) {
