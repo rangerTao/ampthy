@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import javax.xml.transform.TransformerException;
+
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import android.R.integer;
 import android.app.Activity;
@@ -163,10 +166,16 @@ public class qbMain extends Activity {
 		try {
 			iStream = aManager.open("feed.xml");
 			Log.v("test", "the locales"+aManager.getLocales());
-			feedList = parseXML.readXML(iStream);
+			feedList = parseXML.readXML(iStream,this.getFilesDir().toString());
 			setTheAdapterOfListView();
 			invisTheProcessbar();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

@@ -71,9 +71,9 @@ public class AddRss extends Activity{
 					is = aManager.open("feed.xml");
 					
 					if(id == -1){
-						parseXML.addNode(input,is);
+						parseXML.addNode(input);
 					}else{
-						parseXML.editNode(input,is);
+						parseXML.editNode(input);
 					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
