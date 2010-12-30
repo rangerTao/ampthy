@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGestureListener;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,19 +19,21 @@ import android.widget.Toast;
 
 public class NewsViewer extends Activity{
 	
+	public static NewsViewer appRef;
 	// The main of the activity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		appRef = getApp();
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		getWindow().requestFeature(Window.FEATURE_PROGRESS);
 
 		setContentView(R.layout.newsviewer);
-
+		WebViewClient wvc = new Callback();
+		
 		setProgressBarIndeterminateVisibility(true);
 		
-		
 		WebView wView = (WebView) findViewById(R.id.wvNews);
+		wView.setWebViewClient(wvc);
 		Bundle bundle = this.getIntent().getExtras();
 		String urlString = bundle.getString("url");
 		setTitle(urlString);
@@ -59,6 +62,21 @@ public class NewsViewer extends Activity{
 
 		wView.loadUrl(urlString);
 	}
+	
+	public static NewsViewer getApp(){
+		return NewsViewer.appRef;
+	}
+	
+	private class Callback extends WebViewClient{
+
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			Log.v("qb",url);
+			return super.shouldOverrideUrlLoading(view, url);
+		}
+	}
+	
+	
+	
 	
 
 }

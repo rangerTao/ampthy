@@ -1,11 +1,7 @@
 package com.qb.parse;
 
-import parseXML;
-
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -25,13 +21,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
-
-import com.qb.R.string;
-
-import android.R.integer;
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.util.Log;
 
 public class parseXML {
 	public static String filePath = "";
