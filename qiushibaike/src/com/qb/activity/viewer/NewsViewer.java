@@ -34,6 +34,7 @@ public class NewsViewer extends Activity{
 		
 		WebView wView = (WebView) findViewById(R.id.wvNews);
 		wView.setWebViewClient(wvc);
+		wView.getSettings().setAllowFileAccess(true);
 		Bundle bundle = this.getIntent().getExtras();
 		String urlString = bundle.getString("url");
 		setTitle(urlString);
