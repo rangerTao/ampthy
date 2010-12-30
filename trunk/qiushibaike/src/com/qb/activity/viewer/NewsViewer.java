@@ -3,6 +3,8 @@ package com.qb.activity.viewer;
 import com.qb.R;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGestureListener;
 import android.os.Bundle;
@@ -28,13 +30,12 @@ public class NewsViewer extends Activity{
 		getWindow().requestFeature(Window.FEATURE_PROGRESS);
 
 		setContentView(R.layout.newsviewer);
-		WebViewClient wvc = new Callback();
+		//WebViewClient wvc = new Callback();
 		
 		setProgressBarIndeterminateVisibility(true);
 		
 		WebView wView = (WebView) findViewById(R.id.wvNews);
-		wView.setWebViewClient(wvc);
-		wView.getSettings().setAllowFileAccess(true);
+		
 		Bundle bundle = this.getIntent().getExtras();
 		String urlString = bundle.getString("url");
 		setTitle(urlString);
@@ -62,6 +63,8 @@ public class NewsViewer extends Activity{
 		});
 
 		wView.loadUrl(urlString);
+		wView.setWebViewClient(new Callback());
+		
 	}
 	
 	public static NewsViewer getApp(){
@@ -71,8 +74,38 @@ public class NewsViewer extends Activity{
 	private class Callback extends WebViewClient{
 
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			Log.v("qb",url);
-			return super.shouldOverrideUrlLoading(view, url);
+//			if(url.endsWith(".xml")){
+//				new AlertDialog.Builder(NewsViewer.this).setTitle("添加RSS源").setMessage(url).setPositiveButton("添加", new DialogInterface.OnClickListener() {
+//					
+//					public void onClick(DialogInterface dialog, int which) {
+//						// TODO Auto-generated method stub
+//						
+//					}
+//				}).setNegativeButton("不添加", new DialogInterface.OnClickListener() {
+//					
+//					public void onClick(DialogInterface dialog, int which) {
+//						// TODO Auto-generated method stub
+//						
+//					}
+//				}).show();
+//				return true;
+//			}else{
+//				return false;
+//			}
+			new AlertDialog.Builder(NewsViewer.this).setTitle("添加RSS源").setMessage(url).setPositiveButton("添加", new DialogInterface.OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					
+				}
+			}).setNegativeButton("不添加", new DialogInterface.OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					
+				}
+			}).show();
+			return true;
 		}
 	}
 	
