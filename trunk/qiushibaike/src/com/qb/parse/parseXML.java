@@ -33,32 +33,36 @@ import android.util.Log;
 
 public class parseXML {
 	public static String filePath = "";
-	//public static FileInputStream iStream = null;
-	
-	public static void initFile(InputStream is,DocumentBuilder dBuilder,File file) throws SAXException, IOException, TransformerException{
-			Document document;
-			document = dBuilder.parse(is);
-			DOMSource domSource = new DOMSource(document);
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer;
-			transformer = transformerFactory.newTransformer();
-			StreamResult streamResult = new StreamResult(file);
-			transformer.transform(domSource, streamResult);
 
-		
-		
+	// public static FileInputStream iStream = null;
+
+	public static void initFile(InputStream is, DocumentBuilder dBuilder,
+			File file) throws SAXException, IOException, TransformerException {
+		Document document;
+		document = dBuilder.parse(is);
+		DOMSource domSource = new DOMSource(document);
+		TransformerFactory transformerFactory = TransformerFactory
+				.newInstance();
+		Transformer transformer;
+		transformer = transformerFactory.newTransformer();
+		StreamResult streamResult = new StreamResult(file);
+		transformer.transform(domSource, streamResult);
+
 	}
-	
-	public static String[] readFile(String filePath,DocumentBuilder dBuilder,String[] result,StringBuffer sbresult) throws SAXException, IOException{
-		
+
+	public static String[] readFile(String filePath, DocumentBuilder dBuilder,
+			String[] result, StringBuffer sbresult) throws SAXException,
+			IOException {
+
 		parseXML.filePath = filePath + "/feed.xml";
-		FileInputStream iStream = new FileInputStream(new File(parseXML.filePath));
+		FileInputStream iStream = new FileInputStream(new File(
+				parseXML.filePath));
 
 		Document document = dBuilder.parse(iStream);
 
 		NodeList nList = document.getElementsByTagName("item");
 		result = new String[nList.getLength()];
-		
+
 		for (int i = 0; i < nList.getLength(); i++) {
 			sbresult = new StringBuffer();
 			Node node = nList.item(i);
@@ -66,11 +70,9 @@ public class parseXML {
 			for (int j = 0; j < nodeList.getLength(); j++) {
 				Node node2 = nodeList.item(j);
 				if (node2.getNodeName().equalsIgnoreCase("name")) {
-					sbresult.append(node2.getFirstChild().getNodeValue()
-							+ ";");
+					sbresult.append(node2.getFirstChild().getNodeValue() + ";");
 				} else if (node2.getNodeName().equalsIgnoreCase("url")) {
-					sbresult.append(node2.getFirstChild().getNodeValue()
-							+ ";");
+					sbresult.append(node2.getFirstChild().getNodeValue() + ";");
 				} else if (node2.getNodeName().equalsIgnoreCase("id")) {
 					sbresult.append(node2.getFirstChild().getNodeValue());
 				}
@@ -80,8 +82,9 @@ public class parseXML {
 		}
 		return result;
 	}
-	
-	public static String[] readXML(InputStream is , String filePath) throws IOException, TransformerException, SAXException {
+
+	public static String[] readXML(InputStream is, String filePath)
+			throws IOException, TransformerException, SAXException {
 
 		String[] result = null;
 		StringBuffer sbresult = new StringBuffer();
@@ -90,20 +93,20 @@ public class parseXML {
 		DocumentBuilder dBuilder = null;
 		try {
 			dBuilder = dbf.newDocumentBuilder();
-			if(!file.exists()){
-				initFile(is,dBuilder,file);
+			if (!file.exists()) {
+				initFile(is, dBuilder, file);
 			}
-			
-			result = readFile(filePath,dBuilder,result,sbresult);
-			
+
+			result = readFile(filePath, dBuilder, result, sbresult);
+
 		} catch (ParserConfigurationException e) {
 			file.delete();
-			initFile(is,dBuilder,file);
-			result = readFile(filePath,dBuilder,result,sbresult);
+			initFile(is, dBuilder, file);
+			result = readFile(filePath, dBuilder, result, sbresult);
 		} catch (SAXException e) {
 			file.delete();
-			initFile(is,dBuilder,file);
-			result = readFile(filePath,dBuilder,result,sbresult);
+			initFile(is, dBuilder, file);
+			result = readFile(filePath, dBuilder, result, sbresult);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -117,36 +120,38 @@ public class parseXML {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
 			DocumentBuilder dBuilder = dbf.newDocumentBuilder();
-			FileInputStream iStream = new FileInputStream(new File(parseXML.filePath));
+			FileInputStream iStream = new FileInputStream(new File(
+					parseXML.filePath));
 			Document document = dBuilder.parse(iStream);
-			///Document document = dBuilder.parse("E:\\workspace\\qiushibaike\\assets\\feed.xml");
 
 			NodeList nList = document.getElementsByTagName("item");
 			result = new String[nList.getLength()];
 
-			for(int i = 0; i < nList.getLength(); i ++){
+			for (int i = 0; i < nList.getLength(); i++) {
 				sbresult = new StringBuffer();
 				Node node = nList.item(i);
 				NodeList nodeList = node.getChildNodes();
-				for(int j = 0 ; j<nodeList.getLength();j++){
+				for (int j = 0; j < nodeList.getLength(); j++) {
 					Node node2 = nodeList.item(j);
-					if(node2.getNodeName().equalsIgnoreCase("id")){
-						if(node2.getFirstChild().getNodeValue().equalsIgnoreCase(id+"")){
-							node.getParentNode().removeChild(node);
-						
+					if (node2.getNodeName().equalsIgnoreCase("id")) {
+						if (node2.getFirstChild().getNodeValue()
+								.equalsIgnoreCase(id + "")) {
+							node2.getParentNode().getParentNode().removeChild(node2.getParentNode());
+
 						}
 					}
 				}
 				result[i] = sbresult.toString();
 			}
-			
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+
+			TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource domSource = new DOMSource(document);
-			
+
 			StreamResult streamResult = new StreamResult(new File(filePath));
 			transformer.transform(domSource, streamResult);
-			
+
 			iStream.close();
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
@@ -166,22 +171,25 @@ public class parseXML {
 	public static void addNode(String[] input) throws IOException {
 		String[] result = null;
 		StringBuffer sbresult = new StringBuffer();
-		
+
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
 			DocumentBuilder dBuilder = dbf.newDocumentBuilder();
-			FileInputStream iStream = new FileInputStream(new File(parseXML.filePath));
+			FileInputStream iStream = new FileInputStream(new File(
+					parseXML.filePath));
 			Document document = dBuilder.parse(iStream);
 
-			//get the lasted index of id
-			int id = Integer.parseInt(document.getElementsByTagName("index").item(0).getFirstChild().getNodeValue());
-			document.getElementsByTagName("index").item(0).getFirstChild().setNodeValue(id+1+"");
-			//the values
+			// get the lasted index of id
+			int id = Integer.parseInt(document.getElementsByTagName("index")
+					.item(0).getFirstChild().getNodeValue());
+			document.getElementsByTagName("index").item(0).getFirstChild()
+					.setNodeValue(id + 1 + "");
+			// the values
 			Text name = document.createTextNode(input[0]);
 			Text url = document.createTextNode(input[1]);
-			Text tid = document.createTextNode(id+1+"");
-			
-			//new elements
+			Text tid = document.createTextNode(id + 1 + "");
+
+			// new elements
 			Element newElement = document.createElement("item");
 			Element newNameElement = document.createElement("name");
 			Element newUrlElement = document.createElement("url");
@@ -194,11 +202,12 @@ public class parseXML {
 			newElement.appendChild(newIdElement);
 
 			document.getDocumentElement().appendChild(newElement);
-			
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+
+			TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource domSource = new DOMSource(document);
-			
+
 			StreamResult streamResult = new StreamResult(new File(filePath));
 			transformer.transform(domSource, streamResult);
 			iStream.close();
@@ -216,39 +225,43 @@ public class parseXML {
 			e.printStackTrace();
 		}
 	}
-	
-	public static boolean editNode(String[] input) throws IOException{
-		
+
+	public static boolean editNode(String[] input) throws IOException {
+
 		String[] result = null;
 		StringBuffer sbresult = new StringBuffer();
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
 			DocumentBuilder dBuilder = dbf.newDocumentBuilder();
-			FileInputStream fileInputStream = new FileInputStream(new File(parseXML.filePath));
+			FileInputStream fileInputStream = new FileInputStream(new File(
+					parseXML.filePath));
 			Document document = dBuilder.parse(fileInputStream);
-			
+
 			int id = Integer.parseInt(input[2]);
 
 			NodeList nList = document.getElementsByTagName("item");
 			result = new String[nList.getLength()];
 			Log.v("qb", result.toString());
-			for(int i = 0; i < nList.getLength(); i ++){
+			for (int i = 0; i < nList.getLength(); i++) {
 				sbresult = new StringBuffer();
 				Node node = nList.item(i);
 				NodeList nodeList = node.getChildNodes();
-				for(int j = 0 ; j<nodeList.getLength();j++){
+				for (int j = 0; j < nodeList.getLength(); j++) {
 					Node node2 = nodeList.item(j);
-					if(node2.getNodeName().equalsIgnoreCase("id")){
-						if(node2.getFirstChild().getNodeValue().equalsIgnoreCase(id+"")){
-							node.getParentNode().removeChild(node);
-							
+					if (node2.getNodeName().equalsIgnoreCase("id")) {
+						if (node2.getFirstChild().getNodeValue()
+								.equalsIgnoreCase(id + "")) {
+							node2.getParentNode().getParentNode().removeChild(node2.getParentNode());
+
 							Text name = document.createTextNode(input[0]);
 							Text url = document.createTextNode(input[1]);
 							Text tid = document.createTextNode(input[2]);
-							//new elements
+							// new elements
 							Element newElement = document.createElement("item");
-							Element newNameElement = document.createElement("name");
-							Element newUrlElement = document.createElement("url");
+							Element newNameElement = document
+									.createElement("name");
+							Element newUrlElement = document
+									.createElement("url");
 							Element newIdElement = document.createElement("id");
 							newNameElement.appendChild(name);
 							newUrlElement.appendChild(url);
@@ -257,31 +270,35 @@ public class parseXML {
 							newElement.appendChild(newUrlElement);
 							newElement.appendChild(newIdElement);
 
-							document.getDocumentElement().appendChild(newElement);
-							
-							TransformerFactory transformerFactory = TransformerFactory.newInstance();
-							Transformer transformer = transformerFactory.newTransformer();
+							document.getDocumentElement().appendChild(
+									newElement);
+
+							TransformerFactory transformerFactory = TransformerFactory
+									.newInstance();
+							Transformer transformer = transformerFactory
+									.newTransformer();
 							DOMSource domSource = new DOMSource(document);
 
-							StreamResult streamResult = new StreamResult(new File(filePath));
+							StreamResult streamResult = new StreamResult(
+									new File(filePath));
 							transformer.transform(domSource, streamResult);
-						
+
 						}
 					}
 				}
 				result[i] = sbresult.toString();
 			}
-			
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+
+			TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource domSource = new DOMSource(document);
-			
+
 			StreamResult streamResult = new StreamResult(new File(filePath));
 			transformer.transform(domSource, streamResult);
-			FileOutputStream fos = new FileOutputStream(new File(filePath));
 
 			fileInputStream.close();
-			
+
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {
@@ -296,5 +313,17 @@ public class parseXML {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	public static void main(String[] args){
+		parseXML px = new parseXML();
+		px.filePath = "E:\\temp\\feed.xml";
+		String[] input = {"q ","asfsadfas","5"};
+		try {
+			px.editNode(input);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
