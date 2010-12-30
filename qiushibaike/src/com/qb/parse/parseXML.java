@@ -1,5 +1,7 @@
 package com.qb.parse;
 
+import parseXML;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -241,38 +243,28 @@ public class parseXML {
 
 			NodeList nList = document.getElementsByTagName("item");
 			result = new String[nList.getLength()];
-			Log.v("qb", result.toString());
 			for (int i = 0; i < nList.getLength(); i++) {
 				sbresult = new StringBuffer();
 				Node node = nList.item(i);
 				NodeList nodeList = node.getChildNodes();
 				for (int j = 0; j < nodeList.getLength(); j++) {
 					Node node2 = nodeList.item(j);
+
 					if (node2.getNodeName().equalsIgnoreCase("id")) {
 						if (node2.getFirstChild().getNodeValue()
 								.equalsIgnoreCase(id + "")) {
-							node2.getParentNode().getParentNode().removeChild(node2.getParentNode());
-
-							Text name = document.createTextNode(input[0]);
-							Text url = document.createTextNode(input[1]);
-							Text tid = document.createTextNode(input[2]);
-							// new elements
-							Element newElement = document.createElement("item");
-							Element newNameElement = document
-									.createElement("name");
-							Element newUrlElement = document
-									.createElement("url");
-							Element newIdElement = document.createElement("id");
-							newNameElement.appendChild(name);
-							newUrlElement.appendChild(url);
-							newIdElement.appendChild(tid);
-							newElement.appendChild(newNameElement);
-							newElement.appendChild(newUrlElement);
-							newElement.appendChild(newIdElement);
-
-							document.getDocumentElement().appendChild(
-									newElement);
-
+							node2.getFirstChild().setNodeValue(input[2]);
+							for(int k = j;k>=0;k--){
+								boolean isInstance = nodeList.item(k).hasChildNodes();
+								if(isInstance){
+									if(nodeList.item(k).getNodeName().equals("name")){
+										nodeList.item(k).getFirstChild().setNodeValue(input[0]);
+									}
+									if(nodeList.item(k).getNodeName().equals("url")){
+										nodeList.item(k).getFirstChild().setNodeValue(input[1]);
+									}
+								}
+							}
 							TransformerFactory transformerFactory = TransformerFactory
 									.newInstance();
 							Transformer transformer = transformerFactory
@@ -288,42 +280,24 @@ public class parseXML {
 				}
 				result[i] = sbresult.toString();
 			}
-
-			TransformerFactory transformerFactory = TransformerFactory
-					.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource domSource = new DOMSource(document);
-
-			StreamResult streamResult = new StreamResult(new File(filePath));
-			transformer.transform(domSource, streamResult);
-
 			fileInputStream.close();
 
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
+			return false;
 		} catch (SAXException e) {
 			e.printStackTrace();
+			return false;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		}
-		return false;
-	}
-	
-	public static void main(String[] args){
-		parseXML px = new parseXML();
-		px.filePath = "E:\\temp\\feed.xml";
-		String[] input = {"q ","asfsadfas","5"};
-		try {
-			px.editNode(input);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		return true;
 	}
 }
