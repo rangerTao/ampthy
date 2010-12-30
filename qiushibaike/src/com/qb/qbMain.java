@@ -106,7 +106,6 @@ public class qbMain extends Activity {
 						appRef.feedList[arg2].split(";")[0].toString());
 				newFeedIntent.putExtras(bundle);
 				appRef.startActivity(newFeedIntent);
-
 			}
 		});
 	}
