@@ -5,5 +5,33 @@ import java.util.List;
 
 public class SynchronizedData {
 	
-	ArrayList<String[]> action = new ArrayList<String[]>();
+	static ArrayList<String> action = new ArrayList<String>();
+	static ArrayList<String> distence = new ArrayList<String>();
+	
+	public synchronized static boolean addAction(String act , String dis){
+		
+		action.add(act);
+		distence.add(dis);
+		
+		return false;
+	}
+
+	public synchronized static String[] getAction() {
+
+		String[] temp = { "", "" };
+
+		if (action.size() >= 1 && distence.size() >= 1
+				&& action.size() == distence.size()) {
+			temp[0] = action.get(0);
+			temp[1] = distence.get(0);
+
+			action.remove(0);
+			distence.remove(0);
+
+			return temp;
+		} else {
+			return null;
+		}
+
+	}
 }
