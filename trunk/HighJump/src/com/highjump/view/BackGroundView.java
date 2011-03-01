@@ -20,29 +20,34 @@ import com.highjump.thread.DrawCarrot;
 import com.highjump.util.ActionEnum;
 import com.highjump.util.CanvasControl;
 
-public class BackGroundView extends SurfaceView implements Callback{
+public class BackGroundView extends SurfaceView implements Callback {
 
 	static SurfaceHolder holder;
 	Canvas canvas;
 	Resources res;
 	Bitmap bitmap;
+	Paint charPaint;
 	CanvasControl cc;
-	public BackGroundView(Context context,Resources res){
+	int screenX = 0;
+	int screenY = 0;
+
+	public BackGroundView(Context context, Resources res) {
 		super(context);
 		holder = this.getHolder();
-		cc = new CanvasControl(context,holder);
-		while(!(canvas==null)){
+		cc = new CanvasControl(context, holder);
+		while (!(canvas == null)) {
 			canvas = cc.getCanvas();
-		}		
+		}
 		holder.addCallback(this);
+		charPaint = new Paint();
 		this.setFocusable(true);
 		this.res = res;
 		this.setBackgroundColor(Color.TRANSPARENT);
 		this.setKeepScreenOn(true);
-		bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.bg);
+		bitmap = BitmapFactory.decodeResource(this.getResources(),
+				R.drawable.bg);
 	}
-	
-	
+
 	public BackGroundView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		holder = this.getHolder();
@@ -52,22 +57,21 @@ public class BackGroundView extends SurfaceView implements Callback{
 
 	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-		
+
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
 		new Thread(new DrawThread()).start();
-		//new Thread(new DrawCarrot(res)).start();
-		
-		
+		// new Thread(new DrawCarrot(res)).start();
+
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
-		
+
 	}
-	
+
 	class DrawThread extends Thread {
 
 		@Override
@@ -76,41 +80,43 @@ public class BackGroundView extends SurfaceView implements Callback{
 			try {
 				canvas = holder.lockCanvas();
 				paint.setColor(Color.BLACK);
-				
+
 				DrawCarrot(canvas);
+
 				
-				DrawCharc(canvas);
-				
+
 				DrawCloud(canvas);
-				
-				
-				canvas.drawBitmap(bitmap, 0, 0, paint);			
-				
-				int intX = new Random().nextInt() / 240;
-				SynchronizedData.addAction(ActionEnum.actionJump, intX+"");
-				
+
+				canvas.drawBitmap(bitmap, 0, 0, paint);
+				DrawCharc(canvas);
+
+
 				holder.unlockCanvasAndPost(canvas);
-				cc.releaseCanvas();
 				Thread.sleep(33);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
-	
-	private boolean DrawCarrot(Canvas canvas){
-		
+
+	private boolean DrawCarrot(Canvas canvas) {
+		screenX = canvas.getWidth();
+		screenY = canvas.getHeight();
+		charPaint.setARGB(200,255,0,96);
+		charPaint.setStyle(Paint.Style.FILL);
+		canvas.drawBitmap(BitmapFactory.decodeResource(res, R.drawable.icon),
+				0, 0, charPaint);
 		return true;
 	}
-	
-	private boolean DrawCharc(Canvas canvas){
-		
+
+	private boolean DrawCharc(Canvas canvas) {
+
 		return true;
 	}
-	
-	private boolean DrawCloud(Canvas canvas){
-		
+
+	private boolean DrawCloud(Canvas canvas) {
+
 		return true;
 	}
 }
