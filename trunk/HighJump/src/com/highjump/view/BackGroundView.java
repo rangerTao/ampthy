@@ -1,30 +1,52 @@
 package com.highjump.view;
 
-import com.highjump.R;
-import com.highjump.control.SynchronizedData;
-import com.highjump.util.ActionEnum;
+import java.util.Random;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder.Callback;
 
+import com.highjump.R;
+import com.highjump.control.SynchronizedData;
+import com.highjump.thread.DrawCarrot;
+import com.highjump.util.ActionEnum;
+import com.highjump.util.CanvasControl;
+
 public class BackGroundView extends SurfaceView implements Callback{
 
-	SurfaceHolder holder;
+	static SurfaceHolder holder;
 	Canvas canvas;
 	Resources res;
+	Bitmap bitmap;
+	CanvasControl cc;
+	public BackGroundView(Context context,Resources res){
+		super(context);
+		holder = this.getHolder();
+		cc = new CanvasControl(context,holder);
+		while(!(canvas==null)){
+			canvas = cc.getCanvas();
+		}		
+		holder.addCallback(this);
+		this.setFocusable(true);
+		this.res = res;
+		this.setBackgroundColor(Color.TRANSPARENT);
+		this.setKeepScreenOn(true);
+		bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.bg);
+	}
+	
 	
 	public BackGroundView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		holder = this.getHolder();
-		canvas = holder.lockCanvas();
+		canvas = holder.lockCanvas(null);
 		res = this.getResources();
 	}
 
@@ -36,6 +58,9 @@ public class BackGroundView extends SurfaceView implements Callback{
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
 		new Thread(new DrawThread()).start();
+		//new Thread(new DrawCarrot(res)).start();
+		
+		
 	}
 
 	@Override
@@ -47,20 +72,45 @@ public class BackGroundView extends SurfaceView implements Callback{
 
 		@Override
 		public void run() {
+			Paint paint = new Paint();
 			try {
-				Paint paint = new Paint();
-				Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.bg);
-				canvas.drawBitmap(bitmap, 0, 0, paint);
+				canvas = holder.lockCanvas();
+				paint.setColor(Color.BLACK);
+				
+				DrawCarrot(canvas);
+				
+				DrawCharc(canvas);
+				
+				DrawCloud(canvas);
+				
+				
+				canvas.drawBitmap(bitmap, 0, 0, paint);			
+				
+				int intX = new Random().nextInt() / 240;
+				SynchronizedData.addAction(ActionEnum.actionJump, intX+"");
 				
 				holder.unlockCanvasAndPost(canvas);
-				
-				SynchronizedData.addAction(ActionEnum.actionJump, "50");
-				
+				cc.releaseCanvas();
 				Thread.sleep(33);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 		
+	}
+	
+	private boolean DrawCarrot(Canvas canvas){
+		
+		return true;
+	}
+	
+	private boolean DrawCharc(Canvas canvas){
+		
+		return true;
+	}
+	
+	private boolean DrawCloud(Canvas canvas){
+		
+		return true;
 	}
 }

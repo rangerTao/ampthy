@@ -3,10 +3,13 @@ package com.highjump.control;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.view.SurfaceHolder;
+
 public class SynchronizedData {
 	
 	static ArrayList<String> action = new ArrayList<String>();
 	static ArrayList<String> distence = new ArrayList<String>();
+	static SurfaceHolder holder;
 	
 	public synchronized static boolean addAction(String act , String dis){
 		
@@ -33,5 +36,5 @@ public class SynchronizedData {
 			return null;
 		}
 
-	}
+	}	
 }
