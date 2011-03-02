@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder.Callback;
@@ -46,6 +47,9 @@ public class BackGroundView extends SurfaceView implements Callback {
 		this.setKeepScreenOn(true);
 		bitmap = BitmapFactory.decodeResource(this.getResources(),
 				R.drawable.bg);
+		
+
+		//this.setBackgroundResource(R.drawable.bg);
 	}
 
 	public BackGroundView(Context context, AttributeSet attrs) {
@@ -79,17 +83,18 @@ public class BackGroundView extends SurfaceView implements Callback {
 			Paint paint = new Paint();
 			try {
 				canvas = holder.lockCanvas();
+				screenX = canvas.getWidth();
+				screenY = canvas.getHeight();
 				paint.setColor(Color.BLACK);
+				canvas.drawARGB(255, 254, 255, 213);
+				DrawBG(canvas);
 
 				DrawCarrot(canvas);
 
-				
-
 				DrawCloud(canvas);
 
-				canvas.drawBitmap(bitmap, 0, 0, paint);
+				
 				DrawCharc(canvas);
-
 
 				holder.unlockCanvasAndPost(canvas);
 				Thread.sleep(33);
@@ -100,14 +105,26 @@ public class BackGroundView extends SurfaceView implements Callback {
 
 	}
 
-	private boolean DrawCarrot(Canvas canvas) {
-		screenX = canvas.getWidth();
-		screenY = canvas.getHeight();
-		charPaint.setARGB(200,255,0,96);
+	private void DrawBG(Canvas canvas){
+		Paint bgPaint = new Paint();
+		bgPaint.setAntiAlias(true);
+		bgPaint.setStyle(Paint.Style.FILL);
+		canvas.drawBitmap(BitmapFactory.decodeResource(res, R.drawable.bg_left), 0, 0, bgPaint);
+		
+
+		
+		bitmap = BitmapFactory.decodeResource(res, R.drawable.bg_right);
+		canvas.drawBitmap(bitmap, screenX - bitmap.getWidth(), 0, bgPaint);
+		
+		Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.bg_bottom);
+		canvas.drawBitmap(bitmap, 0,screenY - bitmap.getHeight() ,bgPaint);
+		
+	}
+	
+	private void DrawCarrot(Canvas canvas) {
+		charPaint.setColor(Color.RED);
 		charPaint.setStyle(Paint.Style.FILL);
-		canvas.drawBitmap(BitmapFactory.decodeResource(res, R.drawable.icon),
-				0, 0, charPaint);
-		return true;
+		canvas.drawRect(50, 50, 180, 100, charPaint);
 	}
 
 	private boolean DrawCharc(Canvas canvas) {
