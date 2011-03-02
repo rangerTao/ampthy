@@ -1,6 +1,5 @@
 package com.highjump.view;
 
-import java.util.Random;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -10,15 +9,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder.Callback;
 
 import com.highjump.R;
-import com.highjump.control.SynchronizedData;
-import com.highjump.thread.DrawCarrot;
-import com.highjump.util.ActionEnum;
 import com.highjump.util.CanvasControl;
 
 public class BackGroundView extends SurfaceView implements Callback {
@@ -27,6 +22,10 @@ public class BackGroundView extends SurfaceView implements Callback {
 	Canvas canvas;
 	Resources res;
 	Bitmap bitmap;
+	Bitmap bgLeft;
+	Bitmap bgRight;
+	Bitmap bgBottom;
+	Bitmap bmButton;
 	Paint charPaint;
 	CanvasControl cc;
 	int screenX = 0;
@@ -61,14 +60,12 @@ public class BackGroundView extends SurfaceView implements Callback {
 
 	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-
+		
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
 		new Thread(new DrawThread()).start();
-		// new Thread(new DrawCarrot(res)).start();
-
 	}
 
 	@Override
@@ -89,10 +86,9 @@ public class BackGroundView extends SurfaceView implements Callback {
 				canvas.drawARGB(255, 254, 255, 213);
 				DrawBG(canvas);
 
-				DrawCarrot(canvas);
-
 				DrawCloud(canvas);
-
+				
+				DrawCarrot(canvas);
 				
 				DrawCharc(canvas);
 
@@ -109,26 +105,32 @@ public class BackGroundView extends SurfaceView implements Callback {
 		Paint bgPaint = new Paint();
 		bgPaint.setAntiAlias(true);
 		bgPaint.setStyle(Paint.Style.FILL);
-		canvas.drawBitmap(BitmapFactory.decodeResource(res, R.drawable.bg_left), 0, 0, bgPaint);
+		bgLeft = BitmapFactory.decodeResource(res, R.drawable.bg_left);
+		canvas.drawBitmap(bgLeft, 0, 0, bgPaint);
 		
-
+		bgRight = BitmapFactory.decodeResource(res, R.drawable.bg_right);
+		canvas.drawBitmap(bgRight, screenX - bgRight.getWidth(), 0, bgPaint);
 		
-		bitmap = BitmapFactory.decodeResource(res, R.drawable.bg_right);
-		canvas.drawBitmap(bitmap, screenX - bitmap.getWidth(), 0, bgPaint);
+		bgBottom = BitmapFactory.decodeResource(res, R.drawable.bg_bottom);
+		canvas.drawBitmap(bgBottom, 0,screenY - bgBottom.getHeight() ,bgPaint);
 		
-		Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.bg_bottom);
-		canvas.drawBitmap(bitmap, 0,screenY - bitmap.getHeight() ,bgPaint);
-		
+		bgPaint.setARGB(255, 254, 255, 213);
+		//canvas.drawCircle(bgLeft.getWidth()/2,screenY - bgBottom.getHeight()/2, bgLeft.getWidth()/2, bgPaint);
+		//canvas.drawCircle(0, screenY, (float) (bgLeft.getWidth() * 1.5), bgPaint);
+		bmButton = BitmapFactory.decodeResource(res, R.drawable.btn_jump);
+		canvas.drawBitmap(bmButton, 0, screenY - bmButton.getHeight(), bgPaint);
 	}
 	
 	private void DrawCarrot(Canvas canvas) {
 		charPaint.setColor(Color.RED);
 		charPaint.setStyle(Paint.Style.FILL);
-		canvas.drawRect(50, 50, 180, 100, charPaint);
+		int x = screenX /2;
+		int y = screenY;
+		y = ((y - bgBottom.getHeight()) /10) *9;
+		canvas.drawRect(x-25, y-25, x+25, y+25, charPaint);
 	}
 
 	private boolean DrawCharc(Canvas canvas) {
-
 		return true;
 	}
 
