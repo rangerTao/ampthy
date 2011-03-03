@@ -9,8 +9,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder.Callback;
@@ -23,8 +23,7 @@ public class BackGroundView extends SurfaceView implements Callback {
 	static SurfaceHolder holder;
 	Canvas canvas;
 	Resources res;
-	// the bitmap of resources
-	Bitmap bitmap;
+
 	// the left part of the bg
 	Bitmap bgLeft;
 	// the right part of the bg
@@ -42,6 +41,12 @@ public class BackGroundView extends SurfaceView implements Callback {
 	// the height of the screen
 	int screenY = 0;
 
+	// the paint user for bg
+	Paint bgPaint;
+
+	// the location of the character
+	int charX = 0;
+	int charY = 0;
 	/**
 	 * The cloud
 	 */
@@ -52,6 +57,9 @@ public class BackGroundView extends SurfaceView implements Callback {
 	int[] cloudY = new int[cloudMax];
 	// the paint used for cloud
 	Paint cloudPaint;
+	
+	//the handle of the view
+	Handler handler;
 
 	public BackGroundView(Context context, Resources res) {
 		super(context);
@@ -66,10 +74,7 @@ public class BackGroundView extends SurfaceView implements Callback {
 		this.res = res;
 		this.setBackgroundColor(Color.TRANSPARENT);
 		this.setKeepScreenOn(true);
-		bitmap = BitmapFactory.decodeResource(this.getResources(),
-				R.drawable.bg);
 
-		// this.setBackgroundResource(R.drawable.bg);
 	}
 
 	public BackGroundView(Context context, AttributeSet attrs) {
@@ -77,6 +82,8 @@ public class BackGroundView extends SurfaceView implements Callback {
 		holder = this.getHolder();
 		canvas = holder.lockCanvas(null);
 		res = this.getResources();
+		//init the view
+		initalize();
 	}
 
 	@Override
@@ -86,6 +93,10 @@ public class BackGroundView extends SurfaceView implements Callback {
 
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
+		
+		//init the view
+		initalize();
+		
 		new Thread(new DrawThread()).start();
 	}
 
@@ -94,15 +105,62 @@ public class BackGroundView extends SurfaceView implements Callback {
 
 	}
 
+	/**
+	 * init the elements and postions used in the view
+	 */
+	public void initalize() {
+		handler = this.getHandler();
+		canvas = holder.lockCanvas();
+		
+		// get the size of the screen
+		screenX = canvas.getWidth();
+		screenY = canvas.getHeight();
+
+		// init the paints
+		bgPaint = new Paint();
+		bgPaint.setAntiAlias(true);
+		bgPaint.setStyle(Paint.Style.FILL);
+
+		// the paint for character
+		charPaint.setColor(Color.RED);
+		charPaint.setStyle(Paint.Style.FILL);
+
+		// the paint for cloud
+		cloudPaint = new Paint();
+		cloudPaint.setAntiAlias(true);
+		cloudPaint.setARGB(255, 254, 255, 213);
+
+		// init the bitmap of bg
+		bgLeft = BitmapFactory.decodeResource(res, R.drawable.bg_left);
+		bgRight = BitmapFactory.decodeResource(res, R.drawable.bg_right);
+		bgBottom = BitmapFactory.decodeResource(res, R.drawable.bg_bottom);
+		bmButton = BitmapFactory.decodeResource(res, R.drawable.btn_jump);
+
+		// init the bitmap of cloud
+		bmpCloud = BitmapFactory.decodeResource(res, R.drawable.cloud);
+
+		// the location of the character
+		charX = screenX / 2;
+		charY = screenY;
+		charY = ((charY - bgBottom.getHeight()) / 10) * 9;
+	}
+
+	/**
+	 * release the holder
+	 *
+	 */
+	public void releaseHolder(SurfaceHolder holder){
+		holder.unlockCanvasAndPost(canvas);
+	}
+	
 	class DrawThread extends Thread {
 
 		@Override
 		public void run() {
 			Paint paint = new Paint();
 			try {
-				canvas = holder.lockCanvas();
-				screenX = canvas.getWidth();
-				screenY = canvas.getHeight();
+				
+
 				paint.setColor(Color.BLACK);
 				canvas.drawARGB(255, 254, 255, 213);
 				DrawBG(canvas);
@@ -113,7 +171,16 @@ public class BackGroundView extends SurfaceView implements Callback {
 
 				DrawCharc(canvas);
 
-				holder.unlockCanvasAndPost(canvas);
+				handler.post(new Runnable(){
+
+					@Override
+					public void run() {
+						releaseHolder(holder);
+						
+					}
+					
+				});
+				//holder.unlockCanvasAndPost(canvas);
 				Thread.sleep(33);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -123,52 +190,37 @@ public class BackGroundView extends SurfaceView implements Callback {
 	}
 
 	private void DrawBG(Canvas canvas) {
-		Paint bgPaint = new Paint();
-		bgPaint.setAntiAlias(true);
-		bgPaint.setStyle(Paint.Style.FILL);
-		bgLeft = BitmapFactory.decodeResource(res, R.drawable.bg_left);
+
 		canvas.drawBitmap(bgLeft, 0, 0, bgPaint);
 
-		bgRight = BitmapFactory.decodeResource(res, R.drawable.bg_right);
 		canvas.drawBitmap(bgRight, screenX - bgRight.getWidth(), 0, bgPaint);
 
-		bgBottom = BitmapFactory.decodeResource(res, R.drawable.bg_bottom);
 		canvas.drawBitmap(bgBottom, 0, screenY - bgBottom.getHeight(), bgPaint);
 
 		bgPaint.setARGB(255, 254, 255, 213);
-		bmButton = BitmapFactory.decodeResource(res, R.drawable.btn_jump);
+
 		canvas.drawBitmap(bmButton, 0, screenY - bmButton.getHeight(), bgPaint);
 	}
 
 	private void DrawCarrot(Canvas canvas) {
-		charPaint.setColor(Color.RED);
-		charPaint.setStyle(Paint.Style.FILL);
-		int x = screenX / 2;
-		int y = screenY;
-		y = ((y - bgBottom.getHeight()) / 10) * 9;
-		canvas.drawRect(x - 25, y - 25, x + 25, y + 25, charPaint);
+
+		canvas.drawRect(charX - 25, charY - 25, charX + 25, charY + 25,
+				charPaint);
 	}
 
 	private boolean DrawCharc(Canvas canvas) {
 		return true;
 	}
 
-	private boolean DrawCloud(Canvas canvas) {
-		bmpCloud = BitmapFactory.decodeResource(res, R.drawable.cloud);
-		cloudPaint = new Paint();
-		cloudPaint.setAntiAlias(true);
-		cloudPaint.setARGB(255, 254, 255, 213);
+	private void DrawCloud(Canvas canvas) {
+
 		int cloudDis = new Random().nextInt() % 20;
 		for (int i = 0; i < cloudMax; i++) {
 			cloudX[i] = new Random().nextInt() % 320;
 			cloudX[i] = cloudX[i] > 0 ? cloudX[i] : 0 - cloudX[i];
-			Log.v("TAG", cloudX[i] + "");
-			// cloudY[i] = 0 - bmpCloud.getHeight() + cloudDis;
 			cloudY[i] = new Random().nextInt() % 480 - bgBottom.getHeight()
 					+ cloudDis;
 			canvas.drawBitmap(bmpCloud, cloudX[i], cloudY[i], cloudPaint);
 		}
-
-		return true;
 	}
 }
