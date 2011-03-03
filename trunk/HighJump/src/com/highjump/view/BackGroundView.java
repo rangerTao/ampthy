@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -282,32 +283,37 @@ public class BackGroundView extends SurfaceView implements Callback {
 	public boolean onTouchEvent(MotionEvent event) {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-			Log.v("TAG", event.getX() + "");
-			Log.v("TAG", event.getY() + "");
-			Log.v("TAG",
-					(event.getX() * event.getX() + (screenY - event.getY())
-							* (screenY - event.getY()))
-							+ "");
 			if ((event.getX() * event.getX() + (screenY - event.getY())
 					* (screenY - event.getY())) < radius * radius) {
+				int frameCount = 0;
 				for (int i = 0; i < frequency; i++) {
 					for (int j = 0; j < cloudMax; j++) {
-						cloudY[j] += length;
+						Rect cRect = new Rect(cloudX[j], cloudY[j], cloudX[j] + bmpCloud.getWidth(), cloudY[j] + bmpCloud.getHeight());
+						canvas = holder.lockCanvas(cRect);
+						cloudY[j] += length;						
 						Paint paint = new Paint();
-						canvas = holder.lockCanvas();
-						paint.setColor(Color.BLACK);
-						canvas.drawARGB(255, 254, 255, 213);
-						// Draw the background
-						DrawBG(canvas);
-						// Draw the cloud
-						DrawCloud(canvas);
-						// Draw the carrot
-						DrawCarrot(canvas);
-						// draw the character
-						DrawCharc(canvas);
+						
+						if(frameCount < 2){
+							paint.setColor(Color.BLACK);
+							canvas.drawARGB(255, 254, 255, 213);
+							// Draw the background
+							DrawBG(canvas);
+						}
+						paint.setARGB(255, 254, 255, 213);
+						//canvas.drawARGB(255, 254, 255, 213);
+						canvas.drawRect(cRect, paint);
+						canvas.drawBitmap(bmpCloud, cloudX[j], cloudY[j], paint);
+						if(frameCount < 2){
+							// Draw the carrot
+							DrawCarrot(canvas);
+							// draw the character
+							DrawCharc(canvas);
+						}
+						frameCount++;
 						holder.unlockCanvasAndPost(canvas);
 					}
 				}
+				Log.v("TAG", "cloud update finish");
 			}
 			break;
 		}
