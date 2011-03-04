@@ -173,7 +173,7 @@ public class BackGroundView extends SurfaceView implements Callback {
 			cloudY[i] = new Random().nextInt() % 480 - bgBottom.getHeight()
 					+ cloudDis;
 		}
-		//holder.unlockCanvasAndPost(canvas);
+		// holder.unlockCanvasAndPost(canvas);
 	}
 
 	/**
@@ -182,7 +182,7 @@ public class BackGroundView extends SurfaceView implements Callback {
 	 */
 	public void releaseHolder(SurfaceHolder holder) {
 		holder.unlockCanvasAndPost(canvas);
-		Log.v("TAG",drawCount+"");
+		Log.v("TAG", drawCount + "");
 
 	}
 
@@ -198,31 +198,27 @@ public class BackGroundView extends SurfaceView implements Callback {
 		public void run() {
 			Paint paint = new Paint();
 			try {
-				//while (ingame) {
+				paint.setColor(Color.BLACK);
+				canvas.drawARGB(255, 254, 255, 213);
 
-					
-					paint.setColor(Color.BLACK);
-					canvas.drawARGB(255, 254, 255, 213);
-
-					// Draw the background
-					DrawBG(canvas);
-					// Draw the cloud
-					DrawCloud(canvas);
-					// Draw the carrot
-					DrawCarrot(canvas);
-					// draw the character
-					DrawCharc(canvas);
-					// update the surface
-					// the sub thread cannot operate the variable initialized in
-					// the
-					// main thread.
-					handler.post(new Runnable() {
-						public void run() {
-							releaseHolder(holder);
-						}
-					});
-					Thread.sleep(40);
-				//}
+				// Draw the background
+				DrawBG(canvas);
+				// Draw the cloud
+				DrawCloud(canvas);
+				// Draw the carrot
+				DrawCarrot(canvas);
+				// draw the character
+				DrawCharc(canvas);
+				// update the surface
+				// the sub thread cannot operate the variable initialized in
+				// the main thread.
+				handler.post(new Runnable() {
+					public void run() {
+						releaseHolder(holder);
+					}
+				});
+				Thread.sleep(40);
+				// }
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -288,25 +284,28 @@ public class BackGroundView extends SurfaceView implements Callback {
 				int frameCount = 0;
 				for (int i = 0; i < frequency; i++) {
 					for (int j = 0; j < cloudMax; j++) {
-						Rect cRect = new Rect(cloudX[j], cloudY[j], cloudX[j] + bmpCloud.getWidth(), cloudY[j] + bmpCloud.getHeight());
+						Rect cRect = new Rect(cloudX[j], cloudY[j], cloudX[j]
+								+ bmpCloud.getWidth(), cloudY[j]
+								+ bmpCloud.getHeight());
 						canvas = holder.lockCanvas(cRect);
-						cloudY[j] += length;						
+						cloudY[j] += length;
 						Paint paint = new Paint();
-						
-						if(frameCount < 2){
+
+						if (frameCount < 2) {
 							paint.setColor(Color.BLACK);
 							canvas.drawARGB(255, 254, 255, 213);
 							// Draw the background
 							DrawBG(canvas);
 						}
 						paint.setARGB(255, 254, 255, 213);
-						//canvas.drawARGB(255, 254, 255, 213);
+						// canvas.drawARGB(255, 254, 255, 213);
 						canvas.drawRect(cRect, paint);
-						canvas.drawBitmap(bmpCloud, cloudX[j], cloudY[j], paint);
-						if(frameCount < 2){
+						canvas.drawBitmap(bmpCloud, cloudX[j], cloudY[j],
+										paint);
+						if (frameCount < 2) {
 							// Draw the carrot
 							DrawCarrot(canvas);
-							// draw the character
+							// Draw the character
 							DrawCharc(canvas);
 						}
 						frameCount++;
