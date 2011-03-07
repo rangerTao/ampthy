@@ -19,6 +19,7 @@ import android.view.SurfaceView;
 import android.view.SurfaceHolder.Callback;
 
 import com.highjump.R;
+import com.highjump.pojos.SaveFlags;
 import com.highjump.util.CanvasControl;
 
 /**
@@ -40,10 +41,10 @@ public class BackGroundView extends SurfaceView implements Callback {
 	// to count the time of draw
 	int drawCount = 0;
 	// the frequency of the refresh
-	int period = 1500;
-	int frequency = 1500 / 40;
+	int period = 1000;
+	int frequency = period / 40;
 	// the length of jump
-	int length = 200 / frequency;
+	int length = 50 / frequency;
 
 	// the left part of the bg
 	Bitmap bgLeft;
@@ -69,14 +70,19 @@ public class BackGroundView extends SurfaceView implements Callback {
 	// the paint user for bg
 	Paint bgPaint;
 
+	/**
+	 * The character
+	 */
+	boolean isLeft = true;
 	// the location of the character
 	int charX = 0;
 	int charY = 0;
+	int charLength = 0;
 	/**
 	 * The cloud
 	 */
 	// the total sum of the cloud in the screen
-	int cloudMax = 20;
+	int cloudMax = 5;
 	// the default position of the cloud
 	int[] cloudX = new int[cloudMax];
 	int[] cloudY = new int[cloudMax];
@@ -86,6 +92,8 @@ public class BackGroundView extends SurfaceView implements Callback {
 
 	// the handle of the view
 	Handler handler;
+	
+	int frameCount = 0;
 
 	public BackGroundView(Context context, Resources res) {
 		super(context);
@@ -157,6 +165,10 @@ public class BackGroundView extends SurfaceView implements Callback {
 		bgBottom = BitmapFactory.decodeResource(res, R.drawable.bg_bottom);
 		bmButton = BitmapFactory.decodeResource(res, R.drawable.btn_jump);
 
+		// the charLength
+		charLength = (screenX - bgLeft.getWidth() - bgRight.getWidth() - 30)
+				/ frequency;
+
 		// init the bitmap of cloud
 		bmpCloud = BitmapFactory.decodeResource(res, R.drawable.cloud);
 
@@ -178,12 +190,9 @@ public class BackGroundView extends SurfaceView implements Callback {
 
 	/**
 	 * release the holder
-	 * 
 	 */
 	public void releaseHolder(SurfaceHolder holder) {
 		holder.unlockCanvasAndPost(canvas);
-		Log.v("TAG", drawCount + "");
-
 	}
 
 	/**
@@ -198,17 +207,8 @@ public class BackGroundView extends SurfaceView implements Callback {
 		public void run() {
 			Paint paint = new Paint();
 			try {
-				paint.setColor(Color.BLACK);
-				canvas.drawARGB(255, 254, 255, 213);
 
-				// Draw the background
-				DrawBG(canvas);
-				// Draw the cloud
-				DrawCloud(canvas);
-				// Draw the carrot
-				DrawCarrot(canvas);
-				// draw the character
-				DrawCharc(canvas);
+				DrawScreen(canvas, paint);
 				// update the surface
 				// the sub thread cannot operate the variable initialized in
 				// the main thread.
@@ -224,6 +224,23 @@ public class BackGroundView extends SurfaceView implements Callback {
 			}
 		}
 
+	}
+
+	private void DrawScreen(Canvas canvas, Paint paint) {
+
+		// if (frameCount < 2) {
+		paint.setColor(Color.BLACK);
+		canvas.drawARGB(255, 254, 255, 213);
+
+		// Draw the background
+		DrawBG(canvas);
+		// canvas.save(SaveFlags.bgComplete);
+		// Draw the cloud
+		DrawCloud(canvas);
+		// Draw the carrot
+		DrawCarrot(canvas);
+		// draw the character
+		DrawCharc(canvas);
 	}
 
 	/**
@@ -260,8 +277,10 @@ public class BackGroundView extends SurfaceView implements Callback {
 	 */
 	private void DrawCharc(Canvas canvas) {
 		// draw the character
-		canvas.drawRect(charX - 25, charY - 25, charX + 25, charY + 25,
+		canvas.drawRect(charX - 15, charY - 15, charX + 15, charY + 15,
 				charPaint);
+		Log.v("TAG", charX + "charx");
+		Log.v("TAG", charY + "charY");
 	}
 
 	/**
@@ -275,45 +294,62 @@ public class BackGroundView extends SurfaceView implements Callback {
 		}
 	}
 
+	/**
+	 * Get the position of chara
+	 */
+	private void setCharaPos() {
+		if (isLeft) {
+			if (charX < screenX - bgRight.getWidth() && isLeft) {
+				charX =charX + charLength;
+			} else {
+				isLeft = false;
+			}
+		} else {
+			if (charX > screenX - bgLeft.getWidth() && !isLeft) {
+				charX =charX - charLength;
+			} else {
+				isLeft = true;
+			}
+		}
+	}
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-			if ((event.getX() * event.getX() + (screenY - event.getY())
-					* (screenY - event.getY())) < radius * radius) {
-				int frameCount = 0;
-				for (int i = 0; i < frequency; i++) {
-					for (int j = 0; j < cloudMax; j++) {
-						Rect cRect = new Rect(cloudX[j], cloudY[j], cloudX[j]
-								+ bmpCloud.getWidth(), cloudY[j]
-								+ bmpCloud.getHeight());
-						canvas = holder.lockCanvas(cRect);
-						cloudY[j] += length;
-						Paint paint = new Paint();
+			if (ingame) {
+				if ((event.getX() * event.getX() + (screenY - event.getY())
+						* (screenY - event.getY())) < radius * radius) {
 
-						if (frameCount < 2) {
-							paint.setColor(Color.BLACK);
-							canvas.drawARGB(255, 254, 255, 213);
-							// Draw the background
-							DrawBG(canvas);
+					if (frameCount == 0) {
+						charX = bgLeft.getWidth();
+					}
+					for (int i = 0; i < frequency; i++) {
+						for (int j = 0; j < cloudMax; j++) {
+							Rect cRect = new Rect(cloudX[j], cloudY[j],
+									cloudX[j] + bmpCloud.getWidth(), cloudY[j]
+											+ bmpCloud.getHeight());
+							canvas = holder.lockCanvas();
+							cloudY[j] += length;
+							if (cloudY[j] > screenY) {
+								cloudX[j] = new Random().nextInt() % 320;
+								cloudX[j] = cloudX[j] > 0 ? cloudX[j]
+										: 0 - cloudX[j];
+								cloudY[j] = 0 - bmpCloud.getHeight();
+							}
+							Paint paint = new Paint();
+
+							setCharaPos();
+
+							DrawScreen(canvas, paint);
+
+							frameCount++;
+							holder.unlockCanvasAndPost(canvas);
 						}
-						paint.setARGB(255, 254, 255, 213);
-						// canvas.drawARGB(255, 254, 255, 213);
-						canvas.drawRect(cRect, paint);
-						canvas.drawBitmap(bmpCloud, cloudX[j], cloudY[j],
-										paint);
-						if (frameCount < 2) {
-							// Draw the carrot
-							DrawCarrot(canvas);
-							// Draw the character
-							DrawCharc(canvas);
-						}
-						frameCount++;
-						holder.unlockCanvasAndPost(canvas);
 					}
 				}
-				Log.v("TAG", "cloud update finish");
 			}
+
 			break;
 		}
 		return true;
