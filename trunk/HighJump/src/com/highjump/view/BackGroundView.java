@@ -113,7 +113,16 @@ public class BackGroundView extends SurfaceView implements Callback {
 	public BackGroundView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		holder = this.getHolder();
-		canvas = holder.lockCanvas(null);
+		cc = new CanvasControl(context, holder);
+		while (!(canvas == null)) {
+			canvas = cc.getCanvas();
+		}
+		holder.addCallback(this);
+		charPaint = new Paint();
+		this.setFocusable(true);
+		//this.res = res;
+		this.setBackgroundColor(Color.TRANSPARENT);
+		this.setKeepScreenOn(true);
 		res = this.getResources();
 	}
 
@@ -223,7 +232,6 @@ public class BackGroundView extends SurfaceView implements Callback {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	private void DrawScreen(Canvas canvas, Paint paint) {
@@ -279,8 +287,6 @@ public class BackGroundView extends SurfaceView implements Callback {
 		// draw the character
 		canvas.drawRect(charX - 15, charY - 15, charX + 15, charY + 15,
 				charPaint);
-		Log.v("TAG", charX + "charx");
-		Log.v("TAG", charY + "charY");
 	}
 
 	/**
@@ -298,18 +304,19 @@ public class BackGroundView extends SurfaceView implements Callback {
 	 * Get the position of chara
 	 */
 	private void setCharaPos() {
+		
 		if (isLeft) {
-			if (charX < screenX - bgRight.getWidth() && isLeft) {
+			if (charX < screenX - bgRight.getWidth()) {
 				charX =charX + charLength;
-			} else {
-				isLeft = false;
 			}
+			Log.v("TAG", charX +"   charX");
+			Log.v("TAG", screenX - bgRight.getWidth() +"    bgLeft");
 		} else {
-			if (charX > screenX - bgLeft.getWidth() && !isLeft) {
+			if (charX > screenX - bgLeft.getWidth()) {
 				charX =charX - charLength;
-			} else {
-				isLeft = true;
 			}
+			Log.v("TAG", charX +"   charX");
+			Log.v("TAG", screenX - bgLeft.getWidth() +"    bgRight");
 		}
 	}
 
@@ -325,11 +332,14 @@ public class BackGroundView extends SurfaceView implements Callback {
 						charX = bgLeft.getWidth();
 					}
 					for (int i = 0; i < frequency; i++) {
+						
+						canvas = holder.lockCanvas();
+						
 						for (int j = 0; j < cloudMax; j++) {
 							Rect cRect = new Rect(cloudX[j], cloudY[j],
 									cloudX[j] + bmpCloud.getWidth(), cloudY[j]
 											+ bmpCloud.getHeight());
-							canvas = holder.lockCanvas();
+
 							cloudY[j] += length;
 							if (cloudY[j] > screenY) {
 								cloudX[j] = new Random().nextInt() % 320;
@@ -337,14 +347,29 @@ public class BackGroundView extends SurfaceView implements Callback {
 										: 0 - cloudX[j];
 								cloudY[j] = 0 - bmpCloud.getHeight();
 							}
-							Paint paint = new Paint();
 
-							setCharaPos();
+						}
+						
+						if(i == frequency -1){
+							if(isLeft){
+								isLeft = false;
+							}else{
+								isLeft = true;
+							}
+						}
+						Paint paint = new Paint();
 
-							DrawScreen(canvas, paint);
+						setCharaPos();
 
-							frameCount++;
-							holder.unlockCanvasAndPost(canvas);
+						DrawScreen(canvas, paint);
+
+						frameCount++;
+						holder.unlockCanvasAndPost(canvas);
+
+						try {
+							Thread.sleep(40);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
 						}
 					}
 				}
