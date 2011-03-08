@@ -15,6 +15,7 @@ public class HighJump extends Activity {
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.setContentView(new BackGroundView(this,this.getResources()));
+        //this.setContentView(new BackGroundView(this,this.getResources()));
+		this.setContentView(R.layout.main);
     }
 }
