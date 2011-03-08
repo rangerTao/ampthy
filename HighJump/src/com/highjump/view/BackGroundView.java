@@ -82,7 +82,7 @@ public class BackGroundView extends SurfaceView implements Callback {
 	 * The cloud
 	 */
 	// the total sum of the cloud in the screen
-	int cloudMax = 5;
+	int cloudMax = 10;
 	// the default position of the cloud
 	int[] cloudX = new int[cloudMax];
 	int[] cloudY = new int[cloudMax];
@@ -332,9 +332,9 @@ public class BackGroundView extends SurfaceView implements Callback {
 						charX = bgLeft.getWidth();
 					}
 					for (int i = 0; i < frequency; i++) {
-						
+
 						canvas = holder.lockCanvas();
-						
+
 						for (int j = 0; j < cloudMax; j++) {
 							Rect cRect = new Rect(cloudX[j], cloudY[j],
 									cloudX[j] + bmpCloud.getWidth(), cloudY[j]
@@ -349,18 +349,18 @@ public class BackGroundView extends SurfaceView implements Callback {
 							}
 
 						}
-						
-						if(i == frequency -1){
-							if(isLeft){
-								isLeft = false;
-							}else{
-								isLeft = true;
-							}
-						}
+
 						Paint paint = new Paint();
 
 						setCharaPos();
 
+						if (i == frequency - 1) {
+							if (isLeft) {
+								isLeft = false;
+							} else {
+								isLeft = true;
+							}
+						}
 						DrawScreen(canvas, paint);
 
 						frameCount++;
