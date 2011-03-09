@@ -4,15 +4,11 @@ import java.util.Random;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -20,8 +16,8 @@ import android.view.SurfaceHolder.Callback;
 
 import com.highjump.R;
 import com.highjump.control.GData;
-import com.highjump.pojos.SaveFlags;
 import com.highjump.thread.DrawBG;
+import com.highjump.thread.DrawJump;
 import com.highjump.util.CanvasControl;
 
 /**
@@ -124,7 +120,7 @@ public class BackGroundView extends SurfaceView implements Callback {
 		// the location of the character
 		GData.charX = GData.screenX / 2;
 		GData.charY = GData.screenY;
-		GData.charY = ((GData.charY - GData.bgBottom.getHeight()) / 10) * 9;
+		GData.charY = ((GData.charY - GData.bgBottom.getHeight()) / 10) * 7;
 
 		// the location of cloud
 		int cloudDis = new Random().nextInt() % 20;
@@ -218,8 +214,8 @@ public class BackGroundView extends SurfaceView implements Callback {
 				GData.charX = GData.charX + GData.charLength;
 			}
 		} else {
-			if (GData.charX > GData.bgLeft.getWidth()) {
-				GData.charX = GData.charX - GData.charLength;
+			if (GData.charX >= GData.bgLeft.getWidth()) {
+				GData.charX = GData.charX - GData.charLength - 1;
 			}
 		}
 	}
@@ -231,62 +227,11 @@ public class BackGroundView extends SurfaceView implements Callback {
 			if (GData.ingame) {
 				if ((event.getX() * event.getX() + (GData.screenY - event.getY())
 						* (GData.screenY - event.getY())) < GData.radius * GData.radius) {
-					new Thread(new MoveThread()).start();
+					new Thread(new DrawJump()).start();
 				}
 			}
-
 			break;
 		}
 		return true;
-	}
-
-	class MoveThread extends Thread {
-
-		@Override
-		public void run() {
-			if (GData.frameCount == 0) {
-				GData.charX = GData.bgLeft.getWidth();
-			}
-			for (int i = 0; i < GData.frequency; i++) {
-
-				GData.canvas = GData.holder.lockCanvas();
-
-				for (int j = 0; j < GData.cloudMax; j++) {
-					Rect cRect = new Rect(GData.cloudX[j], GData.cloudY[j], GData.cloudX[j]
-							+ GData.bmpCloud.getWidth(), GData.cloudY[j]
-							+ GData.bmpCloud.getHeight());
-
-					GData.cloudY[j] += GData.length;
-					if (GData.cloudY[j] > GData.screenY) {
-						GData.cloudX[j] = new Random().nextInt() % 320;
-						GData.cloudX[j] = GData.cloudX[j] > 0 ? GData.cloudX[j] : 0 - GData.cloudX[j];
-						GData.cloudY[j] = 0 - GData.bmpCloud.getHeight();
-					}
-
-				}
-
-				Paint paint = new Paint();
-
-				setCharaPos();
-
-				if (i == GData.frequency - 1) {
-					if (GData.isLeft) {
-						GData.isLeft = !GData.isLeft;
-					} else {
-						GData.isLeft = true;
-					}
-				}
-				DrawScreen(GData.canvas, paint);
-
-				GData.frameCount++;
-				GData.holder.unlockCanvasAndPost(GData.canvas);
-
-				try {
-					Thread.sleep(40);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 }
