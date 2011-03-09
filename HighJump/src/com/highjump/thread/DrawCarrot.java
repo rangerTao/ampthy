@@ -9,7 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 import com.highjump.R;
-import com.highjump.control.SynchronizedData;
+import com.highjump.control.GData;
 import com.highjump.util.ActionEnum;
 import com.highjump.util.CanvasControl;
 import com.highjump.view.BackGroundView;
@@ -33,9 +33,9 @@ public class DrawCarrot extends Thread {
 			Random random = new Random();
 			int intX = random.nextInt() / 240;
 			Paint paint = new Paint();
-			if (SynchronizedData.getAction()[0].equals(ActionEnum.actionJump)) {
-				canvas.drawBitmap(bitmap, intX, -bitmap.getHeight(), paint);
-			}
+//			if (SynchronizedData.getAction()[0].equals(ActionEnum.actionJump)) {
+//				canvas.drawBitmap(bitmap, intX, -bitmap.getHeight(), paint);
+//			}
 		}
 		CanvasControl.releaseCanvas();
 		try {
