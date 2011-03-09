@@ -41,7 +41,7 @@ public class BackGroundView extends SurfaceView implements Callback {
 	// to count the time of draw
 	int drawCount = 0;
 	// the frequency of the refresh
-	int period = 1000;
+	int period = 500;
 	int frequency = period / 40;
 	// the length of jump
 	int length = 50 / frequency;
@@ -55,6 +55,7 @@ public class BackGroundView extends SurfaceView implements Callback {
 	// the bitmap of the button jump
 	Bitmap bmButton;
 	// the radius of the button
+	Bitmap bmpChar;
 	int radius = 60;
 	// the bitmap of the cloud
 	Bitmap bmpCloud;
@@ -173,9 +174,10 @@ public class BackGroundView extends SurfaceView implements Callback {
 		bgRight = BitmapFactory.decodeResource(res, R.drawable.bg_right);
 		bgBottom = BitmapFactory.decodeResource(res, R.drawable.bg_bottom);
 		bmButton = BitmapFactory.decodeResource(res, R.drawable.btn_jump);
+		bmpChar = BitmapFactory.decodeResource(res, R.drawable.char_jump);
 
 		// the charLength
-		charLength = (screenX - bgLeft.getWidth() - bgRight.getWidth() - 30)
+		charLength = (screenX - bgLeft.getWidth() - bgRight.getWidth() - bmpChar.getWidth())
 				/ frequency;
 
 		// init the bitmap of cloud
@@ -285,8 +287,7 @@ public class BackGroundView extends SurfaceView implements Callback {
 	 */
 	private void DrawCharc(Canvas canvas) {
 		// draw the character
-		canvas.drawRect(charX - 15, charY - 15, charX + 15, charY + 15,
-				charPaint);
+		canvas.drawBitmap(bmpChar, charX, charY, charPaint);
 	}
 
 	/**
@@ -304,19 +305,14 @@ public class BackGroundView extends SurfaceView implements Callback {
 	 * Get the position of chara
 	 */
 	private void setCharaPos() {
-		
 		if (isLeft) {
 			if (charX < screenX - bgRight.getWidth()) {
 				charX =charX + charLength;
 			}
-			Log.v("TAG", charX +"   charX");
-			Log.v("TAG", screenX - bgRight.getWidth() +"    bgLeft");
 		} else {
-			if (charX > screenX - bgLeft.getWidth()) {
-				charX =charX - charLength;
+			if (charX > bgLeft.getWidth()) {
+				charX = charX - charLength;
 			}
-			Log.v("TAG", charX +"   charX");
-			Log.v("TAG", screenX - bgLeft.getWidth() +"    bgRight");
 		}
 	}
 
@@ -355,9 +351,9 @@ public class BackGroundView extends SurfaceView implements Callback {
 						setCharaPos();
 
 						if (i == frequency - 1) {
-							if (isLeft) {
-								isLeft = false;
-							} else {
+							if(isLeft){
+								isLeft = !isLeft;
+							}else{
 								isLeft = true;
 							}
 						}
