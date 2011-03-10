@@ -51,6 +51,9 @@ public class GData {
 
 	// the paint user for bg
 	public static Paint bgPaint;
+	
+	//the bitmap of char
+	public static Bitmap char_login;
 
 	/**
 	 * The character
@@ -64,7 +67,7 @@ public class GData {
 	 * The cloud
 	 */
 	// the total sum of the cloud in the screen
-	public static int cloudMax = 10;
+	public static int cloudMax = 8;
 	// the default position of the cloud
 	public static int[] cloudX = new int[cloudMax];
 	public static int[] cloudY = new int[cloudMax];
