@@ -42,6 +42,7 @@ public class MyDraw {
 		GData.bgBottom = BitmapFactory.decodeResource(GData.res, R.drawable.bg_bottom);
 		GData.bmButton = BitmapFactory.decodeResource(GData.res, R.drawable.btn_jump);
 		GData.bmpChar = BitmapFactory.decodeResource(GData.res, R.drawable.char_jump);
+		GData.char_login = BitmapFactory.decodeResource(GData.res, R.drawable.char_login);
 
 		// the charLength
 		GData.charLength = (GData.screenX - GData.bgLeft.getWidth() -GData. bgRight.getWidth() - GData.bmpChar
@@ -57,15 +58,13 @@ public class MyDraw {
 		GData.charY = ((GData.charY - GData.bgBottom.getHeight()) / 10) * 7;
 
 		// the location of cloud
-		int cloudDis = new Random().nextInt() % 20;
+		int cloudDis = new Random().nextInt() % 80;
 		for (int i = 0; i < GData.cloudMax; i++) {
 			GData.cloudX[i] = new Random().nextInt() % 320;
 			GData.cloudX[i] = GData.cloudX[i] > 0 ? GData.cloudX[i] : 0 - GData.cloudX[i];
 			GData.cloudY[i] = new Random().nextInt() % 480 - GData.bgBottom.getHeight()
 					+ cloudDis;
-		}
-		// holder.unlockCanvasAndPost(canvas);
-	
+		}	
 	}
 
 	/**
