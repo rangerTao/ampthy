@@ -19,6 +19,7 @@ import com.highjump.control.GData;
 import com.highjump.thread.DrawBG;
 import com.highjump.thread.DrawJump;
 import com.highjump.util.CanvasControl;
+import com.highjump.util.MyDraw;
 
 /**
  * The main class of the game
@@ -68,7 +69,7 @@ public class BackGroundView extends SurfaceView implements Callback {
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
 		// init the view
-		initalize();
+		MyDraw.initialize(this);
 		new Thread(new DrawBG()).start();
 	}
 
@@ -147,62 +148,14 @@ public class BackGroundView extends SurfaceView implements Callback {
 		canvas.drawARGB(255, 254, 255, 213);
 
 		// Draw the background
-		DrawBG(canvas);
+		MyDraw.DrawBG(canvas);
 		// canvas.save(SaveFlags.bgComplete);
 		// Draw the cloud
-		DrawCloud(canvas);
+		MyDraw.DrawCloud(canvas);
 		// Draw the carrot
-		DrawCarrot(canvas);
+		MyDraw.DrawCarrot(canvas);
 		// draw the character
-		DrawCharc(canvas);
-	}
-
-	/**
-	 * Draw the background
-	 * 
-	 * @param canvas
-	 */
-	private static void DrawBG(Canvas canvas) {
-		// draw the left part
-		canvas.drawBitmap(GData.bgLeft, 0, 0, GData.bgPaint);
-		// draw the right part
-		canvas.drawBitmap(GData.bgRight, GData.screenX - GData.bgRight.getWidth(), 0, GData.bgPaint);
-		// draw the bottom part
-		canvas.drawBitmap(GData.bgBottom, 0, GData.screenY - GData.bgBottom.getHeight(), GData.bgPaint);
-		// Set the color of the button
-		GData.bgPaint.setARGB(255, 254, 255, 213);
-		// draw the button
-		canvas.drawBitmap(GData.bmButton, 0, GData.screenY - GData.bmButton.getHeight(), GData.bgPaint);
-	}
-
-	/**
-	 * Draw the
-	 * 
-	 * @param canvas
-	 */
-	private static void DrawCarrot(Canvas canvas) {
-
-	}
-
-	/**
-	 * Draw the character
-	 * 
-	 * @param canvas
-	 */
-	private static void DrawCharc(Canvas canvas) {
-		// draw the character
-		canvas.drawBitmap(GData.bmpChar, GData.charX, GData.charY, GData.charPaint);
-	}
-
-	/**
-	 * draw the clouds on the surface
-	 * 
-	 * @param canvas
-	 */
-	private static void DrawCloud(Canvas canvas) {
-		for (int i = 0; i < GData.cloudMax; i++) {
-			canvas.drawBitmap(GData.bmpCloud, GData.cloudX[i], GData.cloudY[i], GData.cloudPaint);
-		}
+		MyDraw.DrawCharc(canvas);
 	}
 
 	/**
