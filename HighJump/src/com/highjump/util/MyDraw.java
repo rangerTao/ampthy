@@ -65,6 +65,7 @@ public class MyDraw {
 			GData.cloudY[i] = new Random().nextInt() % 480 - GData.bgBottom.getHeight()
 					+ cloudDis;
 		}	
+		GData.holder.unlockCanvasAndPost(GData.canvas);
 	}
 
 	/**

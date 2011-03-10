@@ -1,5 +1,6 @@
 package com.highjump.thread;
 
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
@@ -23,7 +24,7 @@ public class DrawLogin extends Thread {
 		
 		Rect charR = new Rect();
 		double left = GData.screenX * 0.3;
-		double right = GData.screenX * 0.6;
+		double right = GData.screenX * 0.7;
 		double top = GData.screenY * 0.45;
 		charR.set((int)left, (int)top,
 				(int)right, (int)top
@@ -33,58 +34,51 @@ public class DrawLogin extends Thread {
 		boolean booLeft = true;
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
-		
+		Canvas tmCanvas = new Canvas();
 		while (true) {
-			try{
-				GData.canvas = GData.holder.lockCanvas();
-			}catch(Exception e){
-				e.printStackTrace();
+			try {
+				GData.canvas2 = GData.holder.lockCanvas(null);
+				tmCanvas = GData.canvas2;
+			} catch (Exception e) {
+				tmCanvas = GData.canvas;
 			}
-			
-			Log.v("TAG", "f");
-			GData.canvas.drawARGB(255, 254, 255, 213);
+
+			tmCanvas.drawARGB(255, 254, 255, 213);
 
 			// draw the left part
-			GData.canvas.drawBitmap(GData.bgLeft, 0, 0, GData.bgPaint);
+			tmCanvas.drawBitmap(GData.bgLeft, 0, 0, GData.bgPaint);
 			// draw the right part
-			GData.canvas.drawBitmap(GData.bgRight, GData.screenX
+			tmCanvas.drawBitmap(GData.bgRight, GData.screenX
 					- GData.bgRight.getWidth(), 0, GData.bgPaint);
 			// draw the bottom part
-			GData.canvas.drawBitmap(GData.bgBottom, 0, GData.screenY
+			tmCanvas.drawBitmap(GData.bgBottom, 0, GData.screenY
 					- GData.bgBottom.getHeight(), GData.bgPaint);
 			// canvas.save(SaveFlags.bgComplete);
 			// Draw the cloud
-			MyDraw.DrawCloud(GData.canvas);
+			MyDraw.DrawCloud(tmCanvas);
 			// Draw the carrot
-			MyDraw.DrawCarrot(GData.canvas);
+			MyDraw.DrawCarrot(tmCanvas);
 
-			//GData.canvas = GData.holder.lockCanvas(charR);
+			//tmCanvas = GData.holder.lockCanvas(charR);
 			if(booLeft){
-				GData.canvas.drawBitmap(GData.char_login, intLeft, (int)top, paint);
-				GData.canvas.drawBitmap(GData.bmpCloud, intLeft+=2, (int)top + GData.char_login.getHeight(),paint);
+				tmCanvas.drawBitmap(GData.char_login, intLeft, (int)top, paint);
+				tmCanvas.drawBitmap(GData.bmpCloud, intLeft+=2, (int)top + GData.char_login.getHeight(),paint);
 			}else{
-				GData.canvas.drawBitmap(GData.char_login, intLeft, (int)top, paint);
-				GData.canvas.drawBitmap(GData.bmpCloud, intLeft-=2, (int)top + GData.char_login.getHeight(),paint);
+				tmCanvas.drawBitmap(GData.char_login, intLeft, (int)top, paint);
+				tmCanvas.drawBitmap(GData.bmpCloud, intLeft-=2, (int)top + GData.char_login.getHeight(),paint);
 			}
-			if(intLeft <= (int)right - GData.char_login.getWidth() && booLeft){
+			if(intLeft >= (int)right - GData.char_login.getWidth() && booLeft){
 				booLeft = false;
-			}else{
+			}
+			if(intLeft <= (int)left && !booLeft){
 				booLeft = true;
 			}
-			Log.v("TAG", "test");
 
-			// update the surface
-			// the sub thread cannot operate the variable initialized in
-			// the main thread.
-//			GData.handler.post(new Runnable() {
-//				public void run() {
-//					BackGroundView.releaseHolder(GData.holder);
-//				}
-//			});
-			GData.holder.unlockCanvasAndPost(GData.canvas);
-			//GData.canvas = GData.holder.lockCanvas();
+			GData.holder.unlockCanvasAndPost(tmCanvas);
+			//tmCanvas = null;
+			//tmCanvas = GData.holder.lockCanvas();
 			try {
-				Thread.sleep(40);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
