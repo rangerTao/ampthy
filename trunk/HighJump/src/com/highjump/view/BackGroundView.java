@@ -61,19 +61,17 @@ public class BackGroundView extends SurfaceView implements Callback {
 		GData.res = this.getResources();
 	}
 
-	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
 
 	}
 
-	@Override
+
 	public void surfaceCreated(SurfaceHolder arg0) {
 		// init the view
 		MyDraw.initialize(this);
 		new Thread(new DrawBG()).start();
 	}
 
-	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
 
 	}

@@ -52,20 +52,17 @@ public class LoginView extends SurfaceView implements Callback{
 		GData.res = this.getResources();
 	}
 	
-	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		MyDraw.initialize(this);
 		new Thread(new DrawLogin()).start();
 	}
 
-	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 	}
 

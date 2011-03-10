@@ -15,6 +15,7 @@ public class GData {
 	public static SurfaceHolder holder;
 	// the canvas
 	public static Canvas canvas;
+	public static Canvas canvas2;
 	// the system resources
 	public static Resources res;
 	// whether game is running
