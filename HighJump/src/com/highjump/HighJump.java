@@ -1,11 +1,12 @@
 package com.highjump;
 
-import com.highjump.view.BackGroundView;
-
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.highjump.view.LoginView;
 
 public class HighJump extends Activity {
     /** Called when the activity is first created. */
@@ -16,6 +17,10 @@ public class HighJump extends Activity {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         //this.setContentView(new BackGroundView(this,this.getResources()));
-		this.setContentView(R.layout.main);
+		this.setContentView(new LoginView(this));
+    }
+    
+    public void changeView(View view){
+    	setContentView(view);
     }
 }
