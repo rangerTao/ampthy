@@ -3,7 +3,7 @@ package com.highjump.thread;
 import java.util.Random;
 
 import com.highjump.control.GData;
-import com.highjump.view.BackGroundView;
+import com.highjump.view.GameView;
 
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -35,7 +35,7 @@ public class DrawJump extends Thread {
 
 			Paint paint = new Paint();
 
-			BackGroundView.setCharaPos();
+			GameView.setCharaPos();
 
 			if (i == GData.frequency - 1) {
 				if (GData.isLeft) {
@@ -44,7 +44,7 @@ public class DrawJump extends Thread {
 					GData.isLeft = true;
 				}
 			}
-			BackGroundView.DrawScreen(GData.canvas, paint);
+			GameView.DrawScreen(GData.canvas, paint);
 
 			GData.frameCount++;
 			GData.holder.unlockCanvasAndPost(GData.canvas);

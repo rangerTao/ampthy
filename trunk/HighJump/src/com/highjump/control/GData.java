@@ -19,7 +19,7 @@ public class GData {
 	// the system resources
 	public static Resources res;
 	// whether game is running
-	public static boolean ingame = true;
+	public static boolean ingame = false;
 	// to count the time of draw
 	public static int drawCount = 0;
 	// the frequency of the refresh

@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -27,10 +28,10 @@ import com.highjump.util.MyDraw;
  * @author ranger
  * 
  */
-public class BackGroundView extends SurfaceView implements Callback {
+public class GameView extends SurfaceView implements Callback {
 
 
-	public BackGroundView(Context context, Resources res) {
+	public GameView(Context context, Resources res) {
 		super(context);
 		GData.holder = this.getHolder();
 		GData.cc = new CanvasControl(context, GData.holder);
@@ -43,9 +44,10 @@ public class BackGroundView extends SurfaceView implements Callback {
 		GData.res = res;
 		this.setBackgroundColor(Color.TRANSPARENT);
 		this.setKeepScreenOn(true);
+		Log.v("TAG", "test");
 	}
 
-	public BackGroundView(Context context, AttributeSet attrs) {
+	public GameView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		GData.holder = this.getHolder();
 		GData.cc = new CanvasControl(context, GData.holder);
@@ -68,7 +70,7 @@ public class BackGroundView extends SurfaceView implements Callback {
 
 	public void surfaceCreated(SurfaceHolder arg0) {
 		// init the view
-		MyDraw.initialize(this);
+		initalize();
 		new Thread(new DrawBG()).start();
 	}
 
@@ -127,7 +129,7 @@ public class BackGroundView extends SurfaceView implements Callback {
 			GData.cloudX[i] = new Random().nextInt() % 320;
 			GData.cloudX[i] = GData.cloudX[i] > 0 ? GData.cloudX[i] : 0 - GData.cloudX[i];
 			GData.cloudY[i] = new Random().nextInt() % 480 - GData.bgBottom.getHeight()
-					+ cloudDis;
+		 			+ cloudDis;
 		}
 		// holder.unlockCanvasAndPost(canvas);
 	}
