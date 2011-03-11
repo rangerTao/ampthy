@@ -2,4 +2,7 @@
 <resources>
     <string name="hello">Hello World, HighJump!</string>
     <string name="app_name">HighJump</string>
+    <string name="login_start">开始游戏</string>
+    <string name="login_record">高分记录</string>
+    <string name="login_exit">退出游戏</string>
 </resources>

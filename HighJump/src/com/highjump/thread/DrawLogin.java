@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.highjump.control.GData;
 import com.highjump.util.MyDraw;
-import com.highjump.view.BackGroundView;
+import com.highjump.view.GameView;
 
 /**
  * Draw the view of login
@@ -21,21 +21,18 @@ public class DrawLogin extends Thread {
 	@Override
 	public void run() {
 
-		
 		Rect charR = new Rect();
 		double left = GData.screenX * 0.3;
 		double right = GData.screenX * 0.7;
 		double top = GData.screenY * 0.45;
-		charR.set((int)left, (int)top,
-				(int)right, (int)top
-						+ GData.char_login.getHeight()
-						+ GData.bmpCloud.getHeight());
-		int intLeft = (int)left;
+		charR.set((int) left, (int) top, (int) right, (int) top
+				+ GData.char_login.getHeight() + GData.bmpCloud.getHeight());
+		int intLeft = (int) left;
 		boolean booLeft = true;
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
 		Canvas tmCanvas = new Canvas();
-		while (true) {
+		while (!GData.ingame) {
 			try {
 				GData.canvas2 = GData.holder.lockCanvas(null);
 				tmCanvas = GData.canvas2;
@@ -59,34 +56,36 @@ public class DrawLogin extends Thread {
 			// Draw the carrot
 			MyDraw.DrawCarrot(tmCanvas);
 
-			//tmCanvas = GData.holder.lockCanvas(charR);
-			if(booLeft){
-				tmCanvas.drawBitmap(GData.char_login, intLeft, (int)top, paint);
-				tmCanvas.drawBitmap(GData.bmpCloud, intLeft+=2, (int)top + GData.char_login.getHeight(),paint);
-			}else{
-				tmCanvas.drawBitmap(GData.char_login, intLeft, (int)top, paint);
-				tmCanvas.drawBitmap(GData.bmpCloud, intLeft-=2, (int)top + GData.char_login.getHeight(),paint);
+			// tmCanvas = GData.holder.lockCanvas(charR);
+			if (booLeft) {
+				tmCanvas
+						.drawBitmap(GData.char_login, intLeft, (int) top, paint);
+				tmCanvas.drawBitmap(GData.bmpCloud, intLeft += 2, (int) top
+						+ GData.char_login.getHeight(), paint);
+			} else {
+				tmCanvas
+						.drawBitmap(GData.char_login, intLeft, (int) top, paint);
+				tmCanvas.drawBitmap(GData.bmpCloud, intLeft -= 2, (int) top
+						+ GData.char_login.getHeight(), paint);
 			}
-			if(intLeft >= (int)right - GData.char_login.getWidth() && booLeft){
+			if (intLeft >= (int) right - GData.char_login.getWidth() && booLeft) {
 				booLeft = false;
 			}
-			if(intLeft <= (int)left && !booLeft){
+			if (intLeft <= (int) left && !booLeft) {
 				booLeft = true;
 			}
+			
+			if(!GData.ingame){
+				GData.holder.unlockCanvasAndPost(tmCanvas);
+			}
 
-			GData.holder.unlockCanvasAndPost(tmCanvas);
-			//tmCanvas = null;
-			//tmCanvas = GData.holder.lockCanvas();
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		}
-		
-
 
 	}
 }

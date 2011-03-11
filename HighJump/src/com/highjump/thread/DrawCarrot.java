@@ -12,7 +12,7 @@ import com.highjump.R;
 import com.highjump.control.GData;
 import com.highjump.util.ActionEnum;
 import com.highjump.util.CanvasControl;
-import com.highjump.view.BackGroundView;
+import com.highjump.view.GameView;
 
 public class DrawCarrot extends Thread {
 	
