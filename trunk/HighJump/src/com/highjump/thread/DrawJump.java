@@ -5,25 +5,32 @@ import java.util.Random;
 import com.highjump.control.GData;
 import com.highjump.view.GameView;
 
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
 public class DrawJump extends Thread {
 
 	@Override
 	public void run() {
+
 		if (GData.frameCount == 0) {
 			GData.charX = GData.bgLeft.getWidth();
 		}
+		Canvas tmCanvas = new Canvas();
 		for (int i = 0; i < GData.frequency; i++) {
 
-			GData.canvas = GData.holder.lockCanvas();
-
+			try {
+				GData.canvas2 = GData.holder.lockCanvas(null);
+				tmCanvas = GData.canvas2;
+			} catch (Exception e) {
+				tmCanvas = GData.canvas;
+			}
+			//GData.canvas = GData.holder.lockCanvas();
+			Log.v("TAG", "test");
 			for (int j = 0; j < GData.cloudMax; j++) {
-				Rect cRect = new Rect(GData.cloudX[j], GData.cloudY[j], GData.cloudX[j]
-						+ GData.bmpCloud.getWidth(), GData.cloudY[j]
-						+ GData.bmpCloud.getHeight());
-
+				
 				GData.cloudY[j] += GData.length;
 				if (GData.cloudY[j] > GData.screenY) {
 					GData.cloudX[j] = new Random().nextInt() % 320;
@@ -44,10 +51,10 @@ public class DrawJump extends Thread {
 					GData.isLeft = true;
 				}
 			}
-			GameView.DrawScreen(GData.canvas, paint);
+			GameView.DrawScreen(tmCanvas, paint);
 
 			GData.frameCount++;
-			GData.holder.unlockCanvasAndPost(GData.canvas);
+			GData.holder.unlockCanvasAndPost(tmCanvas);
 
 			try {
 				Thread.sleep(40);

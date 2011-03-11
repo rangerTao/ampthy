@@ -44,7 +44,6 @@ public class GameView extends SurfaceView implements Callback {
 		GData.res = res;
 		this.setBackgroundColor(Color.TRANSPARENT);
 		this.setKeepScreenOn(true);
-		Log.v("TAG", "test");
 	}
 
 	public GameView(Context context, AttributeSet attrs) {
@@ -84,7 +83,8 @@ public class GameView extends SurfaceView implements Callback {
 	public void initalize() {
 		GData.handler = this.getHandler();
 		GData.canvas = GData.holder.lockCanvas();
-
+		
+		GData.ingame = true;
 		// get the size of the screen
 		GData.screenX = GData.canvas.getWidth();
 		GData.screenY = GData.canvas.getHeight();
@@ -177,6 +177,7 @@ public class GameView extends SurfaceView implements Callback {
 	public boolean onTouchEvent(MotionEvent event) {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
+	
 			if (GData.ingame) {
 				if ((event.getX() * event.getX() + (GData.screenY - event.getY())
 						* (GData.screenY - event.getY())) < GData.radius * GData.radius) {
