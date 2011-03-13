@@ -27,8 +27,6 @@ public class DrawJump extends Thread {
 			} catch (Exception e) {
 				tmCanvas = GData.canvas;
 			}
-			//GData.canvas = GData.holder.lockCanvas();
-			Log.v("TAG", "test");
 			for (int j = 0; j < GData.cloudMax; j++) {
 				
 				GData.cloudY[j] += GData.length;

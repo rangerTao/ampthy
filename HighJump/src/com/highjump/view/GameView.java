@@ -70,7 +70,9 @@ public class GameView extends SurfaceView implements Callback {
 	public void surfaceCreated(SurfaceHolder arg0) {
 		// init the view
 		initalize();
-		new Thread(new DrawBG()).start();
+		Paint paniPaint = new Paint();
+		DrawScreen(GData.canvas, paniPaint);
+		GData.holder.unlockCanvasAndPost(GData.canvas);
 	}
 
 	public void surfaceDestroyed(SurfaceHolder arg0) {

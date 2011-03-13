@@ -13,14 +13,5 @@ public class DrawBG extends Thread{
 	public void run() {
 		Paint paint = new Paint();
 		GameView.DrawScreen(GData.canvas, paint);
-
-		try{
-			GData.holder.unlockCanvasAndPost(GData.canvas);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-
-		// }
 	}
 }
