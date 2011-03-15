@@ -2,9 +2,11 @@ package com.highjump.thread;
 
 import java.util.Random;
 
+import com.highjump.R;
 import com.highjump.control.GData;
 import com.highjump.view.GameView;
 
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -45,9 +47,14 @@ public class DrawJump extends Thread {
 			if (i == GData.frequency - 1) {
 				if (GData.isLeft) {
 					GData.isLeft = !GData.isLeft;
+					GData.bmpChar = BitmapFactory.decodeResource(GData.res, R.drawable.char_right);
+					GData.charX = GData.screenX - GData.bgRight.getWidth() - GData.bmpChar.getWidth();
 				} else {
 					GData.isLeft = true;
+					GData.bmpChar = BitmapFactory.decodeResource(GData.res, R.drawable.charactor);
+					GData.charX = GData.bgLeft.getWidth();
 				}
+				GData.handler.post(null);
 			}
 			GameView.DrawScreen(tmCanvas, paint);
 
