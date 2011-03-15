@@ -30,7 +30,6 @@ public class LoginView extends SurfaceView implements Callback{
 		GData.holder.addCallback(this);
 		GData.charPaint = new Paint();
 		this.setFocusable(true);
-		// this.res = res;
 		this.setBackgroundColor(Color.TRANSPARENT);
 		this.setKeepScreenOn(true);
 		GData.res = this.getResources();
@@ -46,16 +45,13 @@ public class LoginView extends SurfaceView implements Callback{
 		GData.holder.addCallback(this);
 		GData.charPaint = new Paint();
 		this.setFocusable(true);
-		// this.res = res;
 		this.setBackgroundColor(Color.TRANSPARENT);
 		this.setKeepScreenOn(true);
 		GData.res = this.getResources();
 	}
 	
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
-		// TODO Auto-generated method stub
-		
+			int height) {		
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
@@ -68,7 +64,6 @@ public class LoginView extends SurfaceView implements Callback{
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		// TODO Auto-generated method stub
 		return super.onTouchEvent(event);
 	}
 	
