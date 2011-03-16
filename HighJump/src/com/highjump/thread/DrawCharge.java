@@ -25,11 +25,11 @@ public class DrawCharge extends Thread{
 			//wait 500 ms ,then draw the second bitmap of char
 			Thread.sleep(500);
 			if (GData.isLeft) {
-				GData.bmpChar = BitmapFactory.decodeResource(GData.res, R.drawable.char_jump_right);
+				GData.charX = GData.screenX - GData.bgRight.getWidth() - GData.bmpChar.getWidth();
 				GData.charX = GData.bgLeft.getWidth();
 			} else {
 				GData.bmpChar = BitmapFactory.decodeResource(GData.res, R.drawable.char_jump);
-				GData.charX = GData.screenX - GData.bgRight.getWidth() - GData.bmpChar.getWidth();
+				GData.bmpChar = BitmapFactory.decodeResource(GData.res, R.drawable.char_jump_right);
 			}
 			GData.canvas2 = GData.holder.lockCanvas(null);
 			tmCanvas = GData.canvas2;
@@ -39,15 +39,18 @@ public class DrawCharge extends Thread{
 
 		Paint paint = new Paint();
 
-		//GameView.setCharaPos();
-
 		GameView.DrawScreen(tmCanvas, paint);
 
 		GData.frameCount++;
 		GData.holder.unlockCanvasAndPost(tmCanvas);
-
 		
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
+		GData.handler.post(new DrawTimeCountDown());
 	}
 	
 	

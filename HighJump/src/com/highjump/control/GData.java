@@ -81,4 +81,9 @@ public class GData {
 
 	public static int frameCount = 0;
 	
+	//the process
+	public static Bitmap bmpProcess;
+	//the sword
+	public static Bitmap bmpSword;
+	
 }
