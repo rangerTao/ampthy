@@ -67,6 +67,7 @@ public class DrawJump extends Thread {
 				e.printStackTrace();
 			}
 		}
+		GData.handler.post(new DrawCharge());
 	}
 
 }
