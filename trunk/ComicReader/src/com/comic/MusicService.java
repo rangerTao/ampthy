@@ -37,21 +37,33 @@ public class MusicService extends Service{
 		super.onCreate();
 	}
 	
-	public void onStart() throws IllegalArgumentException, IllegalStateException, IOException{
+	@Override
+	public void onStart(Intent intent, int startId) {
 		Log.v("TAG","Service Start");
 		File file = new File(Environment.getExternalStorageDirectory(),"priview.mp3");
 		
-		mplayer = MediaPlayer.create(this,null);
-		mplayer.setDataSource(file.getAbsolutePath());
+		mplayer = new MediaPlayer();
+		try {
+			mplayer.setDataSource(file.getAbsolutePath());
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		mplayer.start();
 	}
 	
-	public void onPause(){
+	public void onPause(Intent intent, int startId){
 		Log.v("TAG", "Service Pause");
 		mplayer.pause();
 	}
 	
-	public void onDestory(){
+	public void onDestory(Intent intent, int startId){
 		Log.v("TAG", "Service Destory");
 		mplayer.stop();
 	}
