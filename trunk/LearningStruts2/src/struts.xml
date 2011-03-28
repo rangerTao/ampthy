@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
 	"http://struts.apache.org/dtds/struts-2.0.dtd">
-<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 	<struts>
 		<package name="struts2" namespace="/mystruts" extends="struts-default">
 			<action name="sum" class="struts.action.FirstAction">
 				<result name="positive">/positive.jsp</result>
 				<result name="negative">/negative.jsp</result>
 			</action>
+			<action name="submin" class="struts.action.MultiAction">
+				<result name="save">/result.jsp</result>
+				<result name="print">/result.jsp</result>
+			</action>
 		</package>
 	</struts>
-</web-app>

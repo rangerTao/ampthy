@@ -15,5 +15,10 @@
 	<s:textfield name="operate2" label=" 2"/>
 	<s:submit value="sum"/>
 </s:form>
+<s:form action="mystruts/submin.action" namespace="/mystruts">
+	<s:textfield name="msg" label="please input" />
+	<s:submit name="save" value="save" method="save" />
+	<s:submit name="print" value="print" method="print"/>
+</s:form>
 </body>
 </html>
