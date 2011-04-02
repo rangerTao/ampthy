@@ -10,6 +10,9 @@
 <body>
 </br>
 <%=request.getRealPath("/")%>
+<h1>Use the validation form</h1>
+
+<hr />
 <s:form action="mystruts/sum.action" namespace="/mystruts" method="post">
 	<s:textfield name="operate1" label=" 1" />
 	<s:textfield name="operate2" label=" 2" />
@@ -26,6 +29,7 @@ Validation
 <s:actionmessage />
 <s:form action="mystruts/validate.action" namespace="/mystruts">
 	<s:textfield name="msg" label="Please Input"></s:textfield>
+	<s:submit value="validation" />
 	<s:fielderror key="msg.hello"></s:fielderror>
 </s:form>
 </body>
