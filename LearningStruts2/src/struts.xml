@@ -11,5 +11,9 @@
 				<result name="save">/result.jsp</result>
 				<result name="print">/result.jsp</result>
 			</action>
+			<action name="validate" class="struts.action.ValidateAction">
+				<result name="success">/sum.jsp</result>
+				<result name="input">/sum.jsp</result>
+			</action>
 		</package>
 	</struts>
