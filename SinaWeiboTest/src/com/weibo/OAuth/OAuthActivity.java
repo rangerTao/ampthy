@@ -12,11 +12,9 @@ import oauth.signpost.exception.OAuthNotAuthorizedException;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.weibo.R;
@@ -48,8 +46,6 @@ public class OAuthActivity extends Activity {
 			String authUrl = httpOauthprovider.retrieveRequestToken(
 					httpOauthConsumer, callBackUrl);
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
-
-			int b = 4;
 
 		} catch (Exception e) {
 			String s = e.getMessage();
@@ -88,11 +84,7 @@ public class OAuthActivity extends Activity {
 		dba.open();
 		dba.insertData(userId, userKey, userSecret);
 		Toast.makeText(this, "Insert OK", 3000);
-		String[] columns = {
-				User.ID,
-				User.TOKEN,
-				User.TOKENSECRET
-		};
+
 		Toast.makeText(this, "Get the Token", 3000);
 	}
 

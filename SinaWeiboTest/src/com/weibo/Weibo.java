@@ -85,8 +85,6 @@ public class Weibo extends Activity implements OnClickListener {
 							httpOauthConsumer, callBackUrl);
 					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
 
-					int b = 4;
-
 				} catch (Exception e) {
 					String s = e.getMessage();
 					Log.v("TAG", s);
@@ -128,11 +126,7 @@ public class Weibo extends Activity implements OnClickListener {
 		dba.open();
 		dba.insertData(userId, userKey, userSecret);
 		Toast.makeText(this, "Insert OK", 3000);
-		String[] columns = {
-				User.ID,
-				User.TOKEN,
-				User.TOKENSECRET
-		};
+
 		Toast.makeText(this, "Get the Token", 3000);
 	}
 }
