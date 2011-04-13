@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.weibo.pojo.UserInfo.User;
+import com.weibo.pojo.User;
 import com.weibo.utils.Contants;
 import com.weibo.utils.DatabaseHelper;
 

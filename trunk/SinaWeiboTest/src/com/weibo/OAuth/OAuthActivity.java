@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.weibo.R;
 import com.weibo.daos.DBAdapter;
-import com.weibo.pojo.UserInfo.User;
+import com.weibo.pojo.User;
 import com.weibo.utils.Contants;
 
 public class OAuthActivity extends Activity {

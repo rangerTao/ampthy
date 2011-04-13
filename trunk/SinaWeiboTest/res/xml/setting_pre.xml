@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  	<CheckBoxPreference 
+  		android:key="checkbox_pre"
+		android:title="@string/passwd_pre"
+		android:summaryOn="@string/passwd_on"
+		android:summaryOff="@string/passwd_off"
+		android:defaultValue="false">
+	</CheckBoxPreference>
+	<Preference
+		android:key="preference_pre"
+		android:title="test"
+		android:summary="button"
+		android:enabled="false">
+	</Preference>
+	<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" 
+		android:summary="test" android:title="test"
+	>
+	<CheckBoxPreference 
+  		android:key="checkbox_pre"
+		android:title="@string/passwd_pre"
+		android:summaryOn="@string/passwd_on"
+		android:summaryOff="@string/passwd_off"
+		android:defaultValue="false">
+	</CheckBoxPreference>
+	</PreferenceScreen>
+</PreferenceScreen>

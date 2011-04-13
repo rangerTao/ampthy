@@ -5,17 +5,16 @@
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:orientation="horizontal" android:layout_width="fill_parent"
 		android:layout_height="wrap_content">
-		<TextView android:text="@string/username" android:id="@+id/tvUser"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-		<EditText android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:id="@+id/etUsername" />
+		<TextView android:text="@string/username" android:id="@+id/tvUser" android:layout_width="50dip"
+			android:layout_height="wrap_content"></TextView>
+		<EditText android:text="EditText" android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/etUsername"></EditText>
 	</LinearLayout>
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:orientation="horizontal" android:layout_width="fill_parent"
 		android:layout_height="wrap_content">
 		<TextView android:text="@string/passwd" android:id="@+id/tvPasswd"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-				<EditText android:layout_width="fill_parent"
+			android:layout_width="50dip" android:layout_height="wrap_content"></TextView>
+				<EditText android:layout_width="fill_parent" 
 			android:layout_height="wrap_content" android:id="@+id/etPasswd" />
 	</LinearLayout>
 	<RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
