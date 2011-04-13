@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.util.Log;
 
-import com.weibo.pojo.UserInfo.User;
+import com.weibo.pojo.User;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
 

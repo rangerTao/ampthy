@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<RelativeLayout android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:id="@+id/relativeLayout1">
+		<EditText android:layout_centerVertical="true"
+			android:layout_alignParentTop="true" android:layout_height="wrap_content"
+			android:text="" android:layout_width="fill_parent"
+			android:id="@+id/etPasswd" android:layout_alignParentLeft="true"></EditText>
+		<Button android:layout_height="wrap_content" android:id="@+id/btnCancel" android:text="@string/passwd_set_cancel" android:layout_width="wrap_content" android:layout_below="@+id/etPasswd" android:layout_alignRight="@+id/etPasswd"></Button>
+		<Button android:layout_height="wrap_content" android:id="@+id/btnConfirm" android:text="@string/passwd_set_confirm" android:layout_width="wrap_content" android:layout_below="@+id/etPasswd" android:layout_alignLeft="@+id/etPasswd"></Button>
+		<TextView android:layout_above="@+id/etPasswd"
+			android:layout_height="wrap_content" android:id="@+id/tvLabel"
+			android:text="@string/passwd_set_label" android:layout_width="wrap_content"
+			android:layout_alignLeft="@+id/etPasswd" android:layout_alignRight="@+id/etPasswd"></TextView>
+	</RelativeLayout>
+</LinearLayout>

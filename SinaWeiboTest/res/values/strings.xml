@@ -7,4 +7,22 @@
     <string name="login">登陆</string>
     <string name="cancel">取消</string>
     <string name="uNameError">用户名格式错误，请重新输入！</string>
+    
+    <!-- Menu -->
+    <string name="Setting">Setting</string>
+    
+    <!-- Setting_Pre -->
+    <string name="passwd_pre">密码设置</string>
+    <string name="passwd_on">密码保护启用</string>
+    <string name="passwd_off">密码保护禁用</string>
+    <string name="passwd_set_label">请输入密码！</string>
+    <string name="passwd_set_title">密码设置</string>
+    <string name="passwd_set_confirm">确定</string>
+    <string name="passwd_set_cancel">取消</string>
+    
+    <!-- Button -->
+    <string name="button_next">下一步</string>
+    
+    <!-- comments -->
+    <string name="welcome_label">欢迎使用...你已经添加好了一个微博的账户。现在，请点击下方的按钮，开始微博的旅程吧。</string>
 </resources>

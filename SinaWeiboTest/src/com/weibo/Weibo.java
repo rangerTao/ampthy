@@ -16,14 +16,18 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import com.weibo.activity.IndexActivity;
+import com.weibo.activity.SettingPre;
+import com.weibo.activity.WelcomeActivity;
 import com.weibo.daos.DBAdapter;
-import com.weibo.pojo.UserInfo.User;
+import com.weibo.pojo.User;
 import com.weibo.utils.Contants;
 
 public class Weibo extends Activity implements OnClickListener {
@@ -33,7 +37,7 @@ public class Weibo extends Activity implements OnClickListener {
 	Button btnLogin;
 	Button btnCancel;
 	
-	Weibo appref;
+	public static Weibo appref;
 	public final static String tag = "TAG";
 	//the instance of OAuth
 
@@ -49,7 +53,6 @@ public class Weibo extends Activity implements OnClickListener {
     
     public void initView(){
     	appref = this;
-    	
     	
     	//init the compenent in the view;
     	etName = (EditText)findViewById(R.id.etUsername);
@@ -68,33 +71,39 @@ public class Weibo extends Activity implements OnClickListener {
 			dba.open();
 			Cursor cr = dba.query(null, "", "", "", "", "");
 			if(cr != null){
-				Log.v("TAG", "Data Exists");
+				dba.close();
+				startActivity(new Intent(this,IndexActivity.class));
+				finish();
 			}else{
-				String consumerKey = "2902988107";
-				String consumerSecret = "2fce81acf8fc9afb51ffc533688fa553";
-				String callBackUrl = "myapp://OAuthActivity";
-
-				try {
-					httpOauthConsumer = new CommonsHttpOAuthConsumer(consumerKey,
-							consumerSecret);
-					httpOauthprovider = new DefaultOAuthProvider(
-							"http://api.t.sina.com.cn/oauth/request_token",
-							"http://api.t.sina.com.cn/oauth/access_token",
-							"http://api.t.sina.com.cn/oauth/authorize");
-					String authUrl = httpOauthprovider.retrieveRequestToken(
-							httpOauthConsumer, callBackUrl);
-					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
-
-				} catch (Exception e) {
-					String s = e.getMessage();
-					Log.v("TAG", s);
-				}
+				newUser();
 			}
 		}else if (arg0.getId() == btnCancel.getId()){
 			System.exit(0);
 		}
 	}
     
+	public void newUser(){
+
+		String consumerKey = "2902988107";
+		String consumerSecret = "2fce81acf8fc9afb51ffc533688fa553";
+		String callBackUrl = "myapp://OAuthActivity";
+
+		try {
+			httpOauthConsumer = new CommonsHttpOAuthConsumer(consumerKey,
+					consumerSecret);
+			httpOauthprovider = new DefaultOAuthProvider(
+					"http://api.t.sina.com.cn/oauth/request_token",
+					"http://api.t.sina.com.cn/oauth/access_token",
+					"http://api.t.sina.com.cn/oauth/authorize");
+			String authUrl = httpOauthprovider.retrieveRequestToken(
+					httpOauthConsumer, callBackUrl);
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
+		} catch (Exception e) {
+			String s = e.getMessage();
+			Log.v("TAG", s);
+		}
+	
+	}
 	@Override
 	protected void onNewIntent(Intent intent) {
 		// super.onNewIntent(intent);
@@ -125,8 +134,27 @@ public class Weibo extends Activity implements OnClickListener {
 		DBAdapter dba = new DBAdapter(this, Contants.dbName, Contants.dbVersion);
 		dba.open();
 		dba.insertData(userId, userKey, userSecret);
-		Toast.makeText(this, "Insert OK", 3000);
-
-		Toast.makeText(this, "Get the Token", 3000);
+		dba.close();
+		this.startActivity(new Intent(this,WelcomeActivity.class));
 	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(0, 0, 0, "Setting");
+		return true;
+	}
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		switch(item.getItemId()){
+			case 0:
+				this.startActivity(new Intent(this,SettingPre.class));
+				break;
+		}
+		return true;
+	}
+	
+	
+
+	
 }
