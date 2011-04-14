@@ -388,22 +388,22 @@ public class Status extends WeiboResponse implements java.io.Serializable {
     @Override
     public String toString() {
         return "Status{" +
-                "createdAt=" + createdAt +
-                ", id=" + id +
-                ", text='" + text + '\'' +
-                ", source='" + source + '\'' +
-                ", isTruncated=" + isTruncated +
-                ", inReplyToStatusId=" + inReplyToStatusId +
-                ", inReplyToUserId=" + inReplyToUserId +
-                ", isFavorited=" + isFavorited +
-                ", thumbnail_pic=" + thumbnail_pic +
-                ", bmiddle_pic=" + bmiddle_pic +
-                ", original_pic=" + original_pic +
-                ", inReplyToScreenName='" + inReplyToScreenName + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", retweetDetails=" + retweetDetails +
-                ", user=" + user +
+                "createdAt=" + createdAt + ", \n" +
+                "id=" + id +", \n" +
+                "text='" + text + '\'' +", \n" +
+                "source='" + source + '\'' +
+                ", \nisTruncated=" + isTruncated +
+                ", \ninReplyToStatusId=" + inReplyToStatusId +
+                ", \ninReplyToUserId=" + inReplyToUserId +
+                ", \nisFavorited=" + isFavorited +
+                ", \nthumbnail_pic=" + thumbnail_pic +
+                ", \nbmiddle_pic=" + bmiddle_pic +
+                ", \noriginal_pic=" + original_pic +
+                ", \ninReplyToScreenName='" + inReplyToScreenName + '\'' +
+                ", \nlatitude=" + latitude +
+                ", \nlongitude=" + longitude +
+                ", \nretweetDetails=" + retweetDetails +
+                ", \nuser=" + user +
                 '}';
     }
 }
