@@ -251,7 +251,7 @@ public class Weibo4sina extends WeiboSupport implements java.io.Serializable {
      * @throws WeiboException when Weibo service or network is unavailable
      */
 
-    private Response get(String url, boolean authenticate) throws WeiboException {
+    public Response get(String url, boolean authenticate) throws WeiboException {
         return get(url, null, authenticate);
     }
 

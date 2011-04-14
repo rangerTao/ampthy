@@ -27,17 +27,20 @@ public class DBAdapter {
 	}
 
 	public boolean close() {
+		Log.v("TAG", "DB close");
 		db.close();
 		return true;
 	}
 
-	public long insertData(String id, String token, String tokenSecret) {
+	public long insertData(String id, String token, String tokenSecret,String access, String accessSecret) {
 		ContentValues cv = new ContentValues();
 		cv.put(User.ID, id);
 		cv.put(User.TOKEN, token);
 		cv.put(User.TOKENSECRET, tokenSecret);
+		cv.put(User.ACCESSTOKEN, access);
+		cv.put(User.ACCESSTOKENSECRET, accessSecret);
 		Cursor cr = query(null,User.ID,id,null,null,null);
-		if(cr != null){
+		if(cr != null && cr.getCount() > 0){
 			Log.v("TAG", "Data Exists");
 			return 0;
 		}else{

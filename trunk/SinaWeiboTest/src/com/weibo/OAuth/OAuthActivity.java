@@ -1,24 +1,21 @@
 package com.weibo.OAuth;
 
-import java.util.SortedSet;
-
 import oauth.signpost.OAuthProvider;
-import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
-import oauth.signpost.exception.OAuthCommunicationException;
-import oauth.signpost.exception.OAuthExpectationFailedException;
-import oauth.signpost.exception.OAuthMessageSignerException;
-import oauth.signpost.exception.OAuthNotAuthorizedException;
+import weibo4andriod.Weibo4sina;
+import weibo4andriod.WeiboException;
+import weibo4andriod.http.AccessToken;
+import weibo4andriod.http.RequestToken;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
-
 import com.weibo.R;
+import com.weibo.activity.IndexActivity;
 import com.weibo.daos.DBAdapter;
+import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.User;
 import com.weibo.utils.Contants;
 
@@ -27,65 +24,60 @@ public class OAuthActivity extends Activity {
 	CommonsHttpOAuthConsumer httpOauthConsumer;
 	OAuthProvider httpOauthprovider;
 
+	String token;
+	String tokenSecret;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.insertresult);
-
+		Log.v("TAG", "start to get the authorized");
 		String consumerKey = "2902988107";
 		String consumerSecret = "2fce81acf8fc9afb51ffc533688fa553";
-		String callBackUrl = "myapp://OAuthActivity";
-
+		Weibo4sina weibo = OAuthConstant.getInstance().getWeibo();
+		RequestToken requestToken;
 		try {
-			httpOauthConsumer = new CommonsHttpOAuthConsumer(consumerKey,
-					consumerSecret);
-			httpOauthprovider = new DefaultOAuthProvider(
-					"http://api.t.sina.com.cn/oauth/request_token",
-					"http://api.t.sina.com.cn/oauth/access_token",
-					"http://api.t.sina.com.cn/oauth/authorize");
-			String authUrl = httpOauthprovider.retrieveRequestToken(
-					httpOauthConsumer, callBackUrl);
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
-
-		} catch (Exception e) {
-			String s = e.getMessage();
-			Log.v("TAG", s);
+			weibo.setOAuthConsumer(consumerKey, consumerSecret);
+			requestToken = weibo.getOAuthRequestToken("myapp://OAuthActivity");
+			token = requestToken.getToken();
+			tokenSecret = requestToken.getTokenSecret();
+			Uri uri = Uri.parse(requestToken.getAuthenticationURL());
+			OAuthConstant.getInstance().setRequestToken(requestToken);
+			startActivity(new Intent(Intent.ACTION_VIEW, uri));
+		} catch (WeiboException e) {
+			e.printStackTrace();
 		}
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		// super.onNewIntent(intent);
+		Log.v("TAG", "Call back");
+
 		Uri uri = intent.getData();
-		String verifier = uri
-				.getQueryParameter(oauth.signpost.OAuth.OAUTH_VERIFIER);
+		AccessToken accessToken = null;
 		try {
-			httpOauthprovider.setOAuth10a(true);
-			httpOauthprovider.retrieveAccessToken(httpOauthConsumer, verifier);
-		} catch (OAuthMessageSignerException ex) {
-			ex.printStackTrace();
-		} catch (OAuthNotAuthorizedException ex) {
-			ex.printStackTrace();
-		} catch (OAuthExpectationFailedException ex) {
-			ex.printStackTrace();
-		} catch (OAuthCommunicationException ex) {
-			ex.printStackTrace();
+			RequestToken requestToken = OAuthConstant.getInstance()
+					.getRequestToken();
+			Log.v("TAG", uri == null ? "null" : "not null");
+			accessToken = requestToken.getAccessToken(uri
+					.getQueryParameter("oauth_verifier"));
+			OAuthConstant.getInstance().setAccessToken(accessToken);
+		} catch (WeiboException e) {
+			e.printStackTrace();
 		}
-		SortedSet<String> user_id = httpOauthprovider.getResponseParameters()
-				.get("user_id");
-		String userId = user_id.first();
-		String userKey = httpOauthConsumer.getToken();
-		String userSecret = httpOauthConsumer.getTokenSecret();
+
+		int userId = accessToken.getUserId();
+		String userKey = accessToken.getToken();
+		String userSecret = accessToken.getTokenSecret();
 		ContentValues cv = new ContentValues();
 		cv.put(User.ID, userId);
 		cv.put(User.TOKEN, userKey);
 		cv.put(User.TOKENSECRET, userSecret);
+		Log.v("TAG", userId + "   " + userKey + "   " + userSecret);
 		DBAdapter dba = new DBAdapter(this, Contants.dbName, Contants.dbVersion);
 		dba.open();
-		dba.insertData(userId, userKey, userSecret);
-		Toast.makeText(this, "Insert OK", 3000);
-
-		Toast.makeText(this, "Get the Token", 3000);
+		dba.insertData(userId + "", userKey, userSecret, token, tokenSecret);
+		startActivity(new Intent(this, IndexActivity.class));
 	}
 
 }

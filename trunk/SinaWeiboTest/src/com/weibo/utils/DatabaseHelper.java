@@ -8,10 +8,10 @@ import android.util.Log;
 
 import com.weibo.pojo.User;
 
-public class DatabaseHelper extends SQLiteOpenHelper{
+public class DatabaseHelper extends SQLiteOpenHelper {
 
-	public DatabaseHelper(Context context, String name,
-			CursorFactory factory, int version) {
+	public DatabaseHelper(Context context, String name, CursorFactory factory,
+			int version) {
 		super(context, name, factory, version);
 	}
 
@@ -23,7 +23,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE " + Contants.tableName + " (" + User.ID
 				+ " TEXT PRIMARY KEY," + User.TOKEN + " TEXT,"
-				+ User.TOKENSECRET + " TEXT," + User.CREATE_TIME
+				+ User.TOKENSECRET + " TEXT," + User.ACCESSTOKEN + " TEXT, "
+				+ User.ACCESSTOKENSECRET + " TEXT, " + User.CREATE_TIME
 				+ " TEXT," + User.MODIFY_TIME + " TEXT" + ");");
 
 	}
@@ -35,6 +36,5 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		db.execSQL("DROP TABLE IF EXISTS " + Contants.tableName);
 		onCreate(db);
 	}
-
 
 }

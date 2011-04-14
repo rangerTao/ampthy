@@ -10,6 +10,8 @@ public final class User implements BaseColumns {
 	public static final String ID = "ID";
 	public static final String TOKEN = "TOKEN";
 	public static final String TOKENSECRET = "TOKENSECRET";
+	public static final String ACCESSTOKEN = "ACCESSTOKEN";
+	public static final String ACCESSTOKENSECRET = "ACCESSTOKENSECRET";
 	public static final String CREATE_TIME = "CREATE_TIME";
 	public static final String MODIFY_TIME = "MODIFY_TIME";
 }
