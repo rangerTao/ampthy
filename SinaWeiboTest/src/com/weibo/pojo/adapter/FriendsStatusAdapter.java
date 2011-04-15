@@ -1,6 +1,5 @@
 package com.weibo.pojo.adapter;
 
-import weibo4andriod.Status;
 import weibo4andriod.User;
 
 import com.weibo.R;

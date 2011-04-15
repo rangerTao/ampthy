@@ -25,4 +25,17 @@
     
     <!-- comments -->
     <string name="welcome_label">欢迎使用...你已经添加好了一个微博的账户。现在，请点击下方的按钮，开始微博的旅程吧。</string>
+    
+    <!-- TopMenu -->
+    <string name="top_menu_home">首页</string>
+    <string name="top_menu_mytwitter">我的微博</string>
+    <string name="top_menu_atme">\@ME</string>
+    <string name="top_menu_favor">收藏</string>
+    <string name="top_menu_comment">评论</string>
+    <string name="top_menu_mail">私信</string>
+    <string name="top_menu_focus">关注</string>
+    <string name="top_menu_fans">粉丝</string>
+    <string name="top_menu_chat">聊天</string>
+    <string name="top_menu_search">查询</string>
+    <string name="top_menu_broadcast">发布</string>
 </resources>
