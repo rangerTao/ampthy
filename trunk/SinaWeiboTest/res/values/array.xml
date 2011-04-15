@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="top_menu">
+        <item>@string/top_menu_home</item>
+        <item>@string/top_menu_mytwitter</item>
+        <item>@string/top_menu_atme</item>
+        <item>@string/top_menu_favor</item>
+        <item>@string/top_menu_comment</item>
+        <item>@string/top_menu_mail</item>
+        <item>@string/top_menu_focus</item>
+        <item>@string/top_menu_fans</item>
+        <item>@string/top_menu_chat</item>
+        <item>@string/top_menu_search</item>
+        <item>@string/top_menu_broadcast</item>
+    </string-array>
+</resources>

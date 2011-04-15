@@ -1,6 +1,5 @@
 package com.weibo.pojo.adapter;
 
-import weibo4andriod.Status;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

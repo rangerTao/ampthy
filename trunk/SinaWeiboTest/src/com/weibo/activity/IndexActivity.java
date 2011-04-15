@@ -2,7 +2,6 @@ package com.weibo.activity;
 
 import java.util.List;
 
-import weibo4andriod.Status;
 import weibo4andriod.User;
 import weibo4andriod.Weibo4sina;
 import weibo4andriod.WeiboException;
@@ -14,11 +13,19 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AbsListView;
+import android.widget.HorizontalScrollView;
 import android.widget.ListView;
+import android.widget.TableRow;
+import android.widget.TextView;
+import android.widget.AbsListView.OnScrollListener;
 
+import com.weibo.R;
 import com.weibo.daos.DBAdapter;
 import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.adapter.FriendsStatusAdapter;
+import com.weibo.pojo.adapter.TopMenuAdapter;
 import com.weibo.utils.Contants;
 
 public class IndexActivity extends Activity {
@@ -30,32 +37,52 @@ public class IndexActivity extends Activity {
 
 	ProgressDialog pDialog;
 	ListView lvPublicTimeLine;
+	ListView lvTopMenu;
 	StringBuffer sbAll = new StringBuffer();
+	HorizontalScrollView hs;
+	public static String[] strTopMenus;
 
 	public static IndexActivity appref;
 
 	public static List<User> friends;
 
 	FriendsStatusAdapter fsa;
+	TopMenuAdapter tma;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 
-		lvPublicTimeLine = new ListView(this);
+		setContentView(R.layout.index_activity);
 
-		setContentView(lvPublicTimeLine);
-
+		lvPublicTimeLine = (ListView)findViewById(R.id.lvpublicTimeLine);
 		initData();
+		lvPublicTimeLine.setOnScrollListener(new OnScrollListener(){
 
-		FriendTask ft = new FriendTask();
-		ft.execute();
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+//		FriendTask ft = new FriendTask();
+//		ft.execute();
 	}
 
 	private void initData() {
 		appref = this;
 
+		strTopMenus = this.getResources().getStringArray(R.array.top_menu);
+		Log.v("TAG", strTopMenus.length +"");
 		DBAdapter dba = new DBAdapter(this, Contants.dbName, Contants.dbVersion);
 		dba.open();
 		Cursor cr = dba.query(null, "", "", "", "", "");
@@ -79,11 +106,24 @@ public class IndexActivity extends Activity {
 		}
 		cr.close();
 		dba.close();
+//		hs = (HorizontalScrollView) findViewById(R.id.hsTopMenu);
+//		hs.setHorizontalScrollBarEnabled(false);
+//		TableRow trMenu = (TableRow)findViewById(R.id.trMenu);
+//
+//		for(int i = 0;i<strTopMenus.length;i++){
+//			TextView tv = new TextView(this);
+//			tv.setText(strTopMenus[i] + "   ");
+//			tv.setClickable(true);
+//			tv.isShown();
+//			trMenu.addView(tv);
+//		}
+		lvTopMenu = (ListView) findViewById(R.id.lvTopMenu);
+		//tma = new TopMenuAdapter();
+		//lvTopMenu.setAdapter(tma);
 	}
 
 	private void getFriends() {
 
-		System.out.println("Showing public timeline.");
 		try {
 
 			Weibo4sina weibo = OAuthConstant.getInstance().getWeibo();
