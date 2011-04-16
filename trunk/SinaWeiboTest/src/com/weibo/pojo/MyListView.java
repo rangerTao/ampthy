@@ -27,7 +27,6 @@ public class MyListView extends LinearLayout implements OnGestureListener {
         mListView.setCacheColorHint(Color.TRANSPARENT);  
         mListView.setScrollBarStyle(SCROLLBARS_OUTSIDE_INSET);  
         mListView.setOnItemClickListener(new OnItemClickListener() {  
-            @Override  
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,  
                     long arg3) {  
                 Log.i("info", "click");  
@@ -36,20 +35,19 @@ public class MyListView extends LinearLayout implements OnGestureListener {
         this.addView(mListView, new LinearLayout.LayoutParams(350, LayoutParams.FILL_PARENT));  
     }  
       
-    @Override  
     public boolean onDown(MotionEvent arg0) {  
         return false;  
     }  
-    @Override  
+    
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,  
             float velocityY) {  
         return true;  
     }  
-    @Override  
+    
     public void onLongPress(MotionEvent e) {  
         //empty      
     }  
-    @Override  
+ 
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,  
             float distanceY) {  
         int scrollWidth = mListView.getWidth() - this.getWidth();  
@@ -69,11 +67,11 @@ public class MyListView extends LinearLayout implements OnGestureListener {
         }  
         return true;  
     }  
-    @Override  
+
     public void onShowPress(MotionEvent e) {  
         //empty  
     }  
-    @Override  
+ 
     public boolean onSingleTapUp(MotionEvent e) {  
         return false;  
     }  

@@ -47,13 +47,13 @@ public class SettingPre extends PreferenceActivity implements
 
 	}
 
-	@Override
+
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
 		btnPre.setEnabled(!cbp.isChecked());
 		return true;
 	}
 
-	@Override
+
 	public boolean onPreferenceClick(Preference preference) {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		View view = inflater.inflate(R.layout.passed_dialog, null);
@@ -65,7 +65,6 @@ public class SettingPre extends PreferenceActivity implements
 		
 		confirm.setOnClickListener(new View.OnClickListener(){
 
-			@Override
 			public void onClick(View v) {
 				Log.v("TAG", etPasswd.getText().toString());
 				passwdDialog.cancel();
@@ -74,7 +73,6 @@ public class SettingPre extends PreferenceActivity implements
 		});
 		cancel.setOnClickListener(new View.OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				etPasswd.setText("");
 				Toast.makeText(Weibo.appref, "Did not set the Passwd", 3000);
@@ -87,7 +85,6 @@ public class SettingPre extends PreferenceActivity implements
 		return true;
 	}
 
-	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		switch(which){
 		case Dialog.BUTTON_POSITIVE:
