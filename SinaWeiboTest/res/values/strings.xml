@@ -31,7 +31,7 @@
     <string name="progress_content">请稍候</string>
     <!-- TopMenu -->
     <string name="top_menu_home">首页</string>
-    <string name="top_menu_mytwitter">我的微博</string>
+    <string name="top_menu_mytwitter">微博</string>
     <string name="top_menu_atme">\@ME</string>
     <string name="top_menu_favor">收藏</string>
     <string name="top_menu_comment">评论</string>

@@ -13,9 +13,14 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -53,21 +58,21 @@ public class IndexActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.index_activity);
 
 		lvPublicTimeLine = (ListView) findViewById(R.id.lvpublicTimeLine);
 		initData();
 		lvPublicTimeLine.setOnScrollListener(new OnScrollListener() {
 
-			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
 				// TODO Auto-generated method stub
 
 			}
 
-			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 				// TODO Auto-generated method stub
 
@@ -80,7 +85,7 @@ public class IndexActivity extends Activity {
 
 	private void initData() {
 		appref = this;
-
+		
 		strTopMenus = this.getResources().getStringArray(R.array.top_menu);
 		Log.v("TAG", strTopMenus.length + "");
 		DBAdapter dba = new DBAdapter(this, Contants.dbName, Contants.dbVersion);
@@ -106,20 +111,25 @@ public class IndexActivity extends Activity {
 		}
 		cr.close();
 		dba.close();
-		// hs = (HorizontalScrollView) findViewById(R.id.hsTopMenu);
-		// hs.setHorizontalScrollBarEnabled(false);
-		// TableRow trMenu = (TableRow)findViewById(R.id.trMenu);
+		hs = (HorizontalScrollView) findViewById(R.id.hsTopMenu);
+		hs.setHorizontalScrollBarEnabled(false);
+		hs.setClickable(true);
+		TableRow trMenu = (TableRow) findViewById(R.id.trTopMenu);
+		trMenu.setClickable(true);
 		//
-		// for(int i = 0;i<strTopMenus.length;i++){
-		// TextView tv = new TextView(this);
-		// tv.setText(strTopMenus[i] + "   ");
-		// tv.setClickable(true);
-		// tv.isShown();
-		// trMenu.addView(tv);
-		// }
-		lvTopMenu = (ListView) findViewById(R.id.lvTopMenu);
-		// tma = new TopMenuAdapter();
-		// lvTopMenu.setAdapter(tma);
+		for (int i = 0; i < strTopMenus.length; i++) {
+			LayoutInflater lInflater = LayoutInflater.from(this);
+			View view = lInflater.inflate(R.layout.top_menu, null);
+			TextView tvTitle = (TextView)view.findViewById(R.id.tvMenuItem);
+			ImageView ivTopMenu = (ImageView)view.findViewById(R.id.ivMenuImage);
+			ivTopMenu.setImageBitmap(Contants.imageMenu[i]);
+			tvTitle.setText(strTopMenus[i].toString());
+			view.setPadding(8, 0, 0, 0);
+			view.setClickable(true);
+			trMenu.addView(view);
+		}
+		//tma = new TopMenuAdapter();
+		//lvTopMenu.setAdapter(tma);
 	}
 
 	private void getFriends() {
@@ -147,8 +157,8 @@ public class IndexActivity extends Activity {
 		@Override
 		protected void onPreExecute() {
 			pDialog = ProgressDialog.show(IndexActivity.appref, appref
-					.getResources().getString(R.string.progress_title), 
-					appref.getResources().getString(R.string.progress_content));
+					.getResources().getString(R.string.progress_title), appref
+					.getResources().getString(R.string.progress_content));
 			super.onPreExecute();
 		}
 
