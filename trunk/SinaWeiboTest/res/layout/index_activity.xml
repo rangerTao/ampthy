@@ -9,6 +9,6 @@
 				android:layout_width="fill_parent" />
 		</TableLayout>
 	</HorizontalScrollView>
-	<ListView android:layout_width="fill_parent" android:id="@+id/lvpublicTimeLine"
-		android:layout_height="fill_parent"></ListView>
+	<ListView android:layout_width="fill_parent" android:id="@+id/lvHomeTimeLine"
+		android:layout_height="wrap_content"></ListView>
 </LinearLayout>

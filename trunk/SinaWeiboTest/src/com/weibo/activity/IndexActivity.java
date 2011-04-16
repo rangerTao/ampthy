@@ -1,7 +1,9 @@
 package com.weibo.activity;
 
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
+import weibo4andriod.Status;
 import weibo4andriod.User;
 import weibo4andriod.Weibo4sina;
 import weibo4andriod.WeiboException;
@@ -12,6 +14,7 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,12 +27,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 
 import com.weibo.R;
 import com.weibo.daos.DBAdapter;
 import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.adapter.FriendsStatusAdapter;
+import com.weibo.pojo.adapter.HomeTimeLineAdapter;
 import com.weibo.pojo.adapter.TopMenuAdapter;
 import com.weibo.utils.Contants;
 
@@ -41,17 +46,20 @@ public class IndexActivity extends Activity {
 	String accessSecret;
 
 	ProgressDialog pDialog;
-	ListView lvPublicTimeLine;
+	ListView lvHomeTimeLine;
 	ListView lvTopMenu;
 	StringBuffer sbAll = new StringBuffer();
 	HorizontalScrollView hs;
+	
+	public static Handler handler = new Handler();
 	public static String[] strTopMenus;
 
 	public static IndexActivity appref;
 
 	public static List<User> friends;
+	public static List<Status> statuses;
 
-	FriendsStatusAdapter fsa;
+	HomeTimeLineAdapter htla;
 	TopMenuAdapter tma;
 
 	@Override
@@ -61,26 +69,14 @@ public class IndexActivity extends Activity {
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.index_activity);
+		lvHomeTimeLine = new ListView(this);
+		setContentView(lvHomeTimeLine);
 
-		lvPublicTimeLine = (ListView) findViewById(R.id.lvpublicTimeLine);
+		//lvHomeTimeLine = (ListView) findViewById(R.id.lvHomeTimeLine);
 		initData();
-		lvPublicTimeLine.setOnScrollListener(new OnScrollListener() {
-
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-				// TODO Auto-generated method stub
-
-			}
-
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				// TODO Auto-generated method stub
-
-			}
-
-		});
-		// FriendTask ft = new FriendTask();
-		// ft.execute();
+		
+		FriendTask ft = new FriendTask();
+		ft.execute();
 	}
 
 	private void initData() {
@@ -111,28 +107,28 @@ public class IndexActivity extends Activity {
 		}
 		cr.close();
 		dba.close();
-		hs = (HorizontalScrollView) findViewById(R.id.hsTopMenu);
-		hs.setHorizontalScrollBarEnabled(false);
-		hs.setClickable(true);
-		TableRow trMenu = (TableRow) findViewById(R.id.trTopMenu);
-		trMenu.setClickable(true);
-		//
-		for (int i = 0; i < strTopMenus.length; i++) {
-			LayoutInflater lInflater = LayoutInflater.from(this);
-			View view = lInflater.inflate(R.layout.top_menu, null);
-			TextView tvTitle = (TextView)view.findViewById(R.id.tvMenuItem);
-			ImageView ivTopMenu = (ImageView)view.findViewById(R.id.ivMenuImage);
-			ivTopMenu.setImageBitmap(Contants.imageMenu[i]);
-			tvTitle.setText(strTopMenus[i].toString());
-			view.setPadding(8, 0, 0, 0);
-			view.setClickable(true);
-			trMenu.addView(view);
-		}
+//		hs = (HorizontalScrollView) findViewById(R.id.hsTopMenu);
+//		hs.setHorizontalScrollBarEnabled(false);
+//		hs.setClickable(true);
+//		TableRow trMenu = (TableRow) findViewById(R.id.trTopMenu);
+//		trMenu.setClickable(true);
+//		//
+//		for (int i = 0; i < strTopMenus.length; i++) {
+//			LayoutInflater lInflater = LayoutInflater.from(this);
+//			View view = lInflater.inflate(R.layout.top_menu, null);
+//			TextView tvTitle = (TextView)view.findViewById(R.id.tvMenuItem);
+//			ImageView ivTopMenu = (ImageView)view.findViewById(R.id.ivMenuImage);
+//			ivTopMenu.setImageBitmap(Contants.imageMenu[i]);
+//			tvTitle.setText(strTopMenus[i].toString());
+//			view.setPadding(8, 0, 0, 0);
+//			view.setClickable(true);
+//			trMenu.addView(view);
+//		}
 		//tma = new TopMenuAdapter();
 		//lvTopMenu.setAdapter(tma);
 	}
 
-	private void getFriends() {
+	private void getFriends() throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException {
 
 		try {
 
@@ -142,10 +138,9 @@ public class IndexActivity extends Activity {
 			weibo.setToken(access, accessSecret);
 			weibo.setOAuthAccessToken(token, tokenSecret);
 
-			friends = weibo.getFriendsStatuses();
-			for (User user : friends) {
-				Log.v("TAG", user.toString());
-			}
+			statuses = weibo.getHomeTimeline();
+			
+			Log.v("TAG", statuses.size()+"");
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
 			System.exit(-1);
@@ -165,14 +160,18 @@ public class IndexActivity extends Activity {
 		@Override
 		protected void onPostExecute(Object result) {
 			pDialog.dismiss();
-			lvPublicTimeLine.setAdapter(fsa);
+			lvHomeTimeLine.setAdapter(htla);
 			super.onPostExecute(result);
 		}
 
 		@Override
 		protected Object doInBackground(Object... arg0) {
-			getFriends();
-			fsa = new FriendsStatusAdapter();
+			try {
+				getFriends();
+			} catch (org.apache.commons.httpclient.util.TimeoutController.TimeoutException e) {
+				Toast.makeText(appref, "time out", 2000).show();
+			}
+			htla = new HomeTimeLineAdapter();
 			return null;
 		}
 	}
