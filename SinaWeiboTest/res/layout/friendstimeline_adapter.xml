@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
-    <ImageView android:id="@+id/imageView1" android:layout_width="wrap_content" android:src="@drawable/icon" android:layout_height="wrap_content" android:layout_alignParentLeft="true"></ImageView>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<ImageView android:src="@drawable/icon"
+		android:layout_alignParentLeft="true" android:id="@+id/ivUserHead"
+		android:layout_width="32px" android:layout_height="32px"></ImageView>
+	<TextView android:layout_width="wrap_content" android:text="TextView"
+		android:layout_toRightOf="@+id/ivUserHead" android:layout_height="wrap_content"
+		android:layout_alignTop="@+id/ivUserHead" android:id="@+id/tvUserName"></TextView>
+	<TextView android:text="TextView" android:layout_below="@+id/tvUserName"
+		android:layout_height="wrap_content" android:layout_alignLeft="@+id/tvUserName"
+		android:layout_alignRight="@+id/tvUserName" android:id="@+id/tvUserDesc"
+		android:layout_width="fill_parent"></TextView>
+	<TextView android:layout_width="wrap_content" android:text="TextView"
+		android:layout_below="@+id/tvUserDesc" android:layout_height="wrap_content"
+		android:layout_alignLeft="@+id/tvUserDesc" android:layout_alignRight="@+id/tvUserDesc"
+		android:id="@+id/tvStatus"></TextView>
+	<TextView android:layout_width="wrap_content" android:text="TextView"
+		android:layout_height="wrap_content" android:layout_alignParentRight="true"
+		android:id="@+id/tvUserLocation"></TextView>
 </RelativeLayout>
