@@ -56,33 +56,33 @@ public class IndexActivity extends Activity {
 
 		setContentView(R.layout.index_activity);
 
-		lvPublicTimeLine = (ListView)findViewById(R.id.lvpublicTimeLine);
+		lvPublicTimeLine = (ListView) findViewById(R.id.lvpublicTimeLine);
 		initData();
-		lvPublicTimeLine.setOnScrollListener(new OnScrollListener(){
+		lvPublicTimeLine.setOnScrollListener(new OnScrollListener() {
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 		});
-//		FriendTask ft = new FriendTask();
-//		ft.execute();
+		// FriendTask ft = new FriendTask();
+		// ft.execute();
 	}
 
 	private void initData() {
 		appref = this;
 
 		strTopMenus = this.getResources().getStringArray(R.array.top_menu);
-		Log.v("TAG", strTopMenus.length +"");
+		Log.v("TAG", strTopMenus.length + "");
 		DBAdapter dba = new DBAdapter(this, Contants.dbName, Contants.dbVersion);
 		dba.open();
 		Cursor cr = dba.query(null, "", "", "", "", "");
@@ -106,20 +106,20 @@ public class IndexActivity extends Activity {
 		}
 		cr.close();
 		dba.close();
-//		hs = (HorizontalScrollView) findViewById(R.id.hsTopMenu);
-//		hs.setHorizontalScrollBarEnabled(false);
-//		TableRow trMenu = (TableRow)findViewById(R.id.trMenu);
-//
-//		for(int i = 0;i<strTopMenus.length;i++){
-//			TextView tv = new TextView(this);
-//			tv.setText(strTopMenus[i] + "   ");
-//			tv.setClickable(true);
-//			tv.isShown();
-//			trMenu.addView(tv);
-//		}
+		// hs = (HorizontalScrollView) findViewById(R.id.hsTopMenu);
+		// hs.setHorizontalScrollBarEnabled(false);
+		// TableRow trMenu = (TableRow)findViewById(R.id.trMenu);
+		//
+		// for(int i = 0;i<strTopMenus.length;i++){
+		// TextView tv = new TextView(this);
+		// tv.setText(strTopMenus[i] + "   ");
+		// tv.setClickable(true);
+		// tv.isShown();
+		// trMenu.addView(tv);
+		// }
 		lvTopMenu = (ListView) findViewById(R.id.lvTopMenu);
-		//tma = new TopMenuAdapter();
-		//lvTopMenu.setAdapter(tma);
+		// tma = new TopMenuAdapter();
+		// lvTopMenu.setAdapter(tma);
 	}
 
 	private void getFriends() {
@@ -146,8 +146,9 @@ public class IndexActivity extends Activity {
 
 		@Override
 		protected void onPreExecute() {
-			pDialog = ProgressDialog
-					.show(IndexActivity.appref, "正在获取信息", "请稍等");
+			pDialog = ProgressDialog.show(IndexActivity.appref, appref
+					.getResources().getString(R.string.progress_title), 
+					appref.getResources().getString(R.string.progress_content));
 			super.onPreExecute();
 		}
 
