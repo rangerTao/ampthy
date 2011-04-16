@@ -2,6 +2,7 @@ package com.weibo.pojo.adapter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -40,11 +41,10 @@ import android.widget.TextView;
 public class HomeTimeLineAdapter extends BaseAdapter {
 
 	ImageView ivUserHead;
-	String urlString;
+	URL urlString;
 	Bitmap bmpUserHead;
 	
 	public int getCount() {
-		Log.v("TAG", "indexActivity.statuses.size()"+IndexActivity.statuses.size());
 		return IndexActivity.statuses.size();
 	}
 
@@ -58,9 +58,8 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Log.v("TAG", "HomeTimeLineAdapter getView");
 		Status status = IndexActivity.statuses.get(position);
-		User user = status.getUser();
+		final User user = status.getUser();
 		LayoutInflater layoutInflater = LayoutInflater
 				.from(IndexActivity.appref);
 		View view = layoutInflater.inflate(R.layout.friendstimeline_adapter,
@@ -74,36 +73,40 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		TextView tvUserStatus = (TextView) view.findViewById(R.id.tvStatus);
 
 		tvUserNameTextView.setText(user.getScreenName());
+		Log.v("TAG", user.getScreenName());
 		tvUserLocationg.setText(user.getLocation());
 		tvUserDesc.setText(user.getDescription().replace("\r", "").replace("\n", ""));
+		urlString = user.getProfileImageURL();
+		ivUserHead.setImageBitmap(BitmapFactory.decodeResource(IndexActivity.appref.getResources(), R.drawable.loading));
+		if(bmpUserHead == null){
+			IndexActivity.handler.post(new Runnable() {
 		
-		IndexActivity.handler.post(new Runnable() {
-			
-			public void run() {
-				DefaultHttpClient hc = new DefaultHttpClient();
-				hc.getParams().setIntParameter(HttpConnectionParams.CONNECTION_TIMEOUT,
-						10000);
-				hc.getParams().setIntParameter(HttpConnectionParams.SO_TIMEOUT, 10000);
-				// hc.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,proxy);
+				public void run() {
+					Log.v("TAG", "start to get the image of "+user.getScreenName());
+					DefaultHttpClient hc = new DefaultHttpClient();
+					hc.getParams().setIntParameter(HttpConnectionParams.CONNECTION_TIMEOUT,
+							10000);
+					hc.getParams().setIntParameter(HttpConnectionParams.SO_TIMEOUT, 10000);
 
-				try {
-					Log.v("Getting data.", "start");
-					HttpGet gm = new HttpGet(urlString);
-					HttpResponse hr = hc.execute(gm);
-					InputStream is = hr.getEntity().getContent();
-					// ad1.wait();
-					Log.v("Getting data.", "end");
+					try {
+						HttpGet gm = new HttpGet(urlString.toURI());
+						HttpResponse hr = hc.execute(gm);
+						InputStream is = hr.getEntity().getContent();
+						// ad1.wait();
+						Log.v("Getting data.", "end");
 
-					bmpUserHead = BitmapFactory.decodeStream(is);
+						bmpUserHead = BitmapFactory.decodeStream(is);
 
-					ivUserHead.setImageBitmap(bmpUserHead);
-				} catch (Exception e) {
-					e.printStackTrace();
+						ivUserHead.setImageBitmap(bmpUserHead);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
 				}
-				
-			}
-		});
-		//tvUserStatus.setText(user.getStatusText().replace("\r", "").replace("\n", ""));
+			});
+		}else{
+			ivUserHead.setImageBitmap(bmpUserHead);
+		}
 		return view;
 	}
 	
