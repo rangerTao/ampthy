@@ -26,6 +26,9 @@
     <!-- comments -->
     <string name="welcome_label">欢迎使用...你已经添加好了一个微博的账户。现在，请点击下方的按钮，开始微博的旅程吧。</string>
     
+    <!-- ProgressDialog -->
+    <string name="progress_title">正在读取信息</string>
+    <string name="progress_content">请稍候</string>
     <!-- TopMenu -->
     <string name="top_menu_home">首页</string>
     <string name="top_menu_mytwitter">我的微博</string>
