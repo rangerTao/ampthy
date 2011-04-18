@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout android:id="@+id/relativeLayout1"
+<RelativeLayout android:id="@+id/widget28"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	xmlns:android="http://schemas.android.com/apk/res/android">
-	<LinearLayout android:layout_width="wrap_content" android:layout_centerVertical="true"
-		android:layout_centerInParent="true" android:layout_height="wrap_content">
-		<Button android:layout_height="wrap_content"
-			android:layout_width="wrap_content" android:text="@string/login"
-			android:id="@+id/btnLogin"></Button>
-		<Button android:layout_height="wrap_content"
-			android:layout_width="wrap_content" android:text="@string/cancel"
-			android:id="@+id/btnCancel" android:layout_toRightOf="@+id/btnLogin"
-			android:layout_alignTop="@+id/btnLogin" android:layout_alignBottom="@+id/btnLogin"></Button>
-	</LinearLayout>
+
+	<RelativeLayout android:id="@+id/rlBtn"
+		android:layout_centerInParent="true" android:layout_width="wrap_content"
+		android:layout_height="fill_parent">
+			<ImageView android:id="@+id/ivUserHead" android:src="@drawable/fans" android:layout_above="@+id/rlControl"
+			android:layout_alignLeft="@+id/rlControl" android:layout_alignRight="@+id/rlControl"
+				android:layout_width="wrap_content" android:layout_height="wrap_content">
+			</ImageView>
+		<LinearLayout android:id="@+id/rlControl" android:paddingTop="20dip"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:orientation="horizontal" android:layout_centerInParent="true">
+			<Button android:id="@+id/btnLogin" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/login"
+				android:layout_alignParentTop="true" android:layout_toLeftOf="@+id/btnCancel">
+			</Button>
+			<Button android:id="@+id/btnCancel" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/cancel"
+				android:layout_alignParentRight="true">
+			</Button>
+		</LinearLayout>
+	</RelativeLayout>
 </RelativeLayout>
