@@ -59,6 +59,8 @@ public class IndexActivity extends Activity {
 	public static List<User> friends;
 	public static List<Status> statuses;
 
+	public Weibo4sina weibo = OAuthConstant.getInstance().getWeibo();
+	
 	HomeTimeLineAdapter htla;
 	TopMenuAdapter tma;
 
@@ -76,6 +78,7 @@ public class IndexActivity extends Activity {
 		
 		FriendTask ft = new FriendTask();
 		ft.execute();
+		
 	}
 
 	private void initData() {
@@ -130,15 +133,13 @@ public class IndexActivity extends Activity {
 	private void getFriends() throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException {
 
 		try {
-
-			Weibo4sina weibo = OAuthConstant.getInstance().getWeibo();
 			weibo.setOAuthConsumer(Contants.CONSUMER_KEY,
 					Contants.CONSUMER_SECRET);
 			weibo.setToken(access, accessSecret);
 			weibo.setOAuthAccessToken(token, tokenSecret);
-
-			statuses = weibo.getHomeTimeline();
 			
+			statuses = weibo.getHomeTimeline();
+
 			Log.v("TAG", statuses.size()+"");
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());

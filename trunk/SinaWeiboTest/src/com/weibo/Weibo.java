@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-
 import com.weibo.OAuth.OAuthActivity;
 import com.weibo.activity.IndexActivity;
 import com.weibo.activity.SettingPre;
@@ -56,8 +55,8 @@ public class Weibo extends Activity implements OnClickListener {
 		appref = this;
 
 		// init the compenent in the view;
-//		etName = (EditText) appref.findViewById(R.id.etUsername);
-//		etPasswd = (EditText) appref.findViewById(R.id.etPasswd);
+		// etName = (EditText) appref.findViewById(R.id.etUsername);
+		// etPasswd = (EditText) appref.findViewById(R.id.etPasswd);
 
 		btnLogin = (Button) appref.findViewById(R.id.btnLogin);
 		btnCancel = (Button) appref.findViewById(R.id.btnCancel);

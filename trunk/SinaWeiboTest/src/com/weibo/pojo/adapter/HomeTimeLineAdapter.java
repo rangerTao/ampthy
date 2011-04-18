@@ -2,6 +2,7 @@ package com.weibo.pojo.adapter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,8 +22,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import weibo4andriod.RetweetDetails;
 import weibo4andriod.Status;
 import weibo4andriod.User;
+import weibo4andriod.Weibo4sina;
+import weibo4andriod.WeiboException;
 
 import com.weibo.R;
 import com.weibo.activity.IndexActivity;
@@ -39,6 +43,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class HomeTimeLineAdapter extends BaseAdapter {
@@ -77,15 +82,14 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		TextView tvUserStatus = (TextView) view.findViewById(R.id.tvStatus);
 
 		tvUserNameTextView.setText(user.getScreenName());
-		Log.v("TAG", user.getScreenName());
 		tvUserLocationg.setText(user.getLocation());
 		tvUserDesc.setSingleLine(true);
-		if(user.getDescription() == null || user.getDescription().equals("") ){
+		if (user.getDescription() == null || user.getDescription().equals("")) {
 			tvUserDesc.setVisibility(View.GONE);
-		}else{
+		} else {
 			tvUserDesc.setText(user.getDescription().toString());
 		}
-		
+
 		urlString = user.getProfileImageURL();
 		ivUserHead.setImageBitmap(BitmapFactory.decodeResource(
 				IndexActivity.appref.getResources(), R.drawable.loading));
@@ -99,8 +103,53 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 			ivUserHead.setImageBitmap(imageMap.get(user.getId() + ""));
 		}
 		tvUserStatus.setText(status.getText().toString());
-		
+		ImageView ivStatusImage = (ImageView) view
+				.findViewById(R.id.ivThumbail);
+		if (status.getThumbnail_pic() != null
+				&& status.getThumbnail_pic() != "") {
+			if (imageMap.containsKey(user.getId() + "thum") == false) {
+				imageMap.put(user.getId() + "thum", null);
+				ivStatusImage.setImageBitmap(BitmapFactory
+						.decodeResource(IndexActivity.appref.getResources(),
+								R.drawable.refresh));
+				try {
+					Bitmap tempBitmap = WeiboUtils.getImage(new URL(status
+							.getThumbnail_pic()));
+					WeiboUtils.setImage(IndexActivity.appref.handler,
+							ivStatusImage, tempBitmap);
+					imageMap.put(user.getId() + "thum", tempBitmap);
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+			} else {
+				ivStatusImage.setImageBitmap(imageMap
+						.get(user.getId() + "thum"));
+			}
+
+		} else {
+			ivStatusImage.setVisibility(View.GONE);
+		}
+
 		view.setPadding(0, 3, 0, 0);
+		RetweetDetails statusRetweet = status.getRetweetDetails();
+		RelativeLayout rlayout = new RelativeLayout(IndexActivity.appref);
+		if (statusRetweet != null && statusRetweet.getRetweetId() != 0) {
+			View viewRetweet = new View(IndexActivity.appref);
+			TextView tvRetweetUserName = new TextView(IndexActivity.appref);
+			TextView tvRetweetDetail = new TextView(IndexActivity.appref);
+			tvRetweetUserName
+					.setText(statusRetweet.getRetweetingUser() == null ? statusRetweet
+							.getRetweetingUser().getScreenName().toString()
+							: "");
+
+			Log.v("TAG", statusRetweet.toString());
+
+			// rlayout.addView(tvRetweetUserName);
+			// rlayout.addView(tvRetweetDetail);
+		}
+		// RelativeLayout rl = (RelativeLayout) view
+		// .findViewById(R.id.rlFriendsTimeLine);
+		// rl.addView(rlayout);
 		return view;
 	}
 }
