@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
-	<HorizontalScrollView android:layout_width="fill_parent" android:id="@+id/hsTopMenu"
-		android:layout_height="wrap_content">
+	<HorizontalScrollView android:layout_width="fill_parent"
+		android:id="@+id/hsTopMenu" android:layout_height="wrap_content">
 		<TableLayout android:layout_width="fill_parent"
 			android:layout_height="wrap_content">
 			<TableRow android:id="@+id/trTopMenu" android:layout_height="wrap_content"
@@ -10,5 +10,5 @@
 		</TableLayout>
 	</HorizontalScrollView>
 	<ListView android:layout_width="fill_parent" android:id="@+id/lvHomeTimeLine"
-		android:layout_height="wrap_content"></ListView>
-</LinearLayout>
+		android:layout_below="@+id/hsTopMenu" android:layout_height="wrap_content"></ListView>
+</RelativeLayout>

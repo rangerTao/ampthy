@@ -9,12 +9,10 @@
 		android:layout_alignTop="@+id/ivUserHead" android:id="@+id/tvUserName"></TextView>
 	<TextView android:text="TextView" android:layout_below="@+id/tvUserName"
 		android:layout_height="wrap_content" android:layout_alignLeft="@+id/tvUserName"
-		android:layout_alignRight="@+id/tvUserName" android:id="@+id/tvUserDesc"
-		android:layout_width="fill_parent"></TextView>
+		android:id="@+id/tvUserDesc" android:layout_width="fill_parent"></TextView>
 	<TextView android:layout_width="wrap_content" android:text="TextView"
 		android:layout_below="@+id/tvUserDesc" android:layout_height="wrap_content"
-		android:layout_alignLeft="@+id/tvUserDesc" android:layout_alignRight="@+id/tvUserDesc"
-		android:id="@+id/tvStatus"></TextView>
+		android:layout_alignLeft="@+id/tvUserDesc" android:id="@+id/tvStatus"></TextView>
 	<TextView android:layout_width="wrap_content" android:text="TextView"
 		android:layout_height="wrap_content" android:layout_alignParentRight="true"
 		android:id="@+id/tvUserLocation"></TextView>
