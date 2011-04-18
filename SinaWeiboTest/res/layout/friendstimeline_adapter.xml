@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	android:id="@+id/rlFriendsTimeLine" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
 	<ImageView android:src="@drawable/icon"
 		android:layout_alignParentLeft="true" android:id="@+id/ivUserHead"
 		android:layout_width="32px" android:layout_height="32px"></ImageView>
@@ -13,6 +14,10 @@
 	<TextView android:layout_width="wrap_content" android:text="TextView"
 		android:layout_below="@+id/tvUserDesc" android:layout_height="wrap_content"
 		android:layout_alignLeft="@+id/tvUserDesc" android:id="@+id/tvStatus"></TextView>
+	<ImageView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:src="@drawable/icon"
+		android:layout_below="@+id/tvStatus" android:layout_alignLeft="@+id/tvStatus"
+		android:id="@+id/ivThumbail"></ImageView>
 	<TextView android:layout_width="wrap_content" android:text="TextView"
 		android:layout_height="wrap_content" android:layout_alignParentRight="true"
 		android:id="@+id/tvUserLocation"></TextView>
