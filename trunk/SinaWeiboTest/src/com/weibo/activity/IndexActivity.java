@@ -69,10 +69,9 @@ public class IndexActivity extends Activity {
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		lvHomeTimeLine = new ListView(this);
-		setContentView(lvHomeTimeLine);
+		setContentView(R.layout.index_activity);
 
-		//lvHomeTimeLine = (ListView) findViewById(R.id.lvHomeTimeLine);
+		lvHomeTimeLine = (ListView) findViewById(R.id.lvHomeTimeLine);
 		initData();
 		
 		FriendTask ft = new FriendTask();
@@ -107,23 +106,23 @@ public class IndexActivity extends Activity {
 		}
 		cr.close();
 		dba.close();
-//		hs = (HorizontalScrollView) findViewById(R.id.hsTopMenu);
-//		hs.setHorizontalScrollBarEnabled(false);
-//		hs.setClickable(true);
-//		TableRow trMenu = (TableRow) findViewById(R.id.trTopMenu);
-//		trMenu.setClickable(true);
-//		//
-//		for (int i = 0; i < strTopMenus.length; i++) {
-//			LayoutInflater lInflater = LayoutInflater.from(this);
-//			View view = lInflater.inflate(R.layout.top_menu, null);
-//			TextView tvTitle = (TextView)view.findViewById(R.id.tvMenuItem);
-//			ImageView ivTopMenu = (ImageView)view.findViewById(R.id.ivMenuImage);
-//			ivTopMenu.setImageBitmap(Contants.imageMenu[i]);
-//			tvTitle.setText(strTopMenus[i].toString());
-//			view.setPadding(8, 0, 0, 0);
-//			view.setClickable(true);
-//			trMenu.addView(view);
-//		}
+		hs = (HorizontalScrollView) findViewById(R.id.hsTopMenu);
+		hs.setHorizontalScrollBarEnabled(false);
+		hs.setClickable(true);
+		TableRow trMenu = (TableRow) findViewById(R.id.trTopMenu);
+		trMenu.setClickable(true);
+		//
+		for (int i = 0; i < strTopMenus.length; i++) {
+			LayoutInflater lInflater = LayoutInflater.from(this);
+			View view = lInflater.inflate(R.layout.top_menu, null);
+			TextView tvTitle = (TextView)view.findViewById(R.id.tvMenuItem);
+			ImageView ivTopMenu = (ImageView)view.findViewById(R.id.ivMenuImage);
+			ivTopMenu.setImageBitmap(Contants.imageMenu[i]);
+			tvTitle.setText(strTopMenus[i].toString());
+			view.setPadding(8, 0, 0, 0);
+			view.setClickable(true);
+			trMenu.addView(view);
+		}
 		//tma = new TopMenuAdapter();
 		//lvTopMenu.setAdapter(tma);
 	}

@@ -3,6 +3,8 @@ package com.weibo.pojo.adapter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,6 +26,7 @@ import weibo4andriod.User;
 
 import com.weibo.R;
 import com.weibo.activity.IndexActivity;
+import com.weibo.utils.WeiboUtils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -43,7 +46,8 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 	ImageView ivUserHead;
 	URL urlString;
 	Bitmap bmpUserHead;
-	
+	Map<String, Bitmap> imageMap = new HashMap<String, Bitmap>();
+
 	public int getCount() {
 		return IndexActivity.statuses.size();
 	}
@@ -75,65 +79,28 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		tvUserNameTextView.setText(user.getScreenName());
 		Log.v("TAG", user.getScreenName());
 		tvUserLocationg.setText(user.getLocation());
-		tvUserDesc.setText(user.getDescription().replace("\r", "").replace("\n", ""));
-		urlString = user.getProfileImageURL();
-		ivUserHead.setImageBitmap(BitmapFactory.decodeResource(IndexActivity.appref.getResources(), R.drawable.loading));
-		if(bmpUserHead == null){
-			IndexActivity.handler.post(new Runnable() {
-		
-				public void run() {
-					Log.v("TAG", "start to get the image of "+user.getScreenName());
-					DefaultHttpClient hc = new DefaultHttpClient();
-					hc.getParams().setIntParameter(HttpConnectionParams.CONNECTION_TIMEOUT,
-							10000);
-					hc.getParams().setIntParameter(HttpConnectionParams.SO_TIMEOUT, 10000);
-
-					try {
-						HttpGet gm = new HttpGet(urlString.toURI());
-						HttpResponse hr = hc.execute(gm);
-						InputStream is = hr.getEntity().getContent();
-						// ad1.wait();
-						Log.v("Getting data.", "end");
-
-						bmpUserHead = BitmapFactory.decodeStream(is);
-
-						ivUserHead.setImageBitmap(bmpUserHead);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					
-				}
-			});
+		tvUserDesc.setSingleLine(true);
+		if(user.getDescription() == null || user.getDescription().equals("") ){
+			tvUserDesc.setVisibility(View.GONE);
 		}else{
-			ivUserHead.setImageBitmap(bmpUserHead);
+			tvUserDesc.setText(user.getDescription().toString());
 		}
+		
+		urlString = user.getProfileImageURL();
+		ivUserHead.setImageBitmap(BitmapFactory.decodeResource(
+				IndexActivity.appref.getResources(), R.drawable.loading));
+		if (imageMap.containsKey(user.getId() + "") == false) {
+			imageMap.put(user.getId() + "", null);
+			Bitmap tempBitmap = WeiboUtils.getImage(user.getProfileImageURL());
+			WeiboUtils.setImage(IndexActivity.appref.handler, ivUserHead,
+					tempBitmap);
+			imageMap.put(user.getId() + "", tempBitmap);
+		} else {
+			ivUserHead.setImageBitmap(imageMap.get(user.getId() + ""));
+		}
+		tvUserStatus.setText(status.getText().toString());
+		
+		view.setPadding(0, 3, 0, 0);
 		return view;
 	}
-	
-	class imageTask extends AsyncTask{
-
-		
-		@Override
-		protected void onPostExecute(Object result) {
-			ivUserHead.setImageBitmap(bmpUserHead);
-			super.onPostExecute(result);
-		}
-
-
-		@Override
-		protected void onPreExecute() {
-			ivUserHead.setImageBitmap(BitmapFactory.decodeResource(IndexActivity.appref.getResources(), R.drawable.pic_error));
-			super.onPreExecute();
-		}
-
-
-		@Override
-		protected Object doInBackground(Object... params) {
-
-			
-			return null;
-		}
-		
-	}
-
 }
