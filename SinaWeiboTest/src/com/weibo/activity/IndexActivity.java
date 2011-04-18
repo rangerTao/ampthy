@@ -12,6 +12,7 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +23,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -51,6 +53,8 @@ public class IndexActivity extends Activity {
 	StringBuffer sbAll = new StringBuffer();
 	HorizontalScrollView hs;
 	
+	public static TextView tvHeaderUserName;
+	
 	public static Handler handler = new Handler();
 	public static String[] strTopMenus;
 
@@ -75,10 +79,23 @@ public class IndexActivity extends Activity {
 
 		lvHomeTimeLine = (ListView) findViewById(R.id.lvHomeTimeLine);
 		initData();
-		
+		initHeader();
 		FriendTask ft = new FriendTask();
-		ft.execute();
+		ft.execute();		
+	}
+	
+	public void initHeader(){
 		
+		View viewHeader = LayoutInflater.from(this).inflate(R.layout.hometimeline_header, null);
+		
+		ImageButton ibtnHeaderWrite = (ImageButton) viewHeader.findViewById(R.id.ibtnHeaderWrite);
+		ImageButton ibtnHeaderRefresh = (ImageButton) viewHeader.findViewById(R.id.ibtnHeaderRefresh);
+		tvHeaderUserName = (TextView) viewHeader.findViewById(R.id.tvHeaderUserName);
+		
+		ibtnHeaderWrite.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.writer));
+		ibtnHeaderRefresh.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.refresh_btn));
+
+		lvHomeTimeLine.addHeaderView(viewHeader);
 	}
 
 	private void initData() {
@@ -139,7 +156,8 @@ public class IndexActivity extends Activity {
 			weibo.setOAuthAccessToken(token, tokenSecret);
 			
 			statuses = weibo.getHomeTimeline();
-
+			User user = weibo.getUserDetail(weibo.getUserId());
+			tvHeaderUserName.setText(user.getScreenName());
 			Log.v("TAG", statuses.size()+"");
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());

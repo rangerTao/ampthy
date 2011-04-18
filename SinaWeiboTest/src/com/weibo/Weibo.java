@@ -55,9 +55,6 @@ public class Weibo extends Activity implements OnClickListener {
 		appref = this;
 
 		// init the compenent in the view;
-		// etName = (EditText) appref.findViewById(R.id.etUsername);
-		// etPasswd = (EditText) appref.findViewById(R.id.etPasswd);
-
 		btnLogin = (Button) appref.findViewById(R.id.btnLogin);
 		btnCancel = (Button) appref.findViewById(R.id.btnCancel);
 
