@@ -83,7 +83,7 @@ public class Weibo extends Activity implements OnClickListener {
 		} else if (arg0.getId() == btnCancel.getId()) {
 			// System.exit(0);
 			if (dba.deleteData(null, null)) {
-				Toast.makeText(appref, "delete ok", 2000);
+				Toast.makeText(appref, "delete ok", 2000).show();
 			}
 		}
 	}
