@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/rlTimeLineHeader"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
+<LinearLayout android:layout_width="fill_parent"
+	android:layout_height="wrap_content" android:orientation="vertical"
 	xmlns:android="http://schemas.android.com/apk/res/android">
-	<ImageButton android:src="@drawable/icon"
-		android:layout_height="wrap_content" android:layout_width="wrap_content"
-		android:layout_alignParentLeft="true" android:id="@+id/ibtnHeaderWrite"></ImageButton>
-	<ImageButton android:src="@drawable/icon"
-		android:layout_height="wrap_content" android:layout_width="wrap_content"
-		android:layout_alignParentRight="true" android:id="@+id/ibtnHeaderRefresh"></ImageButton>
-	<TextView android:text="TextView"
-		android:layout_alignParentTop="true" android:layout_height="wrap_content"
-		android:layout_width="wrap_content" android:id="@+id/tvHeaderUserName"
-		android:layout_centerInParent="true"></TextView>
-</RelativeLayout>
+	<RelativeLayout android:id="@+id/rlTimeLineHeader"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		xmlns:android="http://schemas.android.com/apk/res/android">
+		<ImageView android:src="@drawable/icon"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_alignParentLeft="true" android:id="@+id/ibtnHeaderWrite"></ImageView>
+		<ImageView android:src="@drawable/icon"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_alignParentRight="true" android:id="@+id/ibtnHeaderRefresh"></ImageView>
+		<TextView android:text="TextView"
+			android:layout_alignParentTop="true" android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:id="@+id/tvHeaderUserName"
+			android:layout_centerInParent="true"></TextView>
+	</RelativeLayout>
+	<LinearLayout android:id="@+id/llEditTwitter"
+		android:layout_width="fill_parent" android:layout_height="wrap_content" android:visibility="gone">
+		<EditText android:id="@+id/etBoradcast" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" />
+		<RelativeLayout android:id="@+id/rlBroadcastControl"
+			android:layout_width="fill_parent" android:layout_height="wrap_content">
+			<TextView android:id="@+id/btnSend" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/btnsend"
+				android:layout_alignParentLeft="true" />
+			<TextView android:id="@+id/btnCancel" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/btncancel"
+				android:layout_alignParentRight="true" />
+		</RelativeLayout>
+	</LinearLayout>
+</LinearLayout>

@@ -1,7 +1,6 @@
 package com.weibo.activity;
 
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 import weibo4andriod.Status;
 import weibo4andriod.User;
@@ -21,21 +20,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AbsListView;
+import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AbsListView.OnScrollListener;
 
 import com.weibo.R;
 import com.weibo.daos.DBAdapter;
 import com.weibo.pojo.OAuthConstant;
-import com.weibo.pojo.adapter.FriendsStatusAdapter;
 import com.weibo.pojo.adapter.HomeTimeLineAdapter;
 import com.weibo.pojo.adapter.TopMenuAdapter;
 import com.weibo.utils.Contants;
@@ -52,9 +49,9 @@ public class IndexActivity extends Activity {
 	ListView lvTopMenu;
 	StringBuffer sbAll = new StringBuffer();
 	HorizontalScrollView hs;
-	
+
 	public static TextView tvHeaderUserName;
-	
+
 	public static Handler handler = new Handler();
 	public static String[] strTopMenus;
 
@@ -64,13 +61,13 @@ public class IndexActivity extends Activity {
 	public static List<Status> statuses;
 
 	public Weibo4sina weibo = OAuthConstant.getInstance().getWeibo();
-	
+
 	HomeTimeLineAdapter htla;
 	TopMenuAdapter tma;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		
 		super.onCreate(savedInstanceState);
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -81,26 +78,44 @@ public class IndexActivity extends Activity {
 		initData();
 		initHeader();
 		FriendTask ft = new FriendTask();
-		ft.execute();		
-	}
-	
-	public void initHeader(){
-		
-		View viewHeader = LayoutInflater.from(this).inflate(R.layout.hometimeline_header, null);
-		
-		ImageButton ibtnHeaderWrite = (ImageButton) viewHeader.findViewById(R.id.ibtnHeaderWrite);
-		ImageButton ibtnHeaderRefresh = (ImageButton) viewHeader.findViewById(R.id.ibtnHeaderRefresh);
-		tvHeaderUserName = (TextView) viewHeader.findViewById(R.id.tvHeaderUserName);
-		
-		ibtnHeaderWrite.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.writer));
-		ibtnHeaderRefresh.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.refresh_btn));
+		ft.execute();
 
-		lvHomeTimeLine.addHeaderView(viewHeader);
+	}
+
+	public void initHeader() {
+
+		ImageView ibtnHeaderWrite = (ImageView) findViewById(R.id.ibtnHeaderWrite);
+		ImageView ibtnHeaderRefresh = (ImageView) findViewById(R.id.ibtnHeaderRefresh);
+		tvHeaderUserName = (TextView) findViewById(R.id.tvHeaderUserName);
+
+		ibtnHeaderWrite.setImageBitmap(BitmapFactory.decodeResource(
+				getResources(), R.drawable.writer));
+		ibtnHeaderRefresh.setImageBitmap(BitmapFactory.decodeResource(
+				getResources(), R.drawable.refresh_btn));
+
+		ibtnHeaderWrite.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				LinearLayout llEditTwitter = (LinearLayout) findViewById(R.id.llEditTwitter);
+				llEditTwitter.setVisibility(View.VISIBLE);
+
+				EditText etTwitter = (EditText) findViewById(R.id.etBoradcast);
+				etTwitter.setVisibility(View.VISIBLE);
+
+				TextView tvSend = (TextView) findViewById(R.id.btnSend);
+				tvSend.setVisibility(View.VISIBLE);
+
+				TextView tvCancel = (TextView) findViewById(R.id.btnCancel);
+				tvCancel.setVisibility(View.VISIBLE);
+			}
+
+		});
 	}
 
 	private void initData() {
 		appref = this;
-		
+
 		strTopMenus = this.getResources().getStringArray(R.array.top_menu);
 		Log.v("TAG", strTopMenus.length + "");
 		DBAdapter dba = new DBAdapter(this, Contants.dbName, Contants.dbVersion);
@@ -135,30 +150,28 @@ public class IndexActivity extends Activity {
 		for (int i = 0; i < strTopMenus.length; i++) {
 			LayoutInflater lInflater = LayoutInflater.from(this);
 			View view = lInflater.inflate(R.layout.top_menu, null);
-			TextView tvTitle = (TextView)view.findViewById(R.id.tvMenuItem);
-			ImageView ivTopMenu = (ImageView)view.findViewById(R.id.ivMenuImage);
+			TextView tvTitle = (TextView) view.findViewById(R.id.tvMenuItem);
+			ImageView ivTopMenu = (ImageView) view
+					.findViewById(R.id.ivMenuImage);
 			ivTopMenu.setImageBitmap(Contants.imageMenu[i]);
 			tvTitle.setText(strTopMenus[i].toString());
 			view.setPadding(8, 0, 0, 0);
 			view.setClickable(true);
 			trMenu.addView(view);
 		}
-		//tma = new TopMenuAdapter();
-		//lvTopMenu.setAdapter(tma);
 	}
 
-	private void getFriends() throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException {
+	private void getFriends()
+			throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException {
 
 		try {
 			weibo.setOAuthConsumer(Contants.CONSUMER_KEY,
 					Contants.CONSUMER_SECRET);
 			weibo.setToken(access, accessSecret);
 			weibo.setOAuthAccessToken(token, tokenSecret);
-			
+
 			statuses = weibo.getHomeTimeline();
-			User user = weibo.getUserDetail(weibo.getUserId());
-			tvHeaderUserName.setText(user.getScreenName());
-			Log.v("TAG", statuses.size()+"");
+
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
 			System.exit(-1);
@@ -179,6 +192,14 @@ public class IndexActivity extends Activity {
 		protected void onPostExecute(Object result) {
 			pDialog.dismiss();
 			lvHomeTimeLine.setAdapter(htla);
+			User user = null;
+			try {
+				user = weibo.getAuthenticatedUser();
+			} catch (WeiboException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			tvHeaderUserName.setText(user.getScreenName());
 			super.onPostExecute(result);
 		}
 
