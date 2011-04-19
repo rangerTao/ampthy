@@ -80,7 +80,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 				.findViewById(R.id.tvUserLocation);
 		TextView tvUserDesc = (TextView) view.findViewById(R.id.tvUserDesc);
 		TextView tvUserStatus = (TextView) view.findViewById(R.id.tvStatus);
-
+		tvUserStatus.setPadding(10, 5, 0, 0);
 		tvUserNameTextView.setText(user.getScreenName());
 		tvUserLocationg.setText(user.getLocation());
 		tvUserDesc.setSingleLine(true);
@@ -129,7 +129,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		} else {
 			ivStatusImage.setVisibility(View.GONE);
 		}
-
+		ivStatusImage.setPadding(10, 2, 0, 0);
 		view.setPadding(0, 3, 0, 0);
 		RetweetDetails statusRetweet = status.getRetweetDetails();
 		RelativeLayout rlayout = new RelativeLayout(IndexActivity.appref);

@@ -8,6 +8,9 @@
     <string name="cancel">取消</string>
     <string name="uNameError">用户名格式错误，请重新输入！</string>
     
+    <!-- IndexActivity ListView Header -->
+    <string name="btnsend">发布</string>
+    <string name="btncancel">取消</string>
     <!-- Menu -->
     <string name="Setting">Setting</string>
     
