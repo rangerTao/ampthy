@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +38,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,6 +82,10 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 				.findViewById(R.id.tvUserLocation);
 		TextView tvUserDesc = (TextView) view.findViewById(R.id.tvUserDesc);
 		TextView tvUserStatus = (TextView) view.findViewById(R.id.tvStatus);
+		TextView tvTimeCreate = (TextView)view.findViewById(R.id.tvTimeCreate);
+		TextView tvSource = (TextView)view.findViewById(R.id.tvSource);
+//		TextView tvRewardBy = (TextView)view.findViewById(R.id.tvRewardBy);
+//		TextView tvCommentBy = (TextView)view.findViewById(R.id.tvCommentBy);
 		tvUserStatus.setPadding(10, 5, 0, 0);
 		tvUserNameTextView.setText(user.getScreenName());
 		tvUserLocationg.setText(user.getLocation());
@@ -103,6 +109,11 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 			ivUserHead.setImageBitmap(imageMap.get(user.getId() + ""));
 		}
 		tvUserStatus.setText(status.getText().toString());
+		//tvSource.setText(status.getSource().toString());
+		tvSource.setText(Html.fromHtml(status.getSource().toString()));
+		SimpleDateFormat sdf = new SimpleDateFormat("MM.dd HH:mm  ");
+		tvTimeCreate.setText(sdf.format(status.getCreatedAt()));
+		
 		ImageView ivStatusImage = (ImageView) view
 				.findViewById(R.id.ivThumbail);
 		if (status.getThumbnail_pic() != null

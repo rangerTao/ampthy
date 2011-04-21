@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical">
-	<HorizontalScrollView android:layout_width="fill_parent"
-		android:id="@+id/hsTopMenu" android:layout_height="wrap_content">
-		<TableLayout android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			<TableRow android:id="@+id/trTopMenu" android:layout_height="wrap_content"
-				android:layout_width="fill_parent" />
-		</TableLayout>
-	</HorizontalScrollView>
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:id="@+id/belowTopMenu">
 		<RelativeLayout android:id="@+id/rlTimeLineHeader"
@@ -26,8 +18,9 @@
 		</RelativeLayout>
 	</LinearLayout>
 	<LinearLayout android:id="@+id/llEditTwitter"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="vertical" android:visibility="gone">
+		android:layout_below="@+id/belowTopMenu" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="vertical"
+		android:visibility="gone">
 		<EditText android:id="@+id/etBoradcast" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:visibility="visible" />
 		<RelativeLayout android:id="@+id/rlBroadcastControl"
@@ -42,5 +35,15 @@
 		</RelativeLayout>
 	</LinearLayout>
 	<ListView android:layout_width="fill_parent" android:id="@+id/lvHomeTimeLine"
-		android:visibility="visible" android:layout_height="wrap_content"></ListView>
-</LinearLayout>
+		android:layout_below="@+id/llEditTwitter" android:visibility="visible" android:layout_above="@+id/hsTopMenu"
+		android:layout_height="wrap_content"></ListView>
+	<HorizontalScrollView android:layout_width="fill_parent" 
+		android:layout_alignParentBottom="true" android:id="@+id/hsTopMenu"
+		android:layout_height="wrap_content">
+		<TableLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			<TableRow android:id="@+id/trTopMenu" android:layout_height="wrap_content"
+				android:layout_width="fill_parent" />
+		</TableLayout>
+	</HorizontalScrollView>
+</RelativeLayout>
