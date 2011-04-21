@@ -7,6 +7,7 @@ import weibo4andriod.User;
 import weibo4andriod.Weibo4sina;
 import weibo4andriod.WeiboException;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -64,7 +65,7 @@ public class IndexActivity extends Activity {
 
 	HomeTimeLineAdapter htla;
 	TopMenuAdapter tma;
-
+	FriendTask ft;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -77,7 +78,7 @@ public class IndexActivity extends Activity {
 		lvHomeTimeLine = (ListView) findViewById(R.id.lvHomeTimeLine);
 		initData();
 		initHeader();
-		FriendTask ft = new FriendTask();
+		ft = new FriendTask();
 		ft.execute();
 
 	}
@@ -97,19 +98,55 @@ public class IndexActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				LinearLayout llEditTwitter = (LinearLayout) findViewById(R.id.llEditTwitter);
+				final LinearLayout llEditTwitter = (LinearLayout) findViewById(R.id.llEditTwitter);
 				llEditTwitter.setVisibility(View.VISIBLE);
 
-				EditText etTwitter = (EditText) findViewById(R.id.etBoradcast);
-				etTwitter.setVisibility(View.VISIBLE);
+				final EditText etTwitter = (EditText) findViewById(R.id.etBoradcast);
 
 				TextView tvSend = (TextView) findViewById(R.id.btnSend);
-				tvSend.setVisibility(View.VISIBLE);
+				tvSend.setOnClickListener(new OnClickListener(){
+
+					@SuppressWarnings("deprecation")
+					public void onClick(View v) {
+						ProgressDialog pdSend = null;
+						try {
+							pdSend = ProgressDialog.show(IndexActivity.appref, "Sending", "please wait");
+							if(etTwitter.getText().toString().length()>0){
+								weibo.update(etTwitter.getText().toString());
+							}
+						} catch (WeiboException e) {
+							Toast.makeText(appref, "Updating error", 2000).show();
+							e.printStackTrace();
+						} finally{
+							llEditTwitter.setVisibility(View.GONE);
+							pdSend.dismiss();
+						}
+						
+					}
+					
+				});
 
 				TextView tvCancel = (TextView) findViewById(R.id.btnCancel);
-				tvCancel.setVisibility(View.VISIBLE);
+				tvCancel.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View v) {
+						etTwitter.setText("");
+						llEditTwitter.setVisibility(View.GONE);
+					}
+				});
 			}
 
+		});
+		
+		ibtnHeaderRefresh.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				ft = new FriendTask();
+				ft.execute();
+			}
+			
 		});
 	}
 
@@ -196,7 +233,6 @@ public class IndexActivity extends Activity {
 			try {
 				user = weibo.getAuthenticatedUser();
 			} catch (WeiboException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			tvHeaderUserName.setText(user.getScreenName());
