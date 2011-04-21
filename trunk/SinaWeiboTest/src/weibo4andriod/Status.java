@@ -34,6 +34,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import android.util.Log;
+
 import weibo4andriod.http.Response;
 import weibo4andriod.org.json.JSONArray;
 import weibo4andriod.org.json.JSONException;
@@ -77,6 +79,7 @@ public class Status extends WeiboResponse implements java.io.Serializable {
     Status(Response res)throws WeiboException{
     	super(res);
     	JSONObject json=res.asJSONObject();
+    	Log.v("TAG",json.toString());
     	try {
 			id = json.getLong("id");
 			text = json.getString("text");
@@ -388,22 +391,22 @@ public class Status extends WeiboResponse implements java.io.Serializable {
     @Override
     public String toString() {
         return "Status{" +
-                "createdAt=" + createdAt + ", \n" +
-                "id=" + id +", \n" +
-                "text='" + text + '\'' +", \n" +
+                "createdAt=" + createdAt + ", " +
+                "id=" + id +", " +
+                "text='" + text + '\'' +", " +
                 "source='" + source + '\'' +
-                ", \nisTruncated=" + isTruncated +
-                ", \ninReplyToStatusId=" + inReplyToStatusId +
-                ", \ninReplyToUserId=" + inReplyToUserId +
-                ", \nisFavorited=" + isFavorited +
-                ", \nthumbnail_pic=" + thumbnail_pic +
-                ", \nbmiddle_pic=" + bmiddle_pic +
-                ", \noriginal_pic=" + original_pic +
-                ", \ninReplyToScreenName='" + inReplyToScreenName + '\'' +
-                ", \nlatitude=" + latitude +
-                ", \nlongitude=" + longitude +
-                ", \nretweetDetails=" + retweetDetails +
-                ", \nuser=" + user +
+                ", isTruncated=" + isTruncated +
+                ", inReplyToStatusId=" + inReplyToStatusId +
+                ", inReplyToUserId=" + inReplyToUserId +
+                ", isFavorited=" + isFavorited +
+                ", thumbnail_pic=" + thumbnail_pic +
+                ", bmiddle_pic=" + bmiddle_pic +
+                ", original_pic=" + original_pic +
+                ", inReplyToScreenName='" + inReplyToScreenName + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", retweetDetails=" + retweetDetails +
+                ", user=" + user +
                 '}';
     }
 }

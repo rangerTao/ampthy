@@ -96,7 +96,6 @@ public class IndexActivity extends Activity {
 
 		ibtnHeaderWrite.setOnClickListener(new OnClickListener() {
 
-			@Override
 			public void onClick(View arg0) {
 				final LinearLayout llEditTwitter = (LinearLayout) findViewById(R.id.llEditTwitter);
 				llEditTwitter.setVisibility(View.VISIBLE);
@@ -129,7 +128,6 @@ public class IndexActivity extends Activity {
 				TextView tvCancel = (TextView) findViewById(R.id.btnCancel);
 				tvCancel.setOnClickListener(new OnClickListener(){
 
-					@Override
 					public void onClick(View v) {
 						etTwitter.setText("");
 						llEditTwitter.setVisibility(View.GONE);
@@ -141,7 +139,6 @@ public class IndexActivity extends Activity {
 		
 		ibtnHeaderRefresh.setOnClickListener(new OnClickListener(){
 
-			@Override
 			public void onClick(View v) {
 				ft = new FriendTask();
 				ft.execute();
@@ -222,6 +219,7 @@ public class IndexActivity extends Activity {
 			pDialog = ProgressDialog.show(IndexActivity.appref, appref
 					.getResources().getString(R.string.progress_title), appref
 					.getResources().getString(R.string.progress_content));
+			pDialog.setCancelable(true);
 			super.onPreExecute();
 		}
 
