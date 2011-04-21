@@ -83,7 +83,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		tvUserStatus.setPadding(10, 5, 0, 0);
 		tvUserNameTextView.setText(user.getScreenName());
 		tvUserLocationg.setText(user.getLocation());
-		tvUserDesc.setSingleLine(true);
+		
 		if (user.getDescription() == null || user.getDescription().equals("")) {
 			tvUserDesc.setVisibility(View.GONE);
 		} else {
