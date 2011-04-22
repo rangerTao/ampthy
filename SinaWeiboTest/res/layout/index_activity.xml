@@ -12,9 +12,10 @@
 			<ImageView android:src="@drawable/icon"
 				android:layout_height="wrap_content" android:layout_width="wrap_content"
 				android:layout_alignParentRight="true" android:id="@+id/ibtnHeaderRefresh"></ImageView>
-			<TextView android:text="" android:layout_alignParentTop="true"
-				android:layout_height="wrap_content" android:layout_width="wrap_content"
-				android:id="@+id/tvHeaderUserName" android:layout_centerInParent="true"></TextView>
+			<TextView style="@style/TextView" android:text=""
+				android:layout_alignParentTop="true" android:layout_height="wrap_content"
+				android:layout_width="wrap_content" android:id="@+id/tvHeaderUserName"
+				android:layout_centerInParent="true"></TextView>
 		</RelativeLayout>
 	</LinearLayout>
 	<LinearLayout android:id="@+id/llEditTwitter"
@@ -26,24 +27,20 @@
 		<RelativeLayout android:id="@+id/rlBroadcastControl"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:visibility="visible">
-			<TextView android:id="@+id/btnSend" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:text="@string/btnsend"
-				android:layout_alignParentLeft="true" android:visibility="visible" />
-			<TextView android:id="@+id/btnCancel" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:text="@string/btncancel"
-				android:layout_alignParentRight="true" android:visibility="visible" />
+			<TextView style="@style/TextView" android:id="@+id/btnSend"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:text="@string/btnsend" android:layout_alignParentLeft="true"
+				android:visibility="visible" />
+			<TextView style="@style/TextView" android:id="@+id/btnCancel"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:text="@string/btncancel" android:layout_alignParentRight="true"
+				android:visibility="visible" />
 		</RelativeLayout>
 	</LinearLayout>
 	<ListView android:layout_width="fill_parent" android:id="@+id/lvHomeTimeLine"
-		android:layout_below="@+id/llEditTwitter" android:visibility="visible" android:layout_above="@+id/hsTopMenu"
-		android:layout_height="wrap_content"></ListView>
-	<HorizontalScrollView android:layout_width="fill_parent" 
-		android:layout_alignParentBottom="true" android:id="@+id/hsTopMenu"
-		android:layout_height="wrap_content">
-		<TableLayout android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			<TableRow android:id="@+id/trTopMenu" android:layout_height="wrap_content"
-				android:layout_width="fill_parent" />
-		</TableLayout>
-	</HorizontalScrollView>
+		android:layout_below="@+id/llEditTwitter" android:visibility="visible"
+		android:layout_above="@+id/llTopMenu" android:layout_height="wrap_content"></ListView>
+	<include android:id="@+id/llTopMenu" layout="@layout/top_menu"
+		android:layout_alignParentBottom="true" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
 </RelativeLayout>
