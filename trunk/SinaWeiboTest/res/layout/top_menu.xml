@@ -1,9 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="wrap_content" android:layout_height="wrap_content"
-	android:orientation="vertical">
-	<ImageView android:layout_width="32px"
-		android:layout_height="32px" android:id="@+id/ivMenuImage"></ImageView>
-	<TextView android:text="TextView" android:id="@+id/tvMenuItem"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+	android:orientation="horizontal">
+	<LinearLayout android:id="@+id/llHome_TopMenu"
+		android:paddingLeft="2px" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:orientation="vertical">
+		<ImageView android:layout_width="32px"
+			android:layout_height="32px" android:id="@+id/ivMenuImage_Home"
+			android:src="@drawable/home" />
+		<TextView style="@style/TextView" android:id="@+id/tvMenuItem_Home"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:text="@string/top_menu_home" />
+	</LinearLayout>
+	<LinearLayout android:id="@+id/llAtMe_TopMenu"
+		android:paddingLeft="8px" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:orientation="vertical">
+		<ImageView android:layout_width="32px"
+			android:layout_height="32px" android:id="@+id/ivMenuImage_AtMe"
+			android:src="@drawable/at" />
+		<TextView style="@style/TextView" android:id="@+id/tvMenuItem_AtMe"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:text="@string/top_menu_atme" />
+	</LinearLayout>
+	<LinearLayout android:id="@+id/llFavourite_TopMenu"
+		android:paddingLeft="8px" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:orientation="vertical">
+		<ImageView android:layout_width="32px"
+			android:layout_height="32px" android:id="@+id/ivMenuImage_Favourite"
+			android:src="@drawable/favourite" />
+		<TextView style="@style/TextView" android:id="@+id/tvMenuItem_Favourite"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:text="@string/top_menu_favor" />
+	</LinearLayout>
+	<LinearLayout android:id="@+id/llComments_TopMenu"
+		android:paddingLeft="8px" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:orientation="vertical">
+		<ImageView android:layout_width="32px"
+			android:layout_height="32px" android:id="@+id/ivMenuImage_Comments"
+			android:src="@drawable/comment" />
+		<TextView style="@style/TextView" android:id="@+id/tvMenuItem_Comments"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:text="@string/top_menu_comment" />
+	</LinearLayout>
+	<LinearLayout android:id="@+id/llMail_TopMenu"
+		android:paddingLeft="8px" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:orientation="vertical">
+		<ImageView android:layout_width="32px"
+			android:layout_height="32px" android:id="@+id/ivMenuImage_Mail"
+			android:src="@drawable/mail" />
+		<TextView style="@style/TextView" android:id="@+id/tvMenuItem_Mail"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:text="@string/top_menu_mail" />
+	</LinearLayout>
+	<LinearLayout android:id="@+id/llFriends_TopMenu"
+		android:paddingLeft="8px" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:orientation="vertical">
+		<ImageView android:layout_width="32px"
+			android:layout_height="32px" android:id="@+id/ivMenuImage_Friends"
+			android:src="@drawable/focus" />
+		<TextView style="@style/TextView" android:id="@+id/tvMenuItem_Friends"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:text="@string/top_menu_friends" />
+	</LinearLayout>
+	<LinearLayout android:id="@+id/llChat_TopMenu"
+		android:paddingLeft="8px" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:orientation="vertical">
+		<ImageView android:layout_width="32px"
+			android:layout_height="32px" android:id="@+id/ivMenuImage_Chat"
+			android:src="@drawable/chat" />
+		<TextView style="@style/TextView" android:id="@+id/tvMenuItem_Chat"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:text="@string/top_menu_chat" />
+	</LinearLayout>
+	<LinearLayout android:id="@+id/llMore_TopMenu"
+		android:paddingLeft="8px" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:orientation="vertical">
+		<ImageView android:layout_width="32px"
+			android:layout_height="32px" android:id="@+id/ivMenuImage_More"
+			android:src="@drawable/more" />
+		<TextView style="@style/TextView" android:id="@+id/tvMenuItem_More"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:text="@string/top_menu_more" />
+	</LinearLayout>
 </LinearLayout>

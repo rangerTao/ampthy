@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<style name="Theme.All" parent="android:Theme">
+		<item name="android:colorBackground">#E1F8E5</item>
+	</style>
+
+	<style name="TextView">
+		<item name="android:textColor">@android:color/black</item>
+	</style>
+</resources>
