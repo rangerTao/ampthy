@@ -17,7 +17,7 @@ import com.weibo.activity.IndexActivity;
 import com.weibo.daos.DBAdapter;
 import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.User;
-import com.weibo.utils.Contants;
+import com.weibo.utils.Constant;
 
 public class OAuthActivity extends Activity {
 
@@ -74,7 +74,7 @@ public class OAuthActivity extends Activity {
 		cv.put(User.TOKEN, userKey);
 		cv.put(User.TOKENSECRET, userSecret);
 		Log.v("TAG", userId + "   " + userKey + "   " + userSecret);
-		DBAdapter dba = new DBAdapter(this, Contants.dbName, Contants.dbVersion);
+		DBAdapter dba = new DBAdapter(this, Constant.dbName, Constant.dbVersion);
 		dba.open();
 		dba.insertData(userId + "", userKey, userSecret, token, tokenSecret);
 		startActivity(new Intent(this, IndexActivity.class));

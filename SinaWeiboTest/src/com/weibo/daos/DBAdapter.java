@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.weibo.pojo.User;
-import com.weibo.utils.Contants;
+import com.weibo.utils.Constant;
 import com.weibo.utils.DatabaseHelper;
 
 public class DBAdapter {
@@ -44,18 +44,18 @@ public class DBAdapter {
 			Log.v("TAG", "Data Exists");
 			return 0;
 		}else{
-			return db.insert(Contants.tableName, "_id", cv);
+			return db.insert(Constant.tableName, "_id", cv);
 		}
 		
 	}
 
 	public boolean deleteData(String where, String[] whereargs) {
-		db.delete(Contants.tableName, where, whereargs);
+		db.delete(Constant.tableName, where, whereargs);
 		return true;
 	}
 
 	public Cursor query(String[] columns, String selection,
 			String selectionArgs, String groupBy, String having, String orderBy) {
-		return db.query(Contants.tableName, columns, null, null, "", "", "");
+		return db.query(Constant.tableName, columns, null, null, "", "", "");
 	}
 }
