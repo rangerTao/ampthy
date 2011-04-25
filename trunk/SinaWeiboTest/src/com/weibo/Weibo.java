@@ -24,7 +24,7 @@ import com.weibo.OAuth.OAuthActivity;
 import com.weibo.activity.IndexActivity;
 import com.weibo.activity.SettingPre;
 import com.weibo.daos.DBAdapter;
-import com.weibo.utils.Contants;
+import com.weibo.utils.Constant;
 
 public class Weibo extends Activity implements OnClickListener {
 	/** Called when the activity is first created. */
@@ -63,7 +63,7 @@ public class Weibo extends Activity implements OnClickListener {
 	}
 
 	public void onClick(View arg0) {
-		DBAdapter dba = new DBAdapter(this, Contants.dbName, Contants.dbVersion);
+		DBAdapter dba = new DBAdapter(this, Constant.dbName, Constant.dbVersion);
 		dba.open();
 		if (arg0.getId() == btnLogin.getId()) {
 			Cursor cr = dba.query(null, "", "", "", "", "");

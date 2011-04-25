@@ -16,12 +16,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	public DatabaseHelper(Context context) {
-		super(context, Contants.dbName, null, Contants.dbVersion);
+		super(context, Constant.dbName, null, Constant.dbVersion);
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE " + Contants.tableName + " (" + User.ID
+		db.execSQL("CREATE TABLE " + Constant.tableName + " (" + User.ID
 				+ " TEXT PRIMARY KEY," + User.TOKEN + " TEXT,"
 				+ User.TOKENSECRET + " TEXT," + User.ACCESSTOKEN + " TEXT, "
 				+ User.ACCESSTOKENSECRET + " TEXT, " + User.CREATE_TIME
@@ -33,7 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.w("TAG", "Upgrading database from version " + oldVersion + " to "
 				+ newVersion + ", which will destroy all old data");
-		db.execSQL("DROP TABLE IF EXISTS " + Contants.tableName);
+		db.execSQL("DROP TABLE IF EXISTS " + Constant.tableName);
 		onCreate(db);
 	}
 

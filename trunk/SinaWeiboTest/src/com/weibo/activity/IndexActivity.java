@@ -7,18 +7,16 @@ import weibo4andriod.User;
 import weibo4andriod.Weibo4sina;
 import weibo4andriod.WeiboException;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -28,7 +26,6 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +34,7 @@ import com.weibo.daos.DBAdapter;
 import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.adapter.HomeTimeLineAdapter;
 import com.weibo.pojo.adapter.TopMenuAdapter;
-import com.weibo.utils.Contants;
+import com.weibo.utils.Constant;
 
 public class IndexActivity extends Activity {
 
@@ -82,7 +79,21 @@ public class IndexActivity extends Activity {
 		initHeader();
 		ft = new FriendTask();
 		ft.execute();
+		
+		initButtonAction();
 
+	}
+	
+	public void initButtonAction(){
+		LinearLayout llAtMe = (LinearLayout)findViewById(R.id.llAtMe_TopMenu);
+		llAtMe.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Log.v("TAG", "Start AtMe");
+				startActivity(new Intent(appref,AtMeActivity.class));
+			}
+		});
 	}
 
 	public void initHeader() {
@@ -154,7 +165,7 @@ public class IndexActivity extends Activity {
 
 		strTopMenus = this.getResources().getStringArray(R.array.top_menu);
 		Log.v("TAG", strTopMenus.length + "");
-		DBAdapter dba = new DBAdapter(this, Contants.dbName, Contants.dbVersion);
+		DBAdapter dba = new DBAdapter(this, Constant.dbName, Constant.dbVersion);
 		dba.open();
 		Cursor cr = dba.query(null, "", "", "", "", "");
 
@@ -167,24 +178,29 @@ public class IndexActivity extends Activity {
 			accessSecret = cr.getString(4);
 
 			SharedPreferences sPre = this.getSharedPreferences(
-					Contants.app_name, MODE_WORLD_WRITEABLE);
+					Constant.app_name, MODE_WORLD_WRITEABLE);
 			Editor editor = sPre.edit();
-			editor.putString(Contants.token, token);
-			editor.putString(Contants.tokenSecret, tokenSecret);
-			editor.putString(Contants.ACCESSTOKEN, access);
-			editor.putString(Contants.ACCESSTOKENSECRET, accessSecret);
+			editor.putString(Constant.token, token);
+			editor.putString(Constant.tokenSecret, tokenSecret);
+			editor.putString(Constant.ACCESSTOKEN, access);
+			editor.putString(Constant.ACCESSTOKENSECRET, accessSecret);
 			editor.commit();
 		}
 		cr.close();
 		dba.close();
+		Constant._access = access;
+		Constant._accessSecret = accessSecret;
+		Constant._token = token;
+		Constant._tokenSecret = tokenSecret;
+		
 	}
 
 	private void getFriends()
 			throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException {
 
 		try {
-			weibo.setOAuthConsumer(Contants.CONSUMER_KEY,
-					Contants.CONSUMER_SECRET);
+			weibo.setOAuthConsumer(Constant.CONSUMER_KEY,
+					Constant.CONSUMER_SECRET);
 			weibo.setToken(access, accessSecret);
 			weibo.setOAuthAccessToken(token, tokenSecret);
 

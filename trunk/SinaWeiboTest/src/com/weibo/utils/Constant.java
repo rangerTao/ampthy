@@ -7,7 +7,7 @@ import com.weibo.activity.IndexActivity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-public class Contants {
+public class Constant {
 
 	/**
 	 * DB
@@ -25,6 +25,10 @@ public class Contants {
 	
 	public static final String CONSUMER_KEY="2902988107";
 	public static final String CONSUMER_SECRET = "2fce81acf8fc9afb51ffc533688fa553";
+	public static String _access = "";
+	public static String _accessSecret = "";
+	public static String _token = "";
+	public static String _tokenSecret = "";
 	
 	public static Bitmap[] imageMenu;
 	
