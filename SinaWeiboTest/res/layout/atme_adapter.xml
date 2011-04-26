@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<ImageView android:id="@+id/ivUserHead" android:layout_width="32px"
+		android:layout_height="32px" android:src="@drawable/loading" />
+	<TextView android:id="@+id/tvUserName" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:paddingLeft="4px"
+		android:layout_toRightOf="@+id/ivUserHead"
+		android:layout_alignParentTop="true" />
+	<TextView android:id="@+id/tvLocation" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:paddingRight="2px"
+		android:layout_alignParentTop="true" android:layout_alignParentRight="true"
+		android:layout_alignBaseline="@+id/tvUserName" />
+	<TextView android:id="@+id/tvMention" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:paddingTop="2px"
+		android:layout_alignLeft="@+id/tvUserName" android:layout_below="@+id/tvUserName" />
+	<ImageView android:id="@+id/ivMentionPic" android:visibility="gone"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_alignLeft="@+id/tvMention" android:paddingTop="2px"
+		android:layout_below="@+id/tvMention" />
+	<TextView android:id="@+id/tvTimeAndResouce"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:paddingTop="2px" android:layout_toLeftOf="@+id/tvMention"
+		android:layout_below="@+id/ivMentionPic" />
+</RelativeLayout>
