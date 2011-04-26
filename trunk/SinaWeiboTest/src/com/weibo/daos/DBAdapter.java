@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.weibo.pojo.User;
+import com.weibo.pojo.DBColumns;
 import com.weibo.utils.Constant;
 import com.weibo.utils.DatabaseHelper;
 
@@ -32,14 +32,8 @@ public class DBAdapter {
 		return true;
 	}
 
-	public long insertData(String id, String token, String tokenSecret,String access, String accessSecret) {
-		ContentValues cv = new ContentValues();
-		cv.put(User.ID, id);
-		cv.put(User.TOKEN, token);
-		cv.put(User.TOKENSECRET, tokenSecret);
-		cv.put(User.ACCESSTOKEN, access);
-		cv.put(User.ACCESSTOKENSECRET, accessSecret);
-		Cursor cr = query(null,User.ID,id,null,null,null);
+	public long insertData(String id, ContentValues cv) {
+		Cursor cr = query(null,DBColumns.ID,id,null,null,null);
 		if(cr != null && cr.getCount() > 0){
 			Log.v("TAG", "Data Exists");
 			return 0;
