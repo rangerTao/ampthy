@@ -1,7 +1,10 @@
 package com.weibo.OAuth;
 
+import java.io.ByteArrayOutputStream;
+
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
+import weibo4andriod.User;
 import weibo4andriod.Weibo4sina;
 import weibo4andriod.WeiboException;
 import weibo4andriod.http.AccessToken;
@@ -9,15 +12,18 @@ import weibo4andriod.http.RequestToken;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+
 import com.weibo.R;
 import com.weibo.activity.IndexActivity;
 import com.weibo.daos.DBAdapter;
+import com.weibo.pojo.DBColumns;
 import com.weibo.pojo.OAuthConstant;
-import com.weibo.pojo.User;
 import com.weibo.utils.Constant;
+import com.weibo.utils.WeiboUtils;
 
 public class OAuthActivity extends Activity {
 
@@ -26,6 +32,8 @@ public class OAuthActivity extends Activity {
 
 	String token;
 	String tokenSecret;
+	
+	Weibo4sina weibo;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -34,7 +42,7 @@ public class OAuthActivity extends Activity {
 		Log.v("TAG", "start to get the authorized");
 		String consumerKey = "2902988107";
 		String consumerSecret = "2fce81acf8fc9afb51ffc533688fa553";
-		Weibo4sina weibo = OAuthConstant.getInstance().getWeibo();
+		weibo = OAuthConstant.getInstance().getWeibo();
 		RequestToken requestToken;
 		try {
 			weibo.setOAuthConsumer(consumerKey, consumerSecret);
@@ -69,14 +77,37 @@ public class OAuthActivity extends Activity {
 		int userId = accessToken.getUserId();
 		String userKey = accessToken.getToken();
 		String userSecret = accessToken.getTokenSecret();
+		
+		Constant._token = token;
+		Constant._tokenSecret = this.tokenSecret;
+		Constant._access = userKey;
+		Constant._accessSecret = userSecret;
+		
+		weibo.setOAuthConsumer(Constant.CONSUMER_KEY, Constant.CONSUMER_SECRET);
+		weibo.setToken(token, tokenSecret);
+		weibo.setOAuthAccessToken(userKey, userSecret);
+		User user = null;
+		try {
+			user = weibo.getUserDetail(userId+"");
+		} catch (WeiboException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		ContentValues cv = new ContentValues();
-		cv.put(User.ID, userId);
-		cv.put(User.TOKEN, userKey);
-		cv.put(User.TOKENSECRET, userSecret);
+		Bitmap userHead = WeiboUtils.getImage(user.getProfileImageURL());
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		userHead.compress(Bitmap.CompressFormat.PNG, 100, os);
+		cv.put(DBColumns.ID, userId);
+		cv.put(DBColumns.TOKEN, userKey);
+		cv.put(DBColumns.TOKENSECRET, userSecret);
+		cv.put(DBColumns.ScreenName, user.getScreenName());
+		cv.put(DBColumns.USERHEADURI, os.toByteArray());
+		cv.put(DBColumns.USERHEADURL, user.getProfileImageURL().toString());
 		Log.v("TAG", userId + "   " + userKey + "   " + userSecret);
 		DBAdapter dba = new DBAdapter(this, Constant.dbName, Constant.dbVersion);
 		dba.open();
-		dba.insertData(userId + "", userKey, userSecret, token, tokenSecret);
+		dba.insertData(userId + "", cv);
 		startActivity(new Intent(this, IndexActivity.class));
 	}
 

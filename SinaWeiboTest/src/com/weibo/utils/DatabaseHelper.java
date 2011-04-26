@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.util.Log;
 
-import com.weibo.pojo.User;
+import com.weibo.pojo.DBColumns;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -21,11 +21,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE " + Constant.tableName + " (" + User.ID
-				+ " TEXT PRIMARY KEY," + User.TOKEN + " TEXT,"
-				+ User.TOKENSECRET + " TEXT," + User.ACCESSTOKEN + " TEXT, "
-				+ User.ACCESSTOKENSECRET + " TEXT, " + User.CREATE_TIME
-				+ " TEXT," + User.MODIFY_TIME + " TEXT" + ");");
+		db.execSQL("CREATE TABLE " + Constant.tableName + " (" + DBColumns.ID
+				+ " TEXT PRIMARY KEY," + DBColumns.TOKEN + " TEXT,"
+				+ DBColumns.TOKENSECRET + " TEXT," + DBColumns.ACCESSTOKEN
+				+ " TEXT, " + DBColumns.ACCESSTOKENSECRET + " TEXT, "
+				+ DBColumns.ScreenName + " TEXT, " + DBColumns.SITE + " TEXT, "
+				+ DBColumns.USERHEADURI + " BLOB, " + DBColumns.USERHEADURL
+				+ " TEXT, " + DBColumns.CREATE_TIME + " TEXT,"
+				+ DBColumns.MODIFY_TIME + " TEXT" + ");");
 
 	}
 
