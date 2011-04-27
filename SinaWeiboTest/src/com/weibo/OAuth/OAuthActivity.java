@@ -99,9 +99,12 @@ public class OAuthActivity extends Activity {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		userHead.compress(Bitmap.CompressFormat.PNG, 100, os);
 		cv.put(DBColumns.ID, userId);
-		cv.put(DBColumns.TOKEN, userKey);
-		cv.put(DBColumns.TOKENSECRET, userSecret);
+		cv.put(DBColumns.TOKEN, token);
+		cv.put(DBColumns.TOKENSECRET, tokenSecret);
+		cv.put(DBColumns.ACCESSTOKEN, userKey);
+		cv.put(DBColumns.ACCESSTOKENSECRET, userSecret);
 		cv.put(DBColumns.ScreenName, user.getScreenName());
+		cv.put(DBColumns.SITE, "Sina");
 		cv.put(DBColumns.USERHEADURI, os.toByteArray());
 		cv.put(DBColumns.USERHEADURL, user.getProfileImageURL().toString());
 		Log.v("TAG", userId + "   " + userKey + "   " + userSecret);

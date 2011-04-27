@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.weibo.R;
 import com.weibo.daos.DBAdapter;
 import com.weibo.pojo.OAuthConstant;
+import com.weibo.pojo.UserImpl;
 import com.weibo.pojo.adapter.HomeTimeLineAdapter;
 import com.weibo.pojo.adapter.TopMenuAdapter;
 import com.weibo.utils.Constant;
@@ -71,12 +72,16 @@ public class IndexActivity extends Activity {
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
+
 		setContentView(R.layout.index_activity);
 		
 		lvHomeTimeLine = (ListView) findViewById(R.id.lvHomeTimeLine);
-		initData();
+		//initData();
 		initHeader();
+
+		
+		appref = this;
+		
 		ft = new FriendTask();
 		ft.execute();
 		
@@ -88,7 +93,7 @@ public class IndexActivity extends Activity {
 		LinearLayout llAtMe = (LinearLayout)findViewById(R.id.llAtMe_TopMenu);
 		llAtMe.setOnClickListener(new OnClickListener(){
 
-			@Override
+
 			public void onClick(View v) {
 				Log.v("TAG", "Start AtMe");
 				startActivity(new Intent(appref,AtMeActivity.class));
@@ -101,7 +106,9 @@ public class IndexActivity extends Activity {
 		ImageView ibtnHeaderWrite = (ImageView) findViewById(R.id.ibtnHeaderWrite);
 		ImageView ibtnHeaderRefresh = (ImageView) findViewById(R.id.ibtnHeaderRefresh);
 		tvHeaderUserName = (TextView) findViewById(R.id.tvHeaderUserName);
-
+		
+		tvHeaderUserName.setText(UserImpl.getUserScreenName());
+		
 		ibtnHeaderWrite.setImageBitmap(BitmapFactory.decodeResource(
 				getResources(), R.drawable.writer));
 		ibtnHeaderRefresh.setImageBitmap(BitmapFactory.decodeResource(
@@ -161,7 +168,7 @@ public class IndexActivity extends Activity {
 	}
 
 	private void initData() {
-		appref = this;
+
 
 		strTopMenus = this.getResources().getStringArray(R.array.top_menu);
 		Log.v("TAG", strTopMenus.length + "");
@@ -201,8 +208,8 @@ public class IndexActivity extends Activity {
 		try {
 			weibo.setOAuthConsumer(Constant.CONSUMER_KEY,
 					Constant.CONSUMER_SECRET);
-			weibo.setToken(access, accessSecret);
-			weibo.setOAuthAccessToken(token, tokenSecret);
+			weibo.setToken(Constant.ACCESSTOKEN, Constant.ACCESSTOKENSECRET);
+			weibo.setOAuthAccessToken(Constant.token, Constant.tokenSecret);
 
 			statuses = weibo.getHomeTimeline();
 
@@ -233,7 +240,6 @@ public class IndexActivity extends Activity {
 			} catch (WeiboException e) {
 				e.printStackTrace();
 			}
-			tvHeaderUserName.setText(user.getScreenName());
 			super.onPostExecute(result);
 		}
 
