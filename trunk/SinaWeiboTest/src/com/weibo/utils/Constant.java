@@ -1,5 +1,7 @@
 package com.weibo.utils;
 
+import weibo4andriod.User;
+
 import com.weibo.R;
 import com.weibo.Weibo;
 import com.weibo.activity.IndexActivity;
@@ -31,20 +33,4 @@ public class Constant {
 	public static String _tokenSecret = "";
 	
 	public static Bitmap[] imageMenu;
-	
-	static{
-		imageMenu = new Bitmap[11];
-		imageMenu[0] = BitmapFactory.decodeResource(Weibo.appref.getResources(), R.drawable.home);
-		imageMenu[1] = BitmapFactory.decodeResource(Weibo.appref.getResources(), R.drawable.twitter);
-		imageMenu[2] = BitmapFactory.decodeResource(Weibo.appref.getResources(), R.drawable.at);
-		imageMenu[3] = BitmapFactory.decodeResource(Weibo.appref.getResources(), R.drawable.favourite);
-		imageMenu[4] = BitmapFactory.decodeResource(Weibo.appref.getResources(), R.drawable.comment);
-		imageMenu[5] = BitmapFactory.decodeResource(Weibo.appref.getResources(), R.drawable.mail);
-		imageMenu[6] = BitmapFactory.decodeResource(Weibo.appref.getResources(), R.drawable.focus);
-		imageMenu[7] = BitmapFactory.decodeResource(Weibo.appref.getResources(), R.drawable.fans);
-		imageMenu[8] = BitmapFactory.decodeResource(Weibo.appref.getResources(), R.drawable.chat);
-		imageMenu[9] = BitmapFactory.decodeResource(Weibo.appref.getResources(), R.drawable.search);
-		imageMenu[10] = BitmapFactory.decodeResource(Weibo.appref.getResources(), R.drawable.broadcast);
-	}
-
 }

@@ -1,14 +1,21 @@
 package com.weibo;
 
+import java.io.ByteArrayInputStream;
+
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.CellLocation;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,12 +25,16 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.weibo.OAuth.OAuthActivity;
 import com.weibo.activity.IndexActivity;
 import com.weibo.activity.SettingPre;
 import com.weibo.daos.DBAdapter;
+import com.weibo.pojo.DBColumns;
+import com.weibo.pojo.UserImpl;
 import com.weibo.utils.Constant;
 
 public class Weibo extends Activity implements OnClickListener {
@@ -35,7 +46,11 @@ public class Weibo extends Activity implements OnClickListener {
 
 	public static Weibo appref;
 	public final static String tag = "TAG";
+
+	private static boolean existBoolean = false;
 	// the instance of OAuth
+
+	private DBAdapter dba;
 
 	CommonsHttpOAuthConsumer httpOauthConsumer;
 	OAuthProvider httpOauthprovider;
@@ -48,7 +63,10 @@ public class Weibo extends Activity implements OnClickListener {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
 
+		getData();
+		
 		initView();
+		
 	}
 
 	public void initView() {
@@ -58,25 +76,42 @@ public class Weibo extends Activity implements OnClickListener {
 		btnLogin = (Button) appref.findViewById(R.id.btnLogin);
 		btnCancel = (Button) appref.findViewById(R.id.btnCancel);
 
+		ImageView userHead = (ImageView)findViewById(R.id.ivUserHead);
+		userHead.setImageBitmap(UserImpl.getUserHead());
+
 		btnLogin.setOnClickListener(this);
 		btnCancel.setOnClickListener(this);
 	}
 
-	public void onClick(View arg0) {
-		DBAdapter dba = new DBAdapter(this, Constant.dbName, Constant.dbVersion);
+	public void getData() {
+		dba = new DBAdapter(this, Constant.dbName, Constant.dbVersion);
 		dba.open();
+		Cursor cr = dba.query(null, "", "", "", "", "");
+		if (cr != null && cr.getCount() > 0) {
+			cr.moveToFirst();
+			existBoolean = true;
+			UserImpl.setUserScreenName(cr.getString(cr.getColumnIndex(DBColumns.ScreenName)));
+			UserImpl.setFromSite(cr.getString(cr.getColumnIndex(DBColumns.SITE)));
+			UserImpl.setUserHeadUrl(cr.getString(cr.getColumnIndex(DBColumns.USERHEADURL)));
+			byte[] inStream = cr.getBlob(cr.getColumnIndex(DBColumns.USERHEADURI));
+			UserImpl.setUserHead(BitmapFactory.decodeByteArray(inStream, 0,inStream.length));
+			Constant._access = cr.getString(3);
+			Constant._accessSecret = cr.getString(4);
+			Constant._token = cr.getString(1);
+			Constant._tokenSecret = cr.getString(2);
+			cr.close();
+			dba.close();
+		}
+	}
+
+	public void onClick(View arg0) {
 		if (arg0.getId() == btnLogin.getId()) {
-			Cursor cr = dba.query(null, "", "", "", "", "");
-			Log.v("TAG", cr.getCount() + "");
-			if (cr != null && cr.getCount() > 0) {
-				Log.v("TAG", "authorized");
-				cr.close();
+			if (existBoolean) {
 				startActivity(new Intent(this, IndexActivity.class));
-				dba.close();
 				finish();
-			} else {
-				cr.close();
-				dba.close();
+			}
+
+			else {
 				Log.v("TAG", "not authorized");
 				startActivity(new Intent(this, OAuthActivity.class));
 			}
