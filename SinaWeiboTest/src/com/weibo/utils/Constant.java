@@ -1,5 +1,8 @@
 package com.weibo.utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import weibo4andriod.User;
 
 import com.weibo.R;
@@ -33,4 +36,5 @@ public class Constant {
 	public static String _tokenSecret = "";
 	
 	public static Bitmap[] imageMenu;
+	public static Map<String, Bitmap> imageMap = new HashMap<String, Bitmap>();
 }

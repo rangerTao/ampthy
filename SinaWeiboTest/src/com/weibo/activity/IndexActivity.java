@@ -2,10 +2,12 @@ package com.weibo.activity;
 
 import java.util.List;
 
+import weibo4andriod.Paging;
 import weibo4andriod.Status;
 import weibo4andriod.User;
 import weibo4andriod.Weibo4sina;
 import weibo4andriod.WeiboException;
+import android.R.integer;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -21,6 +23,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -34,7 +38,6 @@ import com.weibo.daos.DBAdapter;
 import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.UserImpl;
 import com.weibo.pojo.adapter.HomeTimeLineAdapter;
-import com.weibo.pojo.adapter.TopMenuAdapter;
 import com.weibo.utils.Constant;
 
 public class IndexActivity extends Activity {
@@ -61,9 +64,11 @@ public class IndexActivity extends Activity {
 	public static List<Status> statuses;
 
 	public Weibo4sina weibo = OAuthConstant.getInstance().getWeibo();
+	
+	private int page_index = 1;
+	private int last_item = 0;
 
 	HomeTimeLineAdapter htla;
-	TopMenuAdapter tma;
 	FriendTask ft;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,13 +83,31 @@ public class IndexActivity extends Activity {
 		lvHomeTimeLine = (ListView) findViewById(R.id.lvHomeTimeLine);
 		//initData();
 		initHeader();
-
 		
 		appref = this;
 		
 		ft = new FriendTask();
 		ft.execute();
 		
+		lvHomeTimeLine.setOnScrollListener(new OnScrollListener() {
+			
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				int last_item = firstVisibleItem + visibleItemCount;
+				
+			}
+			
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				if(last_item == htla.getCount() && scrollState == OnScrollListener.SCROLL_STATE_IDLE){
+					page_index += 1;
+					ft = new FriendTask();
+					ft.execute();
+				}
+			
+			}
+			
+			
+		});
 		initButtonAction();
 
 	}
@@ -167,42 +190,7 @@ public class IndexActivity extends Activity {
 		});
 	}
 
-	private void initData() {
-
-
-		strTopMenus = this.getResources().getStringArray(R.array.top_menu);
-		Log.v("TAG", strTopMenus.length + "");
-		DBAdapter dba = new DBAdapter(this, Constant.dbName, Constant.dbVersion);
-		dba.open();
-		Cursor cr = dba.query(null, "", "", "", "", "");
-
-		if (cr != null && cr.getCount() > 0) {
-			cr.moveToFirst();
-
-			token = cr.getString(1);
-			tokenSecret = cr.getString(2);
-			access = cr.getString(3);
-			accessSecret = cr.getString(4);
-
-			SharedPreferences sPre = this.getSharedPreferences(
-					Constant.app_name, MODE_WORLD_WRITEABLE);
-			Editor editor = sPre.edit();
-			editor.putString(Constant.token, token);
-			editor.putString(Constant.tokenSecret, tokenSecret);
-			editor.putString(Constant.ACCESSTOKEN, access);
-			editor.putString(Constant.ACCESSTOKENSECRET, accessSecret);
-			editor.commit();
-		}
-		cr.close();
-		dba.close();
-		Constant._access = access;
-		Constant._accessSecret = accessSecret;
-		Constant._token = token;
-		Constant._tokenSecret = tokenSecret;
-		
-	}
-
-	private void getFriends()
+	private void getFriends(int page_index)
 			throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException {
 
 		try {
@@ -211,7 +199,7 @@ public class IndexActivity extends Activity {
 			weibo.setToken(Constant.ACCESSTOKEN, Constant.ACCESSTOKENSECRET);
 			weibo.setOAuthAccessToken(Constant.token, Constant.tokenSecret);
 
-			statuses = weibo.getHomeTimeline();
+			statuses = weibo.getHomeTimeline(new Paging(page_index));
 
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
@@ -233,7 +221,12 @@ public class IndexActivity extends Activity {
 		@Override
 		protected void onPostExecute(Object result) {
 			pDialog.dismiss();
-			lvHomeTimeLine.setAdapter(htla);
+			if(lvHomeTimeLine.getAdapter() == null){
+				lvHomeTimeLine.setAdapter(htla);
+			}else{
+				htla.notifyDataSetChanged();
+			}
+			
 			User user = null;
 			try {
 				user = weibo.getAuthenticatedUser();
@@ -246,7 +239,7 @@ public class IndexActivity extends Activity {
 		@Override
 		protected Object doInBackground(Object... arg0) {
 			try {
-				getFriends();
+				getFriends(page_index);
 			} catch (org.apache.commons.httpclient.util.TimeoutController.TimeoutException e) {
 				Toast.makeText(appref, "time out", 2000).show();
 			}
