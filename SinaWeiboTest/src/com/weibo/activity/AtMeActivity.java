@@ -9,16 +9,19 @@ import weibo4andriod.Weibo4sina;
 import weibo4andriod.WeiboException;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -71,7 +74,40 @@ public class AtMeActivity extends Activity {
 		
 		weibo = OAuthConstant.getInstance().getWeibo();
 	}
-		
+	
+	
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+	}
+
+
+
+	@Override
+	protected void onPause() {
+		SharedPreferences sp = getSharedPreferences("sina_ranger", Context.MODE_PRIVATE);
+		Editor edit = sp.edit();
+//		edit.put
+	}
+
+
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+	}
+
+
+
+	@Override
+	protected void onResume() {
+		weibo = OAuthConstant.getInstance().getWeibo();
+	}
+
+
 	public void initButtonAction(){
 		LinearLayout llAtMe = (LinearLayout)findViewById(R.id.llAtMe_TopMenu);
 		llAtMe.setOnClickListener(new OnClickListener(){
@@ -155,8 +191,8 @@ public class AtMeActivity extends Activity {
 		try {
 			weibo.setOAuthConsumer(Constant.CONSUMER_KEY,
 					Constant.CONSUMER_SECRET);
-			weibo.setToken(Constant._access, Constant._accessSecret);
-			weibo.setOAuthAccessToken(Constant._token, Constant._tokenSecret);
+			weibo.setToken(Constant._token, Constant._tokenSecret);
+			weibo.setOAuthAccessToken(Constant._access, Constant._accessSecret);
 
 			statuses = weibo.getMentions(new Paging(page_index));
 			for (Status temp : statuses) {
