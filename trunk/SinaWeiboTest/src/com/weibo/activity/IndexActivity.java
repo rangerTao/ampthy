@@ -1,5 +1,6 @@
 package com.weibo.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import weibo4andriod.Paging;
@@ -61,7 +62,7 @@ public class IndexActivity extends Activity {
 	public static IndexActivity appref;
 
 	public static List<User> friends;
-	public static List<Status> statuses;
+	public static List<Status> statuses = new ArrayList<Status>();
 
 	public Weibo4sina weibo = OAuthConstant.getInstance().getWeibo();
 	
@@ -85,7 +86,7 @@ public class IndexActivity extends Activity {
 		initHeader();
 		
 		appref = this;
-		
+		htla = new HomeTimeLineAdapter();
 		ft = new FriendTask();
 		ft.execute();
 		
@@ -93,12 +94,13 @@ public class IndexActivity extends Activity {
 			
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
-				int last_item = firstVisibleItem + visibleItemCount;
-				
+				last_item = firstVisibleItem + visibleItemCount;
 			}
 			
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				Log.v("TAG", last_item + ":" + htla.getCount());
 				if(last_item == htla.getCount() && scrollState == OnScrollListener.SCROLL_STATE_IDLE){
+					Log.v("TAG", "Get next page");
 					page_index += 1;
 					ft = new FriendTask();
 					ft.execute();
@@ -183,8 +185,12 @@ public class IndexActivity extends Activity {
 		ibtnHeaderRefresh.setOnClickListener(new OnClickListener(){
 
 			public void onClick(View v) {
+				page_index = 1;
+				lvHomeTimeLine.removeAllViewsInLayout();
+				statuses = new ArrayList<Status>();
 				ft = new FriendTask();
 				ft.execute();
+				htla.notifyDataSetChanged();
 			}
 			
 		});
@@ -196,10 +202,13 @@ public class IndexActivity extends Activity {
 		try {
 			weibo.setOAuthConsumer(Constant.CONSUMER_KEY,
 					Constant.CONSUMER_SECRET);
-			weibo.setToken(Constant.ACCESSTOKEN, Constant.ACCESSTOKENSECRET);
-			weibo.setOAuthAccessToken(Constant.token, Constant.tokenSecret);
-
-			statuses = weibo.getHomeTimeline(new Paging(page_index));
+			weibo.setToken(Constant._token, Constant._tokenSecret);
+			weibo.setOAuthAccessToken(Constant._access, Constant._accessSecret);
+			
+			List<Status> temp = weibo.getHomeTimeline(new Paging(page_index));
+			for(Status tmpStatus : temp){
+				statuses.add(tmpStatus);
+			}
 
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
@@ -243,7 +252,6 @@ public class IndexActivity extends Activity {
 			} catch (org.apache.commons.httpclient.util.TimeoutController.TimeoutException e) {
 				Toast.makeText(appref, "time out", 2000).show();
 			}
-			htla = new HomeTimeLineAdapter();
 			return null;
 		}
 	}
