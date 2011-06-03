@@ -11,6 +11,8 @@ public class GetImageThread implements Runnable {
 	private static ArrayList<URL> imageTask = new ArrayList<URL>();
 	
 	public void run() {
+		while(imageTask.size() > 0){
+
 		try{
 			URL tempUrl = popImageTask();
 			Bitmap bmpTemp = WeiboUtils.getImage(tempUrl);
@@ -18,6 +20,7 @@ public class GetImageThread implements Runnable {
 			Log.v("TAG", "Received image" + tempUrl.toString());
 		}catch(Exception e){
 			e.printStackTrace();
+		}			
 		}
 	}
 
