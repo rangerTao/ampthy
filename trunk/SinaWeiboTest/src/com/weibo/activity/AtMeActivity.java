@@ -22,6 +22,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,7 +51,7 @@ public class AtMeActivity extends Activity {
 	public AtMeAdapter atMeAdapter;
 	public Handler handler = new Handler();
 	private int page_index = 1;
-	
+	private int last_item = 0;
 	public AtMeTask at;
 
 	@Override
@@ -64,15 +66,42 @@ public class AtMeActivity extends Activity {
 		setContentView(R.layout.index_activity);
 		
 		lvAtMe = (ListView)findViewById(R.id.lvHomeTimeLine);
-		
+
+		lvAtMe.setOnScrollListener(new OnScrollListener(){
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				last_item = firstVisibleItem + visibleItemCount;
+				
+			}
+
+			@Override
+			public void onScrollStateChanged(AbsListView arg0, int arg1) {
+				if(last_item == atMeAdapter.getCount() && arg1 == OnScrollListener.SCROLL_STATE_IDLE){
+					Log.v("TAG", "Get next page");
+					page_index += 1;
+					at = new AtMeTask();
+					at.execute();
+				}
+			}
+			
+		});
 		initHeader();
 		
 		initButtonAction();
 		
-		at = new AtMeTask();
-		at.execute();
-		
 		weibo = OAuthConstant.getInstance().getWeibo();
+		
+		if(!(atMeList.size()>0)){
+			at = new AtMeTask();
+			at.execute();
+		}else{
+			Log.v("TAG", "item exists");
+			lvAtMe.setAdapter(this.atMeAdapter);
+		}
+		
+		
 	}
 	
 	
@@ -87,9 +116,7 @@ public class AtMeActivity extends Activity {
 
 	@Override
 	protected void onPause() {
-		SharedPreferences sp = getSharedPreferences("sina_ranger", Context.MODE_PRIVATE);
-		Editor edit = sp.edit();
-//		edit.put
+		super.onResume();
 	}
 
 
@@ -105,6 +132,7 @@ public class AtMeActivity extends Activity {
 	@Override
 	protected void onResume() {
 		weibo = OAuthConstant.getInstance().getWeibo();
+		super.onResume();
 	}
 
 
@@ -179,8 +207,13 @@ public class AtMeActivity extends Activity {
 		ibtnHeaderRefresh.setOnClickListener(new OnClickListener(){
 
 			public void onClick(View v) {
+				page_index = 1;
+				lvAtMe.removeAllViewsInLayout();
+				statuses = new ArrayList<Status>();
+				
 				at = new AtMeTask();
 				at.execute();
+				atMeAdapter.notifyDataSetChanged();
 			}
 			
 		});
@@ -189,10 +222,10 @@ public class AtMeActivity extends Activity {
 	private void getAtMe(int page_index) {
 
 		try {
-			weibo.setOAuthConsumer(Constant.CONSUMER_KEY,
-					Constant.CONSUMER_SECRET);
-			weibo.setToken(Constant._token, Constant._tokenSecret);
-			weibo.setOAuthAccessToken(Constant._access, Constant._accessSecret);
+//			weibo.setOAuthConsumer(Constant.CONSUMER_KEY,
+//					Constant.CONSUMER_SECRET);
+//			weibo.setToken(Constant._token, Constant._tokenSecret);
+//			weibo.setOAuthAccessToken(Constant._access, Constant._accessSecret);
 
 			statuses = weibo.getMentions(new Paging(page_index));
 			for (Status temp : statuses) {

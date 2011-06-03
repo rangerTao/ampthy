@@ -96,8 +96,12 @@ public class OAuthActivity extends Activity {
 		
 		ContentValues cv = new ContentValues();
 		Bitmap userHead = WeiboUtils.getImage(user.getProfileImageURL());
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		userHead.compress(Bitmap.CompressFormat.PNG, 100, os);
+		if(userHead != null){
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			userHead.compress(Bitmap.CompressFormat.PNG, 100, os);
+			cv.put(DBColumns.USERHEADURI, os.toByteArray());
+		}
+		
 		cv.put(DBColumns.ID, userId);
 		cv.put(DBColumns.TOKEN, token);
 		cv.put(DBColumns.TOKENSECRET, tokenSecret);
@@ -105,7 +109,6 @@ public class OAuthActivity extends Activity {
 		cv.put(DBColumns.ACCESSTOKENSECRET, userSecret);
 		cv.put(DBColumns.ScreenName, user.getScreenName());
 		cv.put(DBColumns.SITE, "Sina");
-		cv.put(DBColumns.USERHEADURI, os.toByteArray());
 		cv.put(DBColumns.USERHEADURL, user.getProfileImageURL().toString());
 		Log.v("TAG", userId + "   " + userKey + "   " + userSecret);
 		DBAdapter dba = new DBAdapter(this, Constant.dbName, Constant.dbVersion);

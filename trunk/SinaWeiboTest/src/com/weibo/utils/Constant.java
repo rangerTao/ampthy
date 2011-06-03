@@ -37,4 +37,6 @@ public class Constant {
 	
 	public static Bitmap[] imageMenu;
 	public static Map<String, Bitmap> imageMap = new HashMap<String, Bitmap>();
+	
+	public static GetImageThread git = new GetImageThread();
 }

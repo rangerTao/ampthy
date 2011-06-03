@@ -1,5 +1,7 @@
 package com.weibo.activity;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,6 +43,7 @@ import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.UserImpl;
 import com.weibo.pojo.adapter.HomeTimeLineAdapter;
 import com.weibo.utils.Constant;
+import com.weibo.utils.WeiboUtils;
 
 public class IndexActivity extends Activity {
 
@@ -65,63 +69,125 @@ public class IndexActivity extends Activity {
 	public static List<Status> statuses = new ArrayList<Status>();
 
 	public Weibo4sina weibo = OAuthConstant.getInstance().getWeibo();
-	
+
 	private int page_index = 1;
 	private int last_item = 0;
 
+	private int visiableFirstItem = 0;
+	private int visiableItemCount = 0;
+
 	HomeTimeLineAdapter htla;
 	FriendTask ft;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
+
 		super.onCreate(savedInstanceState);
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		setContentView(R.layout.index_activity);
-		
+
 		lvHomeTimeLine = (ListView) findViewById(R.id.lvHomeTimeLine);
-		//initData();
+		// initData();
 		initHeader();
-		
+
 		appref = this;
 		htla = new HomeTimeLineAdapter();
 		ft = new FriendTask();
 		ft.execute();
-		
 		lvHomeTimeLine.setOnScrollListener(new OnScrollListener() {
-			
+
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
 				last_item = firstVisibleItem + visibleItemCount;
+				visiableFirstItem = firstVisibleItem;
+				visiableItemCount = visibleItemCount;
 			}
-			
+
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				Log.v("TAG", last_item + ":" + htla.getCount());
-				if(last_item == htla.getCount() && scrollState == OnScrollListener.SCROLL_STATE_IDLE){
-					Log.v("TAG", "Get next page");
+				if (last_item == htla.getCount()
+						&& scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
 					page_index += 1;
 					ft = new FriendTask();
 					ft.execute();
 				}
-			
+				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+					for (int i = visiableFirstItem; i < visiableFirstItem
+							+ visiableItemCount; i++) {
+
+						View viewTemp = (View) htla.getItem(i);
+
+						final Status statusTemp = statuses.get(i);
+
+						final ImageView ivUserHead = (ImageView) viewTemp
+								.findViewById(R.id.ivUserHead);
+						ImageView ivStatusImage = (ImageView) viewTemp
+								.findViewById(R.id.ivThumbail);
+						final User user = statusTemp.getUser();
+						new Thread() {
+
+							@Override
+							public void run() {
+								if (Constant.imageMap.containsKey(user.getId()
+										+ "") == false) {
+									ivUserHead.setImageBitmap(BitmapFactory
+											.decodeResource(
+													IndexActivity.appref
+															.getResources(),
+													R.drawable.loading));
+									Log.v("TAG", "set loading");
+									Constant.imageMap.put(user.getId() + "",
+											null);
+									Bitmap tempBitmap = WeiboUtils
+											.getImage(user.getProfileImageURL());
+									WeiboUtils.setImage(
+											IndexActivity.appref.handler,
+											ivUserHead, tempBitmap);
+									Constant.imageMap.put(user.getId() + "",
+											tempBitmap);
+								} else {
+									handler.post(new Runnable() {
+
+										@Override
+										public void run() {
+											ivUserHead
+													.setImageBitmap(Constant.imageMap
+															.get(user.getId()
+																	+ ""));
+										}
+
+									});
+
+								}
+							}
+
+						}.start();
+
+					}
+				}
+
 			}
-			
-			
 		});
+
 		initButtonAction();
 
 	}
-	
-	public void initButtonAction(){
-		LinearLayout llAtMe = (LinearLayout)findViewById(R.id.llAtMe_TopMenu);
-		llAtMe.setOnClickListener(new OnClickListener(){
 
+	@Override
+	protected void onResume() {
+		weibo = OAuthConstant.getInstance().getWeibo();
+		super.onResume();
+	}
+
+	public void initButtonAction() {
+		LinearLayout llAtMe = (LinearLayout) findViewById(R.id.llAtMe_TopMenu);
+		llAtMe.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				Log.v("TAG", "Start AtMe");
-				startActivity(new Intent(appref,AtMeActivity.class));
+				startActivity(new Intent(appref, AtMeActivity.class));
 			}
 		});
 	}
@@ -131,9 +197,9 @@ public class IndexActivity extends Activity {
 		ImageView ibtnHeaderWrite = (ImageView) findViewById(R.id.ibtnHeaderWrite);
 		ImageView ibtnHeaderRefresh = (ImageView) findViewById(R.id.ibtnHeaderRefresh);
 		tvHeaderUserName = (TextView) findViewById(R.id.tvHeaderUserName);
-		
+
 		tvHeaderUserName.setText(UserImpl.getUserScreenName());
-		
+
 		ibtnHeaderWrite.setImageBitmap(BitmapFactory.decodeResource(
 				getResources(), R.drawable.writer));
 		ibtnHeaderRefresh.setImageBitmap(BitmapFactory.decodeResource(
@@ -148,30 +214,32 @@ public class IndexActivity extends Activity {
 				final EditText etTwitter = (EditText) findViewById(R.id.etBoradcast);
 
 				TextView tvSend = (TextView) findViewById(R.id.btnSend);
-				tvSend.setOnClickListener(new OnClickListener(){
+				tvSend.setOnClickListener(new OnClickListener() {
 
 					@SuppressWarnings("deprecation")
 					public void onClick(View v) {
 						ProgressDialog pdSend = null;
 						try {
-							pdSend = ProgressDialog.show(IndexActivity.appref, "Sending", "please wait");
-							if(etTwitter.getText().toString().length()>0){
+							pdSend = ProgressDialog.show(IndexActivity.appref,
+									"Sending", "please wait");
+							if (etTwitter.getText().toString().length() > 0) {
 								weibo.update(etTwitter.getText().toString());
 							}
 						} catch (WeiboException e) {
-							Toast.makeText(appref, "Updating error", 2000).show();
+							Toast.makeText(appref, "Updating error", 2000)
+									.show();
 							e.printStackTrace();
-						} finally{
+						} finally {
 							llEditTwitter.setVisibility(View.GONE);
 							pdSend.dismiss();
 						}
-						
+
 					}
-					
+
 				});
 
 				TextView tvCancel = (TextView) findViewById(R.id.btnCancel);
-				tvCancel.setOnClickListener(new OnClickListener(){
+				tvCancel.setOnClickListener(new OnClickListener() {
 
 					public void onClick(View v) {
 						etTwitter.setText("");
@@ -181,8 +249,8 @@ public class IndexActivity extends Activity {
 			}
 
 		});
-		
-		ibtnHeaderRefresh.setOnClickListener(new OnClickListener(){
+
+		ibtnHeaderRefresh.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				page_index = 1;
@@ -192,23 +260,40 @@ public class IndexActivity extends Activity {
 				ft.execute();
 				htla.notifyDataSetChanged();
 			}
-			
+
 		});
 	}
 
 	private void getFriends(int page_index)
-			throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException {
+			throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException, MalformedURLException {
 
 		try {
 			weibo.setOAuthConsumer(Constant.CONSUMER_KEY,
 					Constant.CONSUMER_SECRET);
 			weibo.setToken(Constant._token, Constant._tokenSecret);
 			weibo.setOAuthAccessToken(Constant._access, Constant._accessSecret);
-			
+
 			List<Status> temp = weibo.getHomeTimeline(new Paging(page_index));
-			for(Status tmpStatus : temp){
+			for (Status tmpStatus : temp) {
 				statuses.add(tmpStatus);
 			}
+			for(int i=0;i<statuses.size()/2;i++){
+				Log.v("TAG", "Add to list");
+				User user = statuses.get(i).getUser();
+				if(user.getProfileImageURL() != null && user.getProfileImageURL().toString().startsWith("http")){
+					if(Constant.imageMap.get(user.getProfileImageURL().toString())==null){
+						Constant.git.pushImageTask(user.getProfileImageURL());
+					}
+				}
+				Status status = statuses.get(i);
+				if(status.getThumbnail_pic() !=null && status.getThumbnail_pic().startsWith("http")){
+					if(Constant.imageMap.get(status.getThumbnail_pic())==null){
+						Constant.git.pushImageTask(new URL(status.getThumbnail_pic()));
+					}
+				}
+				Log.v("TAG", "index" + i);
+			}
+			Constant.git.run();
 
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
@@ -230,12 +315,12 @@ public class IndexActivity extends Activity {
 		@Override
 		protected void onPostExecute(Object result) {
 			pDialog.dismiss();
-			if(lvHomeTimeLine.getAdapter() == null){
+			if (lvHomeTimeLine.getAdapter() == null) {
 				lvHomeTimeLine.setAdapter(htla);
-			}else{
+			} else {
 				htla.notifyDataSetChanged();
 			}
-			
+
 			User user = null;
 			try {
 				user = weibo.getAuthenticatedUser();
@@ -251,6 +336,9 @@ public class IndexActivity extends Activity {
 				getFriends(page_index);
 			} catch (org.apache.commons.httpclient.util.TimeoutController.TimeoutException e) {
 				Toast.makeText(appref, "time out", 2000).show();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			return null;
 		}

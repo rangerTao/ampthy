@@ -15,6 +15,7 @@ import com.weibo.utils.WeiboUtils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,9 @@ public class AtMeAdapter extends BaseAdapter{
 		tvUserName.setText(user.getScreenName());
 		tvLocation.setText(user.getLocation());
 		tvMention.setText(status.getText());
+		tvUserName.setTextColor(Color.BLACK);
+		tvLocation.setTextColor(Color.BLACK);
+		tvMention.setTextColor(Color.BLACK);
 		tvSourceAndTime.setText(Html.fromHtml(status.getSource().toString()));
 		if (Constant.imageMap.containsKey(user.getId() + "") == false) {
 			Constant.imageMap.put(user.getId() + "", null);
@@ -76,7 +80,7 @@ public class AtMeAdapter extends BaseAdapter{
 			}
 			
 		} else {
-			ivUserHead.setImageBitmap(Constant.imageMap.get(user.getId() + ""));
+			ivMentionPic.setImageBitmap(Constant.imageMap.get(status.getThumbnail_pic() + ""));
 		}
 		return view;
 	}
