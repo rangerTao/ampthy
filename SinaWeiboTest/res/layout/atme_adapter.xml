@@ -20,6 +20,6 @@
 		android:layout_below="@+id/tvMention" />
 	<TextView android:id="@+id/tvTimeAndResouce"
 		android:layout_height="wrap_content" android:layout_width="wrap_content"
-		android:paddingTop="2px" android:layout_toLeftOf="@+id/tvMention"
+		android:paddingTop="2px" android:layout_alignLeft="@+id/tvMention"
 		android:layout_below="@+id/ivMentionPic" />
 </RelativeLayout>

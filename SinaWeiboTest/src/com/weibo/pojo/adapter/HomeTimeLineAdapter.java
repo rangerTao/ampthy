@@ -61,7 +61,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 	}
 
 	public Object getItem(int position) {
-		return IndexActivity.statuses.get(position);
+		return getView(position,null,null);
 	}
 
 	public long getItemId(int position) {
@@ -82,6 +82,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		TextView tvUserLocationg = (TextView) view
 				.findViewById(R.id.tvUserLocation);
 		TextView tvUserDesc = (TextView) view.findViewById(R.id.tvUserDesc);
+		tvUserDesc.setVisibility(View.GONE);
 		TextView tvUserStatus = (TextView) view.findViewById(R.id.tvStatus);
 		TextView tvTimeCreate = (TextView)view.findViewById(R.id.tvTimeCreate);
 		TextView tvSource = (TextView)view.findViewById(R.id.tvSource);
@@ -100,12 +101,12 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		urlString = user.getProfileImageURL();
 		ivUserHead.setImageBitmap(BitmapFactory.decodeResource(
 				IndexActivity.appref.getResources(), R.drawable.loading));
-		if (Constant.imageMap.containsKey(user.getId() + "") == false) {
+		if (Constant.imageMap.containsKey(user.getProfileImageURL().toString()) == false) {
 			Constant.imageMap.put(user.getId() + "", null);
 			Bitmap tempBitmap = WeiboUtils.getImage(user.getProfileImageURL());
 			WeiboUtils.setImage(IndexActivity.appref.handler, ivUserHead,
 					tempBitmap);
-			Constant.imageMap.put(user.getId() + "", tempBitmap);
+			Constant.imageMap.put(user.getProfileImageURL().toString() + "", tempBitmap);
 		} else {
 			ivUserHead.setImageBitmap(Constant.imageMap.get(user.getId() + ""));
 		}
@@ -119,7 +120,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 				.findViewById(R.id.ivThumbail);
 		if (status.getThumbnail_pic() != null
 				&& status.getThumbnail_pic() != "") {
-			if (Constant.imageMap.containsKey(user.getId() + "thum") == false) {
+			if (Constant.imageMap.containsKey(status.getThumbnail_pic() + "thum") == false) {
 				Constant.imageMap.put(user.getId() + "thum", null);
 				ivStatusImage.setImageBitmap(BitmapFactory
 						.decodeResource(IndexActivity.appref.getResources(),
@@ -129,7 +130,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 							.getThumbnail_pic()));
 					WeiboUtils.setImage(IndexActivity.appref.handler,
 							ivStatusImage, tempBitmap);
-					Constant.imageMap.put(user.getId() + "thum", tempBitmap);
+					Constant.imageMap.put(status.getThumbnail_pic(), tempBitmap);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
