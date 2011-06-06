@@ -69,14 +69,12 @@ public class AtMeActivity extends Activity {
 
 		lvAtMe.setOnScrollListener(new OnScrollListener(){
 
-			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
 				last_item = firstVisibleItem + visibleItemCount;
 				
 			}
 
-			@Override
 			public void onScrollStateChanged(AbsListView arg0, int arg1) {
 				if(last_item == atMeAdapter.getCount() && arg1 == OnScrollListener.SCROLL_STATE_IDLE){
 					Log.v("TAG", "Get next page");

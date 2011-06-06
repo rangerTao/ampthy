@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<RelativeLayout android:id="@+id/llUserDetail"
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
+		<ImageView android:src="@drawable/loading" android:id="@+id/ivUserHead"
+			android:layout_alignParentLeft="true" android:layout_width="32px"
+			android:layout_height="32px"></ImageView>
+		<TextView android:text="" android:id="@+id/tvUserScreenName"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_toRightOf="@+id/ivUserHead" android:paddingLeft="5px"></TextView>
+		<TextView android:text="" android:id="@+id/tvLoc"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"></TextView>
+		<TextView android:id="@+id/tvDetail" android:layout_width="wrap_content"
+			android:text="" android:layout_below="@+id/tvUserScreenName"
+			android:layout_height="wrap_content" android:layout_alignLeft="@+id/tvUserScreenName"></TextView>
+		<ImageView android:id="@+id/ivDetaiThumb"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:visibility="gone" android:layout_alignLeft="@+id/tvUserScreenName"
+			android:paddingTop="5px"></ImageView>
+	</RelativeLayout>
+	<ListView android:id="@+id/lvComent" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_below="@+id/llUserDetail"></ListView>
+</RelativeLayout>
