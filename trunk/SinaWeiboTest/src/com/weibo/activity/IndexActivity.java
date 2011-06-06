@@ -10,13 +10,9 @@ import weibo4andriod.Status;
 import weibo4andriod.User;
 import weibo4andriod.Weibo4sina;
 import weibo4andriod.WeiboException;
-import android.R.integer;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -24,11 +20,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -38,7 +36,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.weibo.R;
-import com.weibo.daos.DBAdapter;
 import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.UserImpl;
 import com.weibo.pojo.adapter.HomeTimeLineAdapter;
@@ -137,7 +134,6 @@ public class IndexActivity extends Activity {
 													IndexActivity.appref
 															.getResources(),
 													R.drawable.loading));
-									Log.v("TAG", "set loading");
 									Constant.imageMap.put(user.getId() + "",
 											null);
 									Bitmap tempBitmap = WeiboUtils
@@ -150,7 +146,6 @@ public class IndexActivity extends Activity {
 								} else {
 									handler.post(new Runnable() {
 
-										@Override
 										public void run() {
 											ivUserHead
 													.setImageBitmap(Constant.imageMap
@@ -173,6 +168,18 @@ public class IndexActivity extends Activity {
 
 		initButtonAction();
 
+		lvHomeTimeLine.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+						Intent intent = new Intent(IndexActivity.appref,MsgDetail.class);
+						Bundle bundle = new Bundle();
+						bundle.putInt("index", arg2);
+						intent.putExtras(bundle);
+						IndexActivity.appref.startActivity(intent);
+			}
+			
+		});
 	}
 
 	@Override
@@ -278,7 +285,6 @@ public class IndexActivity extends Activity {
 				statuses.add(tmpStatus);
 			}
 			for(int i=0;i<statuses.size()/2;i++){
-				Log.v("TAG", "Add to list");
 				User user = statuses.get(i).getUser();
 				if(user.getProfileImageURL() != null && user.getProfileImageURL().toString().startsWith("http")){
 					if(Constant.imageMap.get(user.getProfileImageURL().toString())==null){
@@ -291,13 +297,12 @@ public class IndexActivity extends Activity {
 						Constant.git.pushImageTask(new URL(status.getThumbnail_pic()));
 					}
 				}
-				Log.v("TAG", "index" + i);
 			}
 			Constant.git.run();
 
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
-			System.exit(-1);
+			Toast.makeText(IndexActivity.appref, "Á¬½Ó´íÎó£¡",2000).show();
 		}
 	}
 

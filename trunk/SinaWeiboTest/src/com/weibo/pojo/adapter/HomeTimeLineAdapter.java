@@ -1,53 +1,32 @@
 package com.weibo.pojo.adapter;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import weibo4andriod.RetweetDetails;
 import weibo4andriod.Status;
 import weibo4andriod.User;
-import weibo4andriod.Weibo4sina;
-import weibo4andriod.WeiboException;
-
-import com.weibo.R;
-import com.weibo.activity.IndexActivity;
-import com.weibo.utils.Constant;
-import com.weibo.utils.WeiboUtils;
-
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
+import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.weibo.R;
+import com.weibo.activity.IndexActivity;
+import com.weibo.activity.MsgDetail;
+import com.weibo.utils.Constant;
+import com.weibo.utils.WeiboUtils;
 
 public class HomeTimeLineAdapter extends BaseAdapter {
 
@@ -69,7 +48,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		return 0;
 	}
 
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		Status status = IndexActivity.statuses.get(position);
 		final User user = status.getUser();
 		LayoutInflater layoutInflater = LayoutInflater
@@ -102,13 +81,13 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		ivUserHead.setImageBitmap(BitmapFactory.decodeResource(
 				IndexActivity.appref.getResources(), R.drawable.loading));
 		if (Constant.imageMap.containsKey(user.getProfileImageURL().toString()) == false) {
-			Constant.imageMap.put(user.getId() + "", null);
+			Constant.imageMap.put(user.getProfileImageURL().toString() + "", null);
 			Bitmap tempBitmap = WeiboUtils.getImage(user.getProfileImageURL());
 			WeiboUtils.setImage(IndexActivity.appref.handler, ivUserHead,
 					tempBitmap);
 			Constant.imageMap.put(user.getProfileImageURL().toString() + "", tempBitmap);
 		} else {
-			ivUserHead.setImageBitmap(Constant.imageMap.get(user.getId() + ""));
+			ivUserHead.setImageBitmap(Constant.imageMap.get(user.getProfileImageURL().toString() + ""));
 		}
 		tvUserStatus.setText(status.getText().toString());
 		//tvSource.setText(status.getSource().toString());
@@ -120,8 +99,8 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 				.findViewById(R.id.ivThumbail);
 		if (status.getThumbnail_pic() != null
 				&& status.getThumbnail_pic() != "") {
-			if (Constant.imageMap.containsKey(status.getThumbnail_pic() + "thum") == false) {
-				Constant.imageMap.put(user.getId() + "thum", null);
+			if (Constant.imageMap.containsKey(status.getThumbnail_pic()) == false) {
+				Constant.imageMap.put(status.getThumbnail_pic(), null);
 				ivStatusImage.setImageBitmap(BitmapFactory
 						.decodeResource(IndexActivity.appref.getResources(),
 								R.drawable.refresh));
@@ -136,7 +115,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 				}
 			} else {
 				ivStatusImage.setImageBitmap(Constant.imageMap
-						.get(user.getId() + "thum"));
+						.get(status.getThumbnail_pic()));
 			}
 
 		} else {
@@ -163,6 +142,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		// RelativeLayout rl = (RelativeLayout) view
 		// .findViewById(R.id.rlFriendsTimeLine);
 		// rl.addView(rlayout);
+
 		return view;
 	}
 }
