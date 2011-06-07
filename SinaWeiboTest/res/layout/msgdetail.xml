@@ -6,20 +6,36 @@
 		<ImageView android:src="@drawable/loading" android:id="@+id/ivUserHead"
 			android:layout_alignParentLeft="true" android:layout_width="32px"
 			android:layout_height="32px"></ImageView>
-		<TextView android:text="" android:id="@+id/tvUserScreenName"
+		<TextView android:text="" android:id="@+id/tvUserScreenName" style="@style/TextView"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_toRightOf="@+id/ivUserHead" android:paddingLeft="5px"></TextView>
-		<TextView android:text="" android:id="@+id/tvLoc"
+		<TextView android:text="" android:id="@+id/tvLoc" style="@style/TextView"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_alignParentRight="true"></TextView>
-		<TextView android:id="@+id/tvDetail" android:layout_width="wrap_content"
+		<TextView android:id="@+id/tvDetail" android:layout_width="wrap_content" style="@style/TextView"
 			android:text="" android:layout_below="@+id/tvUserScreenName"
 			android:layout_height="wrap_content" android:layout_alignLeft="@+id/tvUserScreenName"></TextView>
 		<ImageView android:id="@+id/ivDetaiThumb"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:visibility="gone" android:layout_alignLeft="@+id/tvUserScreenName"
-			android:paddingTop="5px"></ImageView>
+			android:layout_alignLeft="@+id/tvUserScreenName"
+			android:layout_below="@+id/tvDetail" android:paddingTop="5px"
+			android:paddingLeft="10px"></ImageView>
+		<TextView android:id="@+id/loadingComents" android:text="Getting Coments" style="@style/TextView"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:textSize="14px" android:gravity="center"
+			android:layout_below="@+id/ivDetaiThumb"></TextView>
 	</RelativeLayout>
+	<LinearLayout android:id="@+id/llButton"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="horizontal" android:layout_below="@+id/llUserDetail">
+		<Button android:id="@+id/btnComment" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="Comment"></Button>
+		<Button android:id="@+id/btnForward" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="Forward"></Button>
+		<Button android:id="@+id/btnAtH" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="AtHim"></Button>
+	</LinearLayout>
 	<ListView android:id="@+id/lvComent" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:layout_below="@+id/llUserDetail"></ListView>
+		android:cacheColorHint="#00000000" android:paddingTop="10px"
+		android:layout_height="wrap_content" android:layout_below="@+id/llButton"></ListView>
 </RelativeLayout>

@@ -7,15 +7,12 @@ import java.text.SimpleDateFormat;
 import weibo4andriod.RetweetDetails;
 import weibo4andriod.Status;
 import weibo4andriod.User;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -24,7 +21,6 @@ import android.widget.TextView;
 
 import com.weibo.R;
 import com.weibo.activity.IndexActivity;
-import com.weibo.activity.MsgDetail;
 import com.weibo.utils.Constant;
 import com.weibo.utils.WeiboUtils;
 

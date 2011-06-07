@@ -1,8 +1,11 @@
 package com.weibo.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import weibo4andriod.Comment;
 import weibo4andriod.User;
 
 import com.weibo.R;
@@ -34,6 +37,8 @@ public class Constant {
 	public static String _accessSecret = "";
 	public static String _token = "";
 	public static String _tokenSecret = "";
+	
+	public static List<Comment> commentList = new ArrayList<Comment>();
 	
 	public static Bitmap[] imageMenu;
 	public static Map<String, Bitmap> imageMap = new HashMap<String, Bitmap>();
