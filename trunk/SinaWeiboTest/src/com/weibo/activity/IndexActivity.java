@@ -94,6 +94,9 @@ public class IndexActivity extends Activity {
 		htla = new HomeTimeLineAdapter();
 		ft = new FriendTask();
 		ft.execute();
+
+		Constant.sit.start();
+		
 		lvHomeTimeLine.setOnScrollListener(new OnScrollListener() {
 
 			public void onScroll(AbsListView view, int firstVisibleItem,
@@ -299,7 +302,6 @@ public class IndexActivity extends Activity {
 				}
 			}
 			Constant.git.run();
-
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
 			Toast.makeText(IndexActivity.appref, "Á¬½Ó´íÎó£¡",2000).show();

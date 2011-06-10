@@ -40,8 +40,6 @@ public class WeiboUtils {
 			HttpResponse hr = hc.execute(gm);
 			InputStream is = hr.getEntity().getContent();
 
-			Log.v("Getting data.", "end");
-
 			bmpUserHead = BitmapFactory.decodeStream(is);
 
 		} catch (Exception e) {

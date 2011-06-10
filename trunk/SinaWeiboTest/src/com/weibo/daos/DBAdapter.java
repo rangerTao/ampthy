@@ -22,12 +22,10 @@ public class DBAdapter {
 	public DBAdapter open() {
 		db = dbHelper.getWritableDatabase();
 
-		Log.v("TAG", "DB OPEN");
 		return this;
 	}
 
 	public boolean close() {
-		Log.v("TAG", "DB close");
 		db.close();
 		return true;
 	}

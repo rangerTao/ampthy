@@ -26,6 +26,7 @@ import com.weibo.utils.WeiboUtils;
 
 public class HomeTimeLineAdapter extends BaseAdapter {
 
+	ImageView ivUserHead;
 	URL urlString;
 	Bitmap bmpUserHead;
 	
@@ -46,87 +47,85 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		Status status = IndexActivity.statuses.get(position);
 		final User user = status.getUser();
-		ViewHolder holder;
-		if(convertView == null){
-			LayoutInflater layoutInflater = LayoutInflater
-			.from(IndexActivity.appref);
-			convertView = layoutInflater.inflate(R.layout.friendstimeline_adapter, null);
-			
-			holder = new ViewHolder();
-			
-			holder.tvUserNameTextView = (TextView) convertView.findViewById(R.id.tvUserName);
-			holder.tvUserLocationg = (TextView) convertView.findViewById(R.id.tvUserLocation);
-			holder.tvUserDesc = (TextView) convertView.findViewById(R.id.tvUserDesc);
-			holder.tvUserDesc.setVisibility(View.GONE);
-			holder.tvUserStatus = (TextView) convertView.findViewById(R.id.tvStatus);
-			holder.tvTimeCreate = (TextView)convertView.findViewById(R.id.tvTimeCreate);
-			holder.tvSource = (TextView)convertView.findViewById(R.id.tvSource);
-			holder.ivUserHead = (ImageView) convertView.findViewById(R.id.ivUserHead);
-			
-			holder.ivStatusImage = (ImageView) convertView.findViewById(R.id.ivThumbail);
-			convertView.setTag(holder);
-		}else{
-			holder = (ViewHolder) convertView.getTag();
-		}
-		
+		LayoutInflater layoutInflater = LayoutInflater
+				.from(IndexActivity.appref);
+		View view = layoutInflater.inflate(R.layout.friendstimeline_adapter,
+				null);
+		ivUserHead = (ImageView) view.findViewById(R.id.ivUserHead);
+		TextView tvUserNameTextView = (TextView) view
+				.findViewById(R.id.tvUserName);
+		TextView tvUserLocationg = (TextView) view
+				.findViewById(R.id.tvUserLocation);
+		TextView tvUserDesc = (TextView) view.findViewById(R.id.tvUserDesc);
+		tvUserDesc.setVisibility(View.GONE);
+		TextView tvUserStatus = (TextView) view.findViewById(R.id.tvStatus);
+		TextView tvTimeCreate = (TextView)view.findViewById(R.id.tvTimeCreate);
+		TextView tvSource = (TextView)view.findViewById(R.id.tvSource);
 //		TextView tvRewardBy = (TextView)view.findViewById(R.id.tvRewardBy);
 //		TextView tvCommentBy = (TextView)view.findViewById(R.id.tvCommentBy);
-		holder.tvUserStatus.setPadding(10, 5, 0, 0);
-		holder.tvUserNameTextView.setText(user.getScreenName());
-		holder.tvUserLocationg.setText(user.getLocation());
+		tvUserStatus.setPadding(10, 5, 0, 0);
+		tvUserNameTextView.setText(user.getScreenName());
+		tvUserLocationg.setText(user.getLocation());
 		
 		if (user.getDescription() == null || user.getDescription().equals("")) {
-			holder.tvUserDesc.setVisibility(View.GONE);
+			tvUserDesc.setVisibility(View.GONE);
 		} else {
-			holder.tvUserDesc.setText(user.getDescription().toString());
+			tvUserDesc.setText(user.getDescription().toString());
 		}
 
 		urlString = user.getProfileImageURL();
-		holder.ivUserHead.setImageBitmap(BitmapFactory.decodeResource(
+		ivUserHead.setImageBitmap(BitmapFactory.decodeResource(
 				IndexActivity.appref.getResources(), R.drawable.loading));
 		if (Constant.imageMap.containsKey(user.getProfileImageURL().toString()) == false) {
-			Bitmap tempBitmap = WeiboUtils.getImage(user.getProfileImageURL());
-			WeiboUtils.setImage(IndexActivity.appref.handler, holder.ivUserHead,
-					tempBitmap);
-			Constant.imageMap.put(user.getProfileImageURL().toString() + "", tempBitmap);
+//			Constant.imageMap.put(user.getProfileImageURL().toString() + "", null);
+			Constant.sit.pushImageTask(user.getProfileImageURL(), ivUserHead);
+//			Bitmap tempBitmap = WeiboUtils.getImage(user.getProfileImageURL());
+//			WeiboUtils.setImage(IndexActivity.appref.handler, ivUserHead,
+//					tempBitmap);
+//			Constant.imageMap.put(user.getProfileImageURL().toString() + "", tempBitmap);
 		} else {
-			holder.ivUserHead.setImageBitmap(Constant.imageMap.get(user.getProfileImageURL().toString() + ""));
+			ivUserHead.setImageBitmap(Constant.imageMap.get(user.getProfileImageURL().toString() + ""));
 		}
-		holder.tvUserStatus.setText(status.getText().toString());
+		tvUserStatus.setText(status.getText().toString());
 		//tvSource.setText(status.getSource().toString());
-		holder.tvSource.setText(Html.fromHtml(status.getSource().toString()));
+		tvSource.setText(Html.fromHtml(status.getSource().toString()));
 		SimpleDateFormat sdf = new SimpleDateFormat("MM.dd HH:mm  ");
-		holder.tvTimeCreate.setText(sdf.format(status.getCreatedAt()));
-
+		tvTimeCreate.setText(sdf.format(status.getCreatedAt()));
+		
+		ImageView ivStatusImage = (ImageView) view
+				.findViewById(R.id.ivThumbail);
 		if (status.getThumbnail_pic() != null
 				&& status.getThumbnail_pic() != "") {
 			if (Constant.imageMap.containsKey(status.getThumbnail_pic()) == false) {
-				holder.ivStatusImage.setImageBitmap(BitmapFactory
+//				Constant.imageMap.put(status.getThumbnail_pic(), null);
+				ivStatusImage.setImageBitmap(BitmapFactory
 						.decodeResource(IndexActivity.appref.getResources(),
 								R.drawable.refresh));
 				try {
-					Bitmap tempBitmap = WeiboUtils.getImage(new URL(status
-							.getThumbnail_pic()));
-					WeiboUtils.setImage(IndexActivity.appref.handler,
-							holder.ivStatusImage, tempBitmap);
-					Constant.imageMap.put(status.getThumbnail_pic(), tempBitmap);
+					Constant.sit.pushImageTask(new URL(status.getThumbnail_pic()), ivStatusImage);
+//					Bitmap tempBitmap = WeiboUtils.getImage(new URL(status
+//							.getThumbnail_pic()));
+//					WeiboUtils.setImage(IndexActivity.appref.handler,
+//							ivStatusImage, tempBitmap);
+//					Constant.imageMap.put(status.getThumbnail_pic(), tempBitmap);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
 			} else {
-				holder.ivStatusImage.setImageBitmap(Constant.imageMap
+				ivStatusImage.setImageBitmap(Constant.imageMap
 						.get(status.getThumbnail_pic()));
 			}
-			holder.ivStatusImage.setPadding(10, 2, 0, 0);
-			holder.ivStatusImage.setVisibility(View.VISIBLE);
+
 		} else {
-			holder.ivStatusImage.setVisibility(View.GONE);
+			ivStatusImage.setVisibility(View.GONE);
 		}
-		
-		convertView.setPadding(0, 3, 0, 0);
+		ivStatusImage.setPadding(10, 2, 0, 0);
+		view.setPadding(0, 3, 0, 0);
 		RetweetDetails statusRetweet = status.getRetweetDetails();
 		RelativeLayout rlayout = new RelativeLayout(IndexActivity.appref);
+
 		if (statusRetweet != null && statusRetweet.getRetweetId() != 0) {
+			Log.v("TAG", statusRetweet.getRetweetId() + "");
 			View viewRetweet = new View(IndexActivity.appref);
 			TextView tvRetweetUserName = new TextView(IndexActivity.appref);
 			TextView tvRetweetDetail = new TextView(IndexActivity.appref);
@@ -144,17 +143,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		// .findViewById(R.id.rlFriendsTimeLine);
 		// rl.addView(rlayout);
 
-		return convertView;
-	}
-	
-	static class ViewHolder{
-		TextView tvUserNameTextView;
-		TextView tvUserLocationg;
-		TextView tvUserDesc;
-		TextView tvUserStatus;
-		TextView tvTimeCreate;
-		TextView tvSource;
-		ImageView ivUserHead;
-		ImageView ivStatusImage;
+		return view;
+		
 	}
 }
