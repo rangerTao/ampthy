@@ -44,4 +44,5 @@ public class Constant {
 	public static Map<String, Bitmap> imageMap = new HashMap<String, Bitmap>();
 	
 	public static GetImageThread git = new GetImageThread();
+	public static SetImageThread sit = new SetImageThread();
 }

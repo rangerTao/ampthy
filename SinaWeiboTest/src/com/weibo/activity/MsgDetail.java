@@ -21,6 +21,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -141,25 +142,11 @@ public class MsgDetail extends Activity implements OnClickListener {
 
 		}
 		
+		tvLoading.setText("评论加载中...");
 		
-		try {
-			Constant.commentList.clear();
-			for(Comment temp : weibo.getComments(status.getId() + "")){
-				Constant.commentList.add(temp);
-			}
-			if(Constant.commentList.size() > 0){
-				ca = new ComentsAdapter();
-				
-				tvLoading.setVisibility(View.GONE);
-				lvComments.setAdapter(ca);
-			}else{
-				tvLoading.setText("暂时没有评价");
-			}
-			
-		} catch (WeiboException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		CommentTask ct = new CommentTask();
+		ct.execute();
+
 	}
 
 	public void onClick(View arg0) {
@@ -213,6 +200,38 @@ public class MsgDetail extends Activity implements OnClickListener {
 						}
 					})
 				     .setNegativeButton("取消", null).show();
+		}
+		
+	}
+	
+	private class CommentTask extends AsyncTask{
+
+		@Override
+		protected void onPostExecute(Object result) {
+			if(Constant.commentList.size() > 0){
+				ca = new ComentsAdapter();
+				
+				tvLoading.setVisibility(View.GONE);
+				lvComments.setAdapter(ca);
+			}else{
+				tvLoading.setText("暂时没有评价");
+			}
+			super.onPostExecute(result);
+		}
+
+		@Override
+		protected Object doInBackground(Object... arg0) {
+			try {
+				Constant.commentList.clear();
+				for(Comment temp : weibo.getComments(status.getId() + "")){
+					Constant.commentList.add(temp);
+				}
+				
+			} catch (WeiboException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return arg0;
 		}
 		
 	}

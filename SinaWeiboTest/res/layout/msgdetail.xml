@@ -29,11 +29,11 @@
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:orientation="horizontal" android:layout_below="@+id/llUserDetail">
 		<Button android:id="@+id/btnComment" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:text="Comment"></Button>
+			android:layout_height="wrap_content" android:text="评论"></Button>
 		<Button android:id="@+id/btnForward" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:text="Forward"></Button>
+			android:layout_height="wrap_content" android:text="转发"></Button>
 		<Button android:id="@+id/btnAtH" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:text="AtHim"></Button>
+			android:layout_height="wrap_content" android:text="对他说"></Button>
 	</LinearLayout>
 	<ListView android:id="@+id/lvComent" android:layout_width="wrap_content"
 		android:cacheColorHint="#00000000" android:paddingTop="10px"
