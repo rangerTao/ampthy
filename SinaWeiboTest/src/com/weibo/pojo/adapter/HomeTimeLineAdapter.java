@@ -85,7 +85,6 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		holder.ivUserHead.setImageBitmap(BitmapFactory.decodeResource(
 				IndexActivity.appref.getResources(), R.drawable.loading));
 		if (Constant.imageMap.containsKey(user.getProfileImageURL().toString()) == false) {
-			Constant.imageMap.put(user.getProfileImageURL().toString() + "", null);
 			Bitmap tempBitmap = WeiboUtils.getImage(user.getProfileImageURL());
 			WeiboUtils.setImage(IndexActivity.appref.handler, holder.ivUserHead,
 					tempBitmap);
@@ -102,7 +101,6 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		if (status.getThumbnail_pic() != null
 				&& status.getThumbnail_pic() != "") {
 			if (Constant.imageMap.containsKey(status.getThumbnail_pic()) == false) {
-				Constant.imageMap.put(status.getThumbnail_pic(), null);
 				holder.ivStatusImage.setImageBitmap(BitmapFactory
 						.decodeResource(IndexActivity.appref.getResources(),
 								R.drawable.refresh));
@@ -119,11 +117,12 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 				holder.ivStatusImage.setImageBitmap(Constant.imageMap
 						.get(status.getThumbnail_pic()));
 			}
-
+			holder.ivStatusImage.setPadding(10, 2, 0, 0);
+			holder.ivStatusImage.setVisibility(View.VISIBLE);
 		} else {
 			holder.ivStatusImage.setVisibility(View.GONE);
 		}
-		holder.ivStatusImage.setPadding(10, 2, 0, 0);
+		
 		convertView.setPadding(0, 3, 0, 0);
 		RetweetDetails statusRetweet = status.getRetweetDetails();
 		RelativeLayout rlayout = new RelativeLayout(IndexActivity.appref);
