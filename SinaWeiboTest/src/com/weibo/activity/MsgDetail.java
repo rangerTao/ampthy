@@ -1,5 +1,7 @@
 package com.weibo.activity;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import weibo4andriod.Comment;
@@ -19,8 +21,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -139,7 +143,6 @@ public class MsgDetail extends Activity implements OnClickListener {
 					Log.v("TAG", e.getMessage());
 				}
 			}
-
 		}
 		
 		tvLoading.setText("∆¿¬€º”‘ÿ÷–...");
