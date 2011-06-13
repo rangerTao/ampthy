@@ -13,12 +13,15 @@ import weibo4andriod.WeiboException;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -86,18 +89,23 @@ public class IndexActivity extends Activity {
 
 		setContentView(R.layout.index_activity);
 
+		Constant.spAll = this.getSharedPreferences("Weibo_ranger", MODE_PRIVATE);
+		
 		lvHomeTimeLine = (ListView) findViewById(R.id.lvHomeTimeLine);
 		// initData();
 		initHeader();
-
 		appref = this;
 		htla = new HomeTimeLineAdapter();
-		ft = new FriendTask();
-		ft.execute();
+
+		if(Constant.spAll.getInt(Constant.ISRUNNING, Constant._NOTRUNNING) == Constant._NOTRUNNING){
+			ft = new FriendTask();
+			ft.execute();
+		}
+		
 		
 		if(!Constant.sit.isAlive()){
 			Constant.sit.start();
-		}		
+		}
 		
 		lvHomeTimeLine.setOnScrollListener(new OnScrollListener() {
 
@@ -193,6 +201,20 @@ public class IndexActivity extends Activity {
 		super.onResume();
 	}
 
+	protected void onPause() {
+		SharedPreferences.Editor editor = Constant.spAll.edit();
+		editor.putInt(Constant.ISRUNNING, Constant._ISRUNNING);
+		editor.commit();
+		super.onPause();
+	}
+
+	protected void onStop() {
+		SharedPreferences.Editor editor = Constant.spAll.edit();
+		editor.putInt(Constant.ISRUNNING, Constant._ISRUNNING);
+		editor.commit();
+		super.onStop();
+	}
+
 	public void initButtonAction() {
 		LinearLayout llAtMe = (LinearLayout) findViewById(R.id.llAtMe_TopMenu);
 		llAtMe.setOnClickListener(new OnClickListener() {
@@ -276,6 +298,22 @@ public class IndexActivity extends Activity {
 		});
 	}
 
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			if(Constant._Back_Count == 0){
+				Toast.makeText(this, R.string.toast_back_1, 2000).show();
+				Constant._Back_Count ++;
+				return true;
+			}else if(Constant._Back_Count == 1){
+				android.os.Process.killProcess(android.os.Process.myPid());
+				return true;
+			}
+		}
+		return super.onKeyDown(keyCode, event);
+		
+	}
+
 	private void getFriends(int page_index)
 			throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException, MalformedURLException {
 
@@ -286,7 +324,7 @@ public class IndexActivity extends Activity {
 			weibo.setOAuthAccessToken(Constant._access, Constant._accessSecret);
 
 
-			if(statuses == null || statuses.size() == 0){
+			if(!Constant.isRunning){
 				List<Status> temp = weibo.getHomeTimeline(new Paging(page_index));
 				for (Status tmpStatus : temp) {
 					statuses.add(tmpStatus);
@@ -309,6 +347,7 @@ public class IndexActivity extends Activity {
 			Constant.git.run();
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
+			Looper.prepare();
 			Toast.makeText(IndexActivity.appref, "Á¬½Ó´íÎó£¡",2000).show();
 		}
 	}

@@ -6,14 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import weibo4andriod.Comment;
-import weibo4andriod.User;
-
-import com.weibo.R;
-import com.weibo.Weibo;
-import com.weibo.activity.IndexActivity;
-
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 public class Constant {
 
@@ -32,6 +26,12 @@ public class Constant {
 	public static String tokenSecret = "TokenSecret";
 	public static final String ACCESSTOKEN = "AccessToken";
 	public static final String ACCESSTOKENSECRET = "AccessTokenSecret";
+	public static final String ISRUNNING = "IsRunning";
+	
+	public static final int _NOTRUNNING = 0;
+	public static final int _ISRUNNING = 1;
+	
+	public static SharedPreferences spAll;
 	
 	public static final String CONSUMER_KEY="2902988107";
 	public static final String CONSUMER_SECRET = "2fce81acf8fc9afb51ffc533688fa553";
@@ -39,6 +39,8 @@ public class Constant {
 	public static String _accessSecret = "";
 	public static String _token = "";
 	public static String _tokenSecret = "";
+	
+	public static int _Back_Count = 0;
 	
 	public static List<Comment> commentList = new ArrayList<Comment>();
 	

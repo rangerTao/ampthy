@@ -32,6 +32,7 @@
     <!-- ProgressDialog -->
     <string name="progress_title">正在读取信息</string>
     <string name="progress_content">请稍候</string>
+    <string name="toast_back_1">再次单击后退将退出应用</string>
     <!-- TopMenu -->
     <string name="top_menu_home">首页</string>
     <string name="top_menu_mytwitter">微博</string>
