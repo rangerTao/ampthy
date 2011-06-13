@@ -20,6 +20,8 @@ public class Constant {
 	/**
 	 * DB
 	 */
+	public static boolean isRunning = false;
+	
 	public static String tag = "SinaWeibo";
 	public static String dbName = "sina_weibo.db";
 	public static final int dbVersion = 2;

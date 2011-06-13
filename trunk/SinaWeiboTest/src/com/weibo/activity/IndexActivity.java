@@ -94,8 +94,10 @@ public class IndexActivity extends Activity {
 		htla = new HomeTimeLineAdapter();
 		ft = new FriendTask();
 		ft.execute();
-
-		Constant.sit.start();
+		
+		if(!Constant.sit.isAlive()){
+			Constant.sit.start();
+		}		
 		
 		lvHomeTimeLine.setOnScrollListener(new OnScrollListener() {
 
@@ -283,9 +285,12 @@ public class IndexActivity extends Activity {
 			weibo.setToken(Constant._token, Constant._tokenSecret);
 			weibo.setOAuthAccessToken(Constant._access, Constant._accessSecret);
 
-			List<Status> temp = weibo.getHomeTimeline(new Paging(page_index));
-			for (Status tmpStatus : temp) {
-				statuses.add(tmpStatus);
+
+			if(statuses == null || statuses.size() == 0){
+				List<Status> temp = weibo.getHomeTimeline(new Paging(page_index));
+				for (Status tmpStatus : temp) {
+					statuses.add(tmpStatus);
+				}
 			}
 			for(int i=0;i<statuses.size()/2;i++){
 				User user = statuses.get(i).getUser();
