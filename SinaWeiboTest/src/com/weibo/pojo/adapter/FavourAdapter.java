@@ -3,12 +3,16 @@ package com.weibo.pojo.adapter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import weibo4andriod.RetweetDetails;
 import weibo4andriod.Status;
 import weibo4andriod.User;
+
+import com.weibo.R;
+import com.weibo.activity.IndexActivity;
+import com.weibo.utils.Constant;
+import com.weibo.utils.WeiboUtils;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Html;
@@ -16,42 +20,31 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.weibo.R;
-import com.weibo.activity.IndexActivity;
-import com.weibo.utils.Constant;
-import com.weibo.utils.WeiboUtils;
-
-public class HomeTimeLineAdapter extends BaseAdapter {
-
+public class FavourAdapter extends BaseAdapter{
+	
+	ImageView ivUserHead;
 	URL urlString;
 	Bitmap bmpUserHead;
-	ArrayList<Status> inputList;
-
-	public HomeTimeLineAdapter(List<Status> tmp){
-		inputList = (ArrayList<Status>) tmp;
-	}
 
 	public int getCount() {
-		return inputList.size();
+		return Constant.favourList.size();
 	}
 
-	public Object getItem(int position) {
-		return getView(position,null,null);
+	public Object getItem(int arg0) {
+		return Constant.favourList.get(arg0);
 	}
 
-	public long getItemId(int position) {
-		// TODO Auto-generated method stub
-		return 0;
+	public long getItemId(int arg0) {
+		return Constant.favourList.get(arg0).getId();
 	}
 
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		Status status = inputList.get(position);
+		Status status = IndexActivity.statuses.get(position);
 		final User user = status.getUser();
 		ViewHolder holder;
 		if(convertView == null){
@@ -92,7 +85,10 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		holder.ivUserHead.setImageBitmap(BitmapFactory.decodeResource(
 				IndexActivity.appref.getResources(), R.drawable.loading));
 		if (Constant.imageMap.containsKey(user.getProfileImageURL().toString()) == false) {
-			Constant.sit.pushImageTask(user.getProfileImageURL(), holder.ivUserHead);
+			Bitmap tempBitmap = WeiboUtils.getImage(user.getProfileImageURL());
+			WeiboUtils.setImage(IndexActivity.appref.handler, holder.ivUserHead,
+					tempBitmap);
+			Constant.imageMap.put(user.getProfileImageURL().toString() + "", tempBitmap);
 		} else {
 			holder.ivUserHead.setImageBitmap(Constant.imageMap.get(user.getProfileImageURL().toString() + ""));
 		}
@@ -109,7 +105,11 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 						.decodeResource(IndexActivity.appref.getResources(),
 								R.drawable.refresh));
 				try {
-					Constant.sit.pushImageTask(new URL(status.getThumbnail_pic()), holder.ivStatusImage);
+					Bitmap tempBitmap = WeiboUtils.getImage(new URL(status
+							.getThumbnail_pic()));
+					WeiboUtils.setImage(IndexActivity.appref.handler,
+							holder.ivStatusImage, tempBitmap);
+					Constant.imageMap.put(status.getThumbnail_pic(), tempBitmap);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
@@ -147,6 +147,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		return convertView;
 	}
 	
+	
 	static class ViewHolder{
 		TextView tvUserNameTextView;
 		TextView tvUserLocationg;
@@ -157,4 +158,5 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		ImageView ivUserHead;
 		ImageView ivStatusImage;
 	}
+
 }
