@@ -42,6 +42,10 @@ import com.weibo.R;
 import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.UserImpl;
 import com.weibo.pojo.adapter.HomeTimeLineAdapter;
+import com.weibo.task.AtMeTask;
+import com.weibo.task.CommentsTask;
+import com.weibo.task.FavourTask;
+import com.weibo.task.MailTask;
 import com.weibo.utils.Constant;
 import com.weibo.utils.WeiboUtils;
 
@@ -52,8 +56,8 @@ public class IndexActivity extends Activity {
 	String access;
 	String accessSecret;
 
-	ProgressDialog pDialog;
-	ListView lvHomeTimeLine;
+	public ProgressDialog pDialog;
+	public static ListView lvHomeTimeLine;
 	ListView lvTopMenu;
 	StringBuffer sbAll = new StringBuffer();
 	HorizontalScrollView hs;
@@ -95,9 +99,9 @@ public class IndexActivity extends Activity {
 		// initData();
 		initHeader();
 		appref = this;
-		htla = new HomeTimeLineAdapter();
+		
 
-		if(Constant.spAll.getInt(Constant.ISRUNNING, Constant._NOTRUNNING) == Constant._NOTRUNNING){
+		if(Constant.spAll.getInt(Constant.ISRUNNING, Constant._NOTRUNNING) != Constant._ISRUNNING ){
 			ft = new FriendTask();
 			ft.execute();
 		}
@@ -220,8 +224,56 @@ public class IndexActivity extends Activity {
 		llAtMe.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				Log.v("TAG", "Start AtMe");
-				startActivity(new Intent(appref, AtMeActivity.class));
+				showProgressDialog();
+				lvHomeTimeLine.removeAllViewsInLayout();
+				AtMeTask atMeTask = new AtMeTask();
+				atMeTask.execute();
+				lvHomeTimeLine.setOnItemClickListener(null);
+				pDialog.dismiss();
+			}
+		});
+		
+		LinearLayout llFavour = (LinearLayout)findViewById(R.id.llFavourite_TopMenu);
+		llFavour.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View arg0) {
+				showProgressDialog();
+				FavourTask ftFavourTask = new FavourTask();
+				ftFavourTask.execute();
+				pDialog.dismiss();
+			}
+		});
+		
+		LinearLayout llComment = (LinearLayout)findViewById(R.id.llComments_TopMenu);
+		llComment.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View arg0) {
+				showProgressDialog();
+				CommentsTask ct = new CommentsTask();
+				ct.execute();
+				pDialog.dismiss();
+			}
+		});
+		
+		LinearLayout llMail = (LinearLayout)findViewById(R.id.llMail_TopMenu);
+		llMail.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View arg0) {
+				showProgressDialog();
+				MailTask mt = new MailTask();
+				mt.execute();
+				pDialog.dismiss();
+			}
+		});
+		
+		LinearLayout llFriends = (LinearLayout)findViewById(R.id.llFriends_TopMenu);
+		llFriends.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View arg0) {
+				showProgressDialog();
+				FriendTask ft = new FriendTask();
+				ft.execute();
+				pDialog.dismiss();
 			}
 		});
 	}
@@ -306,6 +358,9 @@ public class IndexActivity extends Activity {
 				Constant._Back_Count ++;
 				return true;
 			}else if(Constant._Back_Count == 1){
+				SharedPreferences.Editor editor = Constant.spAll.edit();
+				editor.putInt(Constant.ISRUNNING, Constant._NOTRUNNING);
+				editor.commit();
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			}
@@ -314,6 +369,18 @@ public class IndexActivity extends Activity {
 		
 	}
 
+	public void showProgressDialog(){
+		if(pDialog  == null){
+			pDialog = ProgressDialog.show(IndexActivity.appref, appref
+					.getResources().getString(R.string.progress_title), appref
+					.getResources().getString(R.string.progress_content));
+			pDialog.setCancelable(true);
+		}else{
+			
+		}
+
+	}
+		
 	private void getFriends(int page_index)
 			throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException, MalformedURLException {
 
@@ -330,21 +397,21 @@ public class IndexActivity extends Activity {
 					statuses.add(tmpStatus);
 				}
 			}
-			for(int i=0;i<statuses.size()/2;i++){
-				User user = statuses.get(i).getUser();
-				if(user.getProfileImageURL() != null && user.getProfileImageURL().toString().startsWith("http")){
-					if(Constant.imageMap.get(user.getProfileImageURL().toString())==null){
-						Constant.git.pushImageTask(user.getProfileImageURL());
-					}
-				}
-				Status status = statuses.get(i);
-				if(status.getThumbnail_pic() !=null && status.getThumbnail_pic().startsWith("http")){
-					if(Constant.imageMap.get(status.getThumbnail_pic())==null){
-						Constant.git.pushImageTask(new URL(status.getThumbnail_pic()));
-					}
-				}
-			}
-			Constant.git.run();
+//			for(int i=0;i<statuses.size()/2;i++){
+//				User user = statuses.get(i).getUser();
+//				if(user.getProfileImageURL() != null && user.getProfileImageURL().toString().startsWith("http")){
+//					if(Constant.imageMap.get(user.getProfileImageURL().toString())==null){
+//						Constant.git.pushImageTask(user.getProfileImageURL());
+//					}
+//				}
+//				Status status = statuses.get(i);
+//				if(status.getThumbnail_pic() !=null && status.getThumbnail_pic().startsWith("http")){
+//					if(Constant.imageMap.get(status.getThumbnail_pic())==null){
+//						Constant.git.pushImageTask(new URL(status.getThumbnail_pic()));
+//					}
+//				}
+//			}
+//			Constant.git.run();
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
 			Looper.prepare();
@@ -356,16 +423,14 @@ public class IndexActivity extends Activity {
 
 		@Override
 		protected void onPreExecute() {
-			pDialog = ProgressDialog.show(IndexActivity.appref, appref
-					.getResources().getString(R.string.progress_title), appref
-					.getResources().getString(R.string.progress_content));
-			pDialog.setCancelable(true);
+			showProgressDialog();
 			super.onPreExecute();
 		}
 
 		@Override
 		protected void onPostExecute(Object result) {
 			pDialog.dismiss();
+			htla = new HomeTimeLineAdapter(statuses);
 			if (lvHomeTimeLine.getAdapter() == null) {
 				lvHomeTimeLine.setAdapter(htla);
 			} else {

@@ -68,11 +68,12 @@ public class ViewGallery extends Gallery{
         final int imageHeight = child.getLayoutParams().height;
         final int imageWidth = child.getLayoutParams().width;
         final int rotation = Math.abs(rotationAngle);
+
         mCamera.translate(0.0f, 0.0f, 100.0f);
         // As the angle of the view gets less, zoom in
         if (rotation <= mMaxRotationAngle) {
             float zoomAmount = (float) (mMaxZoom + (rotation * 1.5));
-            mCamera.translate(0.0f, 0.0f, zoomAmount);
+            mCamera.translate(0.0f, 0.0f, 0);
             if (mCircleMode) {
                 if (rotation < 40)
                     mCamera.translate(0.0f, 155, 0.0f);
@@ -83,11 +84,11 @@ public class ViewGallery extends Gallery{
                // (child.setAlpha((int) (255 - rotation * 2.5));
             }
         }
-        mCamera.rotateY(rotationAngle);
+        //mCamera.rotateY(rotationAngle);
         mCamera.getMatrix(imageMatrix);
 
-        imageMatrix.preTranslate(-(imageWidth / 2), -(imageHeight / 2));
-        imageMatrix.postTranslate((imageWidth / 2), (imageHeight / 2));
+        imageMatrix.preTranslate(-(child.getWidth() / 2), -(child.getWidth() / 2));
+        imageMatrix.postTranslate((child.getWidth() / 2), (child.getWidth() / 2));
         mCamera.restore();
     }
 

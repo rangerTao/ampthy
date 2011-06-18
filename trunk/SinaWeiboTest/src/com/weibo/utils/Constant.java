@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import weibo4andriod.Comment;
+import weibo4andriod.DirectMessage;
+import weibo4andriod.Status;
+import weibo4andriod.User;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
@@ -49,4 +52,35 @@ public class Constant {
 	
 	public static GetImageThread git = new GetImageThread();
 	public static SetImageThread sit = new SetImageThread();
+	
+	public static int atMe_PageIndex = 1;
+	public static int favour_PageIndex = 1;
+	public static int friend_PageIndex = 1;
+	public static int mail_PageIndex = 1;
+	
+	//The flag of channel.
+	public static int weiboChannel = 1;
+	
+	public static final int indexChannel = 1;
+	public static final int atMeChannel = 2;
+	public static final int favourChannel = 3;
+	public static final int commentChannel = 4;
+	public static final int mailChannel = 5;
+	public static final int friendsChannel = 6;
+	
+	
+	
+	/**
+	 * Statuses
+	 */
+	public static ArrayList<Status> atMeList = new ArrayList<Status>();
+	public static List<Comment> comList = new ArrayList<Comment>();
+	public static List<Status> favourList = new ArrayList<Status>();
+	public static List<User> friendsList = new ArrayList<User>();
+	public static List<DirectMessage> mailList = new ArrayList<DirectMessage>();
+	
+	public static List<Comment> comments = new ArrayList<Comment>();
+	public static List<Status> statuses = new ArrayList<Status>();
+	public static List<User> useres = new ArrayList<User>();
+	public static List<DirectMessage> mails = new ArrayList<DirectMessage>();
 }
