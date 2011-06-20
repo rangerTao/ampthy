@@ -93,14 +93,11 @@ public class IndexActivity extends Activity {
 
 		setContentView(R.layout.index_activity);
 
-		Constant.spAll = this.getSharedPreferences("Weibo_ranger", MODE_PRIVATE);
-		
 		lvHomeTimeLine = (ListView) findViewById(R.id.lvHomeTimeLine);
 		// initData();
 		initHeader();
 		appref = this;
 		
-
 		if(Constant.spAll.getInt(Constant.ISRUNNING, Constant._NOTRUNNING) != Constant._ISRUNNING ){
 			ft = new FriendTask();
 			ft.execute();
@@ -376,7 +373,7 @@ public class IndexActivity extends Activity {
 					.getResources().getString(R.string.progress_content));
 			pDialog.setCancelable(true);
 		}else{
-			
+			pDialog.show();
 		}
 
 	}
@@ -397,25 +394,25 @@ public class IndexActivity extends Activity {
 					statuses.add(tmpStatus);
 				}
 			}
-//			for(int i=0;i<statuses.size()/2;i++){
-//				User user = statuses.get(i).getUser();
-//				if(user.getProfileImageURL() != null && user.getProfileImageURL().toString().startsWith("http")){
-//					if(Constant.imageMap.get(user.getProfileImageURL().toString())==null){
-//						Constant.git.pushImageTask(user.getProfileImageURL());
-//					}
-//				}
-//				Status status = statuses.get(i);
-//				if(status.getThumbnail_pic() !=null && status.getThumbnail_pic().startsWith("http")){
-//					if(Constant.imageMap.get(status.getThumbnail_pic())==null){
-//						Constant.git.pushImageTask(new URL(status.getThumbnail_pic()));
-//					}
-//				}
-//			}
-//			Constant.git.run();
+			for(int i=0;i<statuses.size()/2;i++){
+				User user = statuses.get(i).getUser();
+				if(user.getProfileImageURL() != null && user.getProfileImageURL().toString().startsWith("http")){
+					if(Constant.imageMap.get(user.getProfileImageURL().toString())==null){
+						Constant.git.pushImageTask(user.getProfileImageURL());
+					}
+				}
+				Status status = statuses.get(i);
+				if(status.getThumbnail_pic() !=null && status.getThumbnail_pic().startsWith("http")){
+					if(Constant.imageMap.get(status.getThumbnail_pic())==null){
+						Constant.git.pushImageTask(new URL(status.getThumbnail_pic()));
+					}
+				}
+			}
+			Constant.git.run();
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
 			Looper.prepare();
-			Toast.makeText(IndexActivity.appref, "Á¬½Ó´íÎó£¡",2000).show();
+			Toast.makeText(IndexActivity.appref, "ï¿½ï¿½ï¿½Ó´ï¿½ï¿½ï¿½",2000).show();
 		}
 	}
 
@@ -429,20 +426,19 @@ public class IndexActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Object result) {
-			pDialog.dismiss();
-			htla = new HomeTimeLineAdapter(statuses);
-			if (lvHomeTimeLine.getAdapter() == null) {
-				lvHomeTimeLine.setAdapter(htla);
-			} else {
-				htla.notifyDataSetChanged();
-			}
+			
+			IndexActivity.handler.post(new Runnable(){
+				public void run() {
 
-			User user = null;
-			try {
-				user = weibo.getAuthenticatedUser();
-			} catch (WeiboException e) {
-				e.printStackTrace();
-			}
+					if (lvHomeTimeLine.getAdapter() == null) {
+						htla = new HomeTimeLineAdapter(statuses);
+						lvHomeTimeLine.setAdapter(htla);
+					} else {
+						htla.notifyDataSetChanged();
+					}
+					pDialog.dismiss();
+				}
+			});
 			super.onPostExecute(result);
 		}
 

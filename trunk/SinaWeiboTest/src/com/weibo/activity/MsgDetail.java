@@ -145,7 +145,7 @@ public class MsgDetail extends Activity implements OnClickListener {
 			}
 		}
 		
-		tvLoading.setText("ÆÀÂÛ¼ÓÔØÖÐ...");
+		tvLoading.setText(R.string.gettingcom);
 		
 		CommentTask ct = new CommentTask();
 		ct.execute();
@@ -158,20 +158,20 @@ public class MsgDetail extends Activity implements OnClickListener {
 		if(arg0.getId() == btnComment.getId()){
 			
 			final EditText etAtEditText = new EditText(this);
-			new AlertDialog.Builder(this).setTitle("ÇëÊäÈë").setIcon(
+			new AlertDialog.Builder(this).setTitle("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½").setIcon(
 				     android.R.drawable.ic_dialog_info).setView(
-				    		 etAtEditText).setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+				    		 etAtEditText).setPositiveButton("È·ï¿½ï¿½", new DialogInterface.OnClickListener() {
 						
 						public void onClick(DialogInterface arg0, int arg1) {
 							try {
 								weibo.updateComment(etAtEditText.getText().toString(), status.getId()+"", null);
-								Toast.makeText(appref, "ÆÀÂÛ³É¹¦", 2000).show();
+								Toast.makeText(appref, "ï¿½ï¿½ï¿½Û³É¹ï¿½", 2000).show();
 							} catch (WeiboException e) {
-								Toast.makeText(appref, "ÍøÂç´íÎó£¬ÇëÖØÊÔ¡£", 2000).show();
+								Toast.makeText(appref, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¡ï¿½", 2000).show();
 							}
 						}
 					})
-				     .setNegativeButton("È¡Ïû", null).show();
+				     .setNegativeButton("È¡ï¿½ï¿½", null).show();
 		
 		}
 		
@@ -179,9 +179,9 @@ public class MsgDetail extends Activity implements OnClickListener {
 		if(arg0.getId() == btnForward.getId()){
 			try {
 				weibo.retweetStatus(status.getId());
-				Toast.makeText(this, "×ª·¢³É¹¦", 2000).show();
+				Toast.makeText(this, "×ªï¿½ï¿½ï¿½É¹ï¿½", 2000).show();
 			} catch (WeiboException e) {
-				Toast.makeText(this, "ÍøÂç´íÎó£¬ÇëÖØÊÔ¡£", 2000).show();
+				Toast.makeText(this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¡ï¿½", 2000).show();
 			}
 		}
 		
@@ -189,20 +189,20 @@ public class MsgDetail extends Activity implements OnClickListener {
 		if(arg0.getId() == btnAt.getId()){
 			final EditText etAtEditText = new EditText(this);
 			etAtEditText.append("@"+user.getScreenName() + " ");
-			new AlertDialog.Builder(this).setTitle("ÇëÊäÈë").setIcon(
+			new AlertDialog.Builder(this).setTitle("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½").setIcon(
 				     android.R.drawable.ic_dialog_info).setView(
-				    		 etAtEditText).setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+				    		 etAtEditText).setPositiveButton("È·ï¿½ï¿½", new DialogInterface.OnClickListener() {
 						
 						public void onClick(DialogInterface arg0, int arg1) {
 							try {
-								Toast.makeText(appref, "ÆÀÂÛ³É¹¦", 2000).show();
+								Toast.makeText(appref, "ï¿½ï¿½ï¿½Û³É¹ï¿½", 2000).show();
 								weibo.updateStatus(etAtEditText.getText().toString());
 							} catch (WeiboException e) {
-								Toast.makeText(appref, "ÍøÂç´íÎó£¬ÇëÖØÊÔ¡£", 2000).show();
+								Toast.makeText(appref, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¡ï¿½", 2000).show();
 							}
 						}
 					})
-				     .setNegativeButton("È¡Ïû", null).show();
+				     .setNegativeButton("È¡ï¿½ï¿½", null).show();
 		}
 		
 	}
@@ -217,7 +217,7 @@ public class MsgDetail extends Activity implements OnClickListener {
 				tvLoading.setVisibility(View.GONE);
 				lvComments.setAdapter(ca);
 			}else{
-				tvLoading.setText("ÔÝÊ±Ã»ÓÐÆÀ¼Û");
+				tvLoading.setText(R.string.nocomments);
 			}
 			super.onPostExecute(result);
 		}
