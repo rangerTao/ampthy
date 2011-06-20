@@ -68,7 +68,7 @@ public class Constant {
 	public static final int mailChannel = 5;
 	public static final int friendsChannel = 6;
 	
-	
+	public static final boolean getMsg = false;
 	
 	/**
 	 * Statuses

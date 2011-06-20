@@ -63,6 +63,8 @@ public class Weibo extends Activity implements OnClickListener {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
 
+		Constant.spAll = this.getSharedPreferences("Weibo_ranger", MODE_PRIVATE);
+		
 		getData();
 		
 		initView();
@@ -107,6 +109,9 @@ public class Weibo extends Activity implements OnClickListener {
 	public void onClick(View arg0) {
 		if (arg0.getId() == btnLogin.getId()) {
 			if (existBoolean) {
+				SharedPreferences.Editor editor = Constant.spAll.edit();
+				editor.putInt(Constant.ISRUNNING, Constant._NOTRUNNING);
+				editor.commit();
 				startActivity(new Intent(this, IndexActivity.class));
 				finish();
 			}

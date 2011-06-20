@@ -11,8 +11,8 @@ public class GetImageThread implements Runnable {
 	private static ArrayList<URL> imageTask = new ArrayList<URL>();
 
 	public void run() {
-		while (imageTask.size() > 0) {
 
+		while (imageTask.size() > 0) {
 			try {
 				URL tempUrl = popImageTask();
 				Bitmap bmpTemp = WeiboUtils.getImage(tempUrl);
@@ -31,7 +31,6 @@ public class GetImageThread implements Runnable {
 	}
 
 	public synchronized URL popImageTask() throws InterruptedException {
-		synchronized (imageTask) {
 			if (imageTask.size() > 0) {
 				URL temp = imageTask.get(0);
 				imageTask.remove(0);
@@ -40,9 +39,6 @@ public class GetImageThread implements Runnable {
 				this.wait();
 			}
 			return null;
-
-		}
-
 	}
 
 }
