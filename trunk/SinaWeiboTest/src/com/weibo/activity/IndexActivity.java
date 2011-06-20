@@ -49,7 +49,7 @@ import com.weibo.task.MailTask;
 import com.weibo.utils.Constant;
 import com.weibo.utils.WeiboUtils;
 
-public class IndexActivity extends Activity {
+public class IndexActivity extends Activity implements OnItemClickListener {
 
 	String token;
 	String tokenSecret;
@@ -99,6 +99,7 @@ public class IndexActivity extends Activity {
 		appref = this;
 		
 		if(Constant.spAll.getInt(Constant.ISRUNNING, Constant._NOTRUNNING) != Constant._ISRUNNING ){
+			Constant.getMsg = true;
 			ft = new FriendTask();
 			ft.execute();
 		}
@@ -182,20 +183,11 @@ public class IndexActivity extends Activity {
 
 		initButtonAction();
 
-		lvHomeTimeLine.setOnItemClickListener(new OnItemClickListener() {
-
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-						Intent intent = new Intent(IndexActivity.appref,MsgDetail.class);
-						Bundle bundle = new Bundle();
-						bundle.putInt("index", arg2);
-						intent.putExtras(bundle);
-						IndexActivity.appref.startActivity(intent);
-			}
-			
-		});
+		lvHomeTimeLine.setOnItemClickListener(this);
 	}
-
+	
+	
+	
 	@Override
 	protected void onResume() {
 		weibo = OAuthConstant.getInstance().getWeibo();
@@ -217,12 +209,31 @@ public class IndexActivity extends Activity {
 	}
 
 	public void initButtonAction() {
+		LinearLayout llHome = (LinearLayout) findViewById(R.id.llHome_TopMenu);
+		llHome.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				showProgressDialog();
+				lvHomeTimeLine.removeAllViewsInLayout();
+				if(Constant.atMeList.size() < 1){
+					Constant.getMsg = true;
+				}
+				ft = new FriendTask();
+				ft.execute();
+				lvHomeTimeLine.setOnClickListener(this);
+				pDialog.dismiss();
+			}
+			
+		});
 		LinearLayout llAtMe = (LinearLayout) findViewById(R.id.llAtMe_TopMenu);
 		llAtMe.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				showProgressDialog();
 				lvHomeTimeLine.removeAllViewsInLayout();
+				if(Constant.atMeList.size() < 1){
+					Constant.getMsg = true;
+				}
 				AtMeTask atMeTask = new AtMeTask();
 				atMeTask.execute();
 				lvHomeTimeLine.setOnItemClickListener(null);
@@ -235,6 +246,10 @@ public class IndexActivity extends Activity {
 			
 			public void onClick(View arg0) {
 				showProgressDialog();
+				lvHomeTimeLine.removeAllViewsInLayout();
+				if(Constant.favourList.size() < 1 ){
+					Constant.getMsg = true;
+				}
 				FavourTask ftFavourTask = new FavourTask();
 				ftFavourTask.execute();
 				pDialog.dismiss();
@@ -445,7 +460,10 @@ public class IndexActivity extends Activity {
 		@Override
 		protected Object doInBackground(Object... arg0) {
 			try {
-				getFriends(page_index);
+				if(Constant.getMsg){
+					getFriends(page_index);
+				}
+				Constant.getMsg = false;
 			} catch (org.apache.commons.httpclient.util.TimeoutController.TimeoutException e) {
 				Toast.makeText(appref, "time out", 2000).show();
 			} catch (MalformedURLException e) {
@@ -454,5 +472,14 @@ public class IndexActivity extends Activity {
 			}
 			return null;
 		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		Intent intent = new Intent(IndexActivity.appref,MsgDetail.class);
+		Bundle bundle = new Bundle();
+		bundle.putInt("index", arg2);
+		intent.putExtras(bundle);
+		IndexActivity.appref.startActivity(intent);
 	}
 }
