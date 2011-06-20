@@ -24,7 +24,10 @@ public class FavourTask extends AsyncTask{
 	Weibo4sina weibo;
 	@Override
 	protected Object doInBackground(Object... arg0) {
-		getFavours(Constant.favour_PageIndex);
+		if(Constant.getMsg){
+			getFavours(Constant.favour_PageIndex);
+		}
+		Constant.getMsg = false;
 		return null;
 	}
 
@@ -33,13 +36,9 @@ public class FavourTask extends AsyncTask{
 	protected void onPostExecute(Object result) {
 
 		htla = new HomeTimeLineAdapter(Constant.favourList);
-		if (IndexActivity.lvHomeTimeLine.getAdapter() == null && Constant.favour_PageIndex == 1) {
-			IndexActivity.lvHomeTimeLine.setAdapter(htla);
-			
-		} else if (Constant.favour_PageIndex == 1){
+		if (IndexActivity.lvHomeTimeLine.getAdapter() == null ){
 			IndexActivity.lvHomeTimeLine.removeAllViewsInLayout();
 			IndexActivity.lvHomeTimeLine.setAdapter(htla);
-			Log.v("TAG", "Test1");
 		}else{
 			htla.notifyDataSetChanged();
 		}

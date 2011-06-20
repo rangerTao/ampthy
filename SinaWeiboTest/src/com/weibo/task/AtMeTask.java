@@ -23,14 +23,17 @@ public class AtMeTask extends AsyncTask{
 	
 	@Override
 	protected Object doInBackground(Object... params) {
-		getAtMe(Constant.atMe_PageIndex);
+		if(Constant.getMsg){
+			getAtMe(Constant.atMe_PageIndex);
+		}
+		Constant.getMsg = false;
 		return null;
 	}
 
 	@Override
 	protected void onPostExecute(Object result) {
 		
-		if(IndexActivity.lvHomeTimeLine.getAdapter() != null || Constant.atMe_PageIndex == 1){
+		if(IndexActivity.lvHomeTimeLine.getAdapter() == null){
 			IndexActivity.lvHomeTimeLine.removeAllViewsInLayout();
 			IndexActivity.lvHomeTimeLine.setAdapter(atMeAdapter);
 		}else{
