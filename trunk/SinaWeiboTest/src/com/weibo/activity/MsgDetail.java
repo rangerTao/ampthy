@@ -158,20 +158,20 @@ public class MsgDetail extends Activity implements OnClickListener {
 		if(arg0.getId() == btnComment.getId()){
 			
 			final EditText etAtEditText = new EditText(this);
-			new AlertDialog.Builder(this).setTitle("������").setIcon(
+			new AlertDialog.Builder(this).setTitle(R.string.input).setIcon(
 				     android.R.drawable.ic_dialog_info).setView(
-				    		 etAtEditText).setPositiveButton("ȷ��", new DialogInterface.OnClickListener() {
+				    		 etAtEditText).setPositiveButton(R.string.passwd_set_confirm, new DialogInterface.OnClickListener() {
 						
 						public void onClick(DialogInterface arg0, int arg1) {
 							try {
 								weibo.updateComment(etAtEditText.getText().toString(), status.getId()+"", null);
-								Toast.makeText(appref, "���۳ɹ�", 2000).show();
+								Toast.makeText(appref, R.string.comsuccess, 2000).show();
 							} catch (WeiboException e) {
-								Toast.makeText(appref, "������������ԡ�", 2000).show();
+								Toast.makeText(appref, R.string.neterror, 2000).show();
 							}
 						}
 					})
-				     .setNegativeButton("ȡ��", null).show();
+				     .setNegativeButton(R.string.passwd_set_cancel, null).show();
 		
 		}
 		
@@ -179,9 +179,9 @@ public class MsgDetail extends Activity implements OnClickListener {
 		if(arg0.getId() == btnForward.getId()){
 			try {
 				weibo.retweetStatus(status.getId());
-				Toast.makeText(this, "ת���ɹ�", 2000).show();
+				Toast.makeText(this, R.string.forwardsuccess , 2000).show();
 			} catch (WeiboException e) {
-				Toast.makeText(this, "������������ԡ�", 2000).show();
+				Toast.makeText(this, R.string.neterror , 2000).show();
 			}
 		}
 		
@@ -189,20 +189,20 @@ public class MsgDetail extends Activity implements OnClickListener {
 		if(arg0.getId() == btnAt.getId()){
 			final EditText etAtEditText = new EditText(this);
 			etAtEditText.append("@"+user.getScreenName() + " ");
-			new AlertDialog.Builder(this).setTitle("������").setIcon(
+			new AlertDialog.Builder(this).setTitle(R.string.input).setIcon(
 				     android.R.drawable.ic_dialog_info).setView(
-				    		 etAtEditText).setPositiveButton("ȷ��", new DialogInterface.OnClickListener() {
+				    		 etAtEditText).setPositiveButton(R.string.passwd_set_confirm, new DialogInterface.OnClickListener() {
 						
 						public void onClick(DialogInterface arg0, int arg1) {
 							try {
-								Toast.makeText(appref, "���۳ɹ�", 2000).show();
+								Toast.makeText(appref, R.string.comsuccess, 2000).show();
 								weibo.updateStatus(etAtEditText.getText().toString());
 							} catch (WeiboException e) {
-								Toast.makeText(appref, "������������ԡ�", 2000).show();
+								Toast.makeText(appref, R.string.neterror, 2000).show();
 							}
 						}
 					})
-				     .setNegativeButton("ȡ��", null).show();
+				     .setNegativeButton(R.string.passwd_set_cancel, null).show();
 		}
 		
 	}

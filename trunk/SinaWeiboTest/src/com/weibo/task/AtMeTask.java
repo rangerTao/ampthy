@@ -33,7 +33,7 @@ public class AtMeTask extends AsyncTask{
 	@Override
 	protected void onPostExecute(Object result) {
 		
-		if(IndexActivity.lvHomeTimeLine.getAdapter() == null){
+		if(IndexActivity.lvHomeTimeLine.getAdapter() != null){
 			IndexActivity.lvHomeTimeLine.removeAllViewsInLayout();
 			IndexActivity.lvHomeTimeLine.setAdapter(atMeAdapter);
 		}else{

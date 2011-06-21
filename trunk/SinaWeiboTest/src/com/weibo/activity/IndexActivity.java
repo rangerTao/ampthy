@@ -45,11 +45,12 @@ import com.weibo.pojo.adapter.HomeTimeLineAdapter;
 import com.weibo.task.AtMeTask;
 import com.weibo.task.CommentsTask;
 import com.weibo.task.FavourTask;
+import com.weibo.task.FriendsTask;
 import com.weibo.task.MailTask;
 import com.weibo.utils.Constant;
 import com.weibo.utils.WeiboUtils;
 
-public class IndexActivity extends Activity implements OnItemClickListener {
+public class IndexActivity extends Activity implements OnItemClickListener{
 
 	String token;
 	String tokenSecret;
@@ -122,6 +123,7 @@ public class IndexActivity extends Activity implements OnItemClickListener {
 				if (last_item == htla.getCount()
 						&& scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
 					page_index += 1;
+					Constant.getMsg = true;
 					ft = new FriendTask();
 					ft.execute();
 				}
@@ -215,12 +217,19 @@ public class IndexActivity extends Activity implements OnItemClickListener {
 			public void onClick(View v) {
 				showProgressDialog();
 				lvHomeTimeLine.removeAllViewsInLayout();
-				if(Constant.atMeList.size() < 1){
+				if(statuses.size() < 1){
 					Constant.getMsg = true;
+					ft = new FriendTask();
+					ft.execute();
+				}else{
+					lvHomeTimeLine.removeAllViewsInLayout();
+					if(htla == null){
+						htla = new HomeTimeLineAdapter(statuses);
+					}
+					lvHomeTimeLine.setAdapter(htla);
 				}
-				ft = new FriendTask();
-				ft.execute();
-				lvHomeTimeLine.setOnClickListener(this);
+				
+				lvHomeTimeLine.setOnItemClickListener(IndexActivity.appref);
 				pDialog.dismiss();
 			}
 			
@@ -261,6 +270,9 @@ public class IndexActivity extends Activity implements OnItemClickListener {
 			
 			public void onClick(View arg0) {
 				showProgressDialog();
+				if(Constant.commentList.size() < 1){
+					Constant.getMsg = true;
+				}
 				CommentsTask ct = new CommentsTask();
 				ct.execute();
 				pDialog.dismiss();
@@ -272,6 +284,9 @@ public class IndexActivity extends Activity implements OnItemClickListener {
 			
 			public void onClick(View arg0) {
 				showProgressDialog();
+				if(Constant.mailList.size() < 1){
+					Constant.getMsg = true;
+				}
 				MailTask mt = new MailTask();
 				mt.execute();
 				pDialog.dismiss();
@@ -282,8 +297,11 @@ public class IndexActivity extends Activity implements OnItemClickListener {
 		llFriends.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View arg0) {
-				showProgressDialog();
-				FriendTask ft = new FriendTask();
+				//showProgressDialog();
+				if(Constant.friendsList.size() < 1){
+					Constant.getMsg = true;
+				}
+				FriendsTask ft = new FriendsTask();
 				ft.execute();
 				pDialog.dismiss();
 			}

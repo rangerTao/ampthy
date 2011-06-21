@@ -1,18 +1,12 @@
 package com.weibo.task;
 
 import java.util.ArrayList;
-
-import weibo4andriod.User;
 import weibo4andriod.Weibo4sina;
 import weibo4andriod.WeiboException;
-
-import com.weibo.R;
 import com.weibo.activity.IndexActivity;
 import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.adapter.HomeTimeLineAdapter;
 import com.weibo.utils.Constant;
-
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Looper;
 import android.util.Log;
@@ -36,7 +30,7 @@ public class FavourTask extends AsyncTask{
 	protected void onPostExecute(Object result) {
 
 		htla = new HomeTimeLineAdapter(Constant.favourList);
-		if (IndexActivity.lvHomeTimeLine.getAdapter() == null ){
+		if (IndexActivity.lvHomeTimeLine.getAdapter() != null ){
 			IndexActivity.lvHomeTimeLine.removeAllViewsInLayout();
 			IndexActivity.lvHomeTimeLine.setAdapter(htla);
 		}else{

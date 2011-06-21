@@ -9,6 +9,8 @@ import weibo4andriod.WeiboException;
 
 import com.weibo.activity.IndexActivity;
 import com.weibo.pojo.OAuthConstant;
+import com.weibo.pojo.adapter.CommentsToMeAdapter;
+import com.weibo.pojo.adapter.HomeTimeLineAdapter;
 import com.weibo.utils.Constant;
 
 import android.os.AsyncTask;
@@ -17,16 +19,27 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class CommentsTask extends AsyncTask{
-
+	CommentsToMeAdapter htla;
 	@Override
 	protected Object doInBackground(Object... arg0) {
-		getComments();
+		if(Constant.getMsg){
+			getComments();
+		}
+		Constant.getMsg = false;
 		return null;
 	}
 
 	
 	@Override
 	protected void onPostExecute(Object result) {
+
+		htla = new CommentsToMeAdapter();
+		if (IndexActivity.lvHomeTimeLine.getAdapter() != null ){
+			IndexActivity.lvHomeTimeLine.removeAllViewsInLayout();
+			IndexActivity.lvHomeTimeLine.setAdapter(htla);
+		}else{
+			htla.notifyDataSetChanged();
+		}
 		super.onPostExecute(result);
 	}
 
