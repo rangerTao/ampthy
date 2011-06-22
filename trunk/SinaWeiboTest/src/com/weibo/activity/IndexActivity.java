@@ -370,8 +370,10 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 
 			public void onClick(View v) {
 				page_index = 1;
-				lvHomeTimeLine.removeAllViewsInLayout();
+//				lvHomeTimeLine.removeAllViewsInLayout();
+				statuses.clear();
 				statuses = new ArrayList<Status>();
+				Constant.getMsg = true;
 				ft = new FriendTask();
 				ft.execute();
 				htla.notifyDataSetChanged();
@@ -463,7 +465,7 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 			IndexActivity.handler.post(new Runnable(){
 				public void run() {
 
-					if (lvHomeTimeLine.getAdapter() == null) {
+					if (lvHomeTimeLine.getChildCount() == 0) {
 						htla = new HomeTimeLineAdapter(statuses);
 						lvHomeTimeLine.setAdapter(htla);
 					} else {
