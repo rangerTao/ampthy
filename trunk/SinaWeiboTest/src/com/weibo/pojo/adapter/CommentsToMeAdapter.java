@@ -23,22 +23,18 @@ import android.widget.TextView;
 
 public class CommentsToMeAdapter extends BaseAdapter{
 	URL urlString;
-	@Override
 	public int getCount() {
 		return Constant.comList.size();
 	}
 
-	@Override
 	public Object getItem(int arg0) {
 		return Constant.comList.get(arg0);
 	}
 
-	@Override
 	public long getItemId(int arg0) {
 		return 0;
 	}
 
-	@Override
 	public View getView(int arg0, View view, ViewGroup arg2) {
 		Comment com = (Comment) getItem(arg0);
 		User user = com.getUser();

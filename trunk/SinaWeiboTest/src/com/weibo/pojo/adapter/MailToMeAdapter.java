@@ -23,23 +23,19 @@ import android.widget.TextView;
 
 public class MailToMeAdapter extends BaseAdapter{
 	URL urlString;
-	@Override
 	public int getCount() {
 		return Constant.mailList.size();
 	}
 
-	@Override
 	public Object getItem(int arg0) {
 		return Constant.mailList.get(arg0);
 	}
 
-	@Override
 	public long getItemId(int arg0) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public View getView(int arg0, View view, ViewGroup arg2) {
 		DirectMessage com = (DirectMessage) getItem(arg0);
 		User user = com.getSender();
