@@ -30,6 +30,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -211,7 +212,7 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 	}
 
 	public void initButtonAction() {
-		LinearLayout llHome = (LinearLayout) findViewById(R.id.llHome_TopMenu);
+		Button llHome = (Button) findViewById(R.id.btnHome_TopMenu);
 		llHome.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
@@ -234,7 +235,7 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 			}
 			
 		});
-		LinearLayout llAtMe = (LinearLayout) findViewById(R.id.llAtMe_TopMenu);
+		Button llAtMe = (Button) findViewById(R.id.btnAtMe_TopMenu);
 		llAtMe.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
@@ -250,7 +251,7 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 			}
 		});
 		
-		LinearLayout llFavour = (LinearLayout)findViewById(R.id.llFavourite_TopMenu);
+		Button llFavour = (Button)findViewById(R.id.btnFavourite_TopMenu);
 		llFavour.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View arg0) {
@@ -265,7 +266,7 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 			}
 		});
 		
-		LinearLayout llComment = (LinearLayout)findViewById(R.id.llComments_TopMenu);
+		Button llComment = (Button)findViewById(R.id.btnComments_TopMenu);
 		llComment.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View arg0) {
@@ -279,7 +280,7 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 			}
 		});
 		
-		LinearLayout llMail = (LinearLayout)findViewById(R.id.llMail_TopMenu);
+		Button llMail = (Button)findViewById(R.id.btnMail_TopMenu);
 		llMail.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View arg0) {
@@ -293,7 +294,7 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 			}
 		});
 		
-		LinearLayout llFriends = (LinearLayout)findViewById(R.id.llFriends_TopMenu);
+		Button llFriends = (Button)findViewById(R.id.btnFriends_TopMenu);
 		llFriends.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View arg0) {
@@ -494,7 +495,6 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 		}
 	}
 
-	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		Intent intent = new Intent(IndexActivity.appref,MsgDetail.class);
 		Bundle bundle = new Bundle();

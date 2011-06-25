@@ -56,6 +56,7 @@ public class CommentsTask extends AsyncTask{
 			Constant.comments = weibo.getCommentsToMe();
 			for(weibo4andriod.Comment tempStatus : Constant.comments){
 				Constant.comList.add(tempStatus);
+				Log.v("TAG", tempStatus.toString());
 			}
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
