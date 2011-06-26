@@ -97,7 +97,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 			holder.ivUserHead.setImageBitmap(Constant.imageMap.get(user.getProfileImageURL().toString() + ""));
 		}
 		holder.tvUserStatus.setText(status.getText().toString());
-		//tvSource.setText(status.getSource().toString());
+
 		holder.tvSource.setText(Html.fromHtml(status.getSource().toString()));
 		SimpleDateFormat sdf = new SimpleDateFormat("MM.dd HH:mm  ");
 		holder.tvTimeCreate.setText(sdf.format(status.getCreatedAt()));
@@ -125,6 +125,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		
 		convertView.setPadding(0, 3, 0, 0);
 		RetweetDetails statusRetweet = status.getRetweetDetails();
+		
 		RelativeLayout rlayout = new RelativeLayout(IndexActivity.appref);
 		if (statusRetweet != null && statusRetweet.getRetweetId() != 0) {
 			View viewRetweet = new View(IndexActivity.appref);

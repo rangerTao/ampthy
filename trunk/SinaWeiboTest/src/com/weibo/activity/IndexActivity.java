@@ -21,7 +21,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -29,6 +32,7 @@ import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -84,7 +88,15 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 
 	HomeTimeLineAdapter htla;
 	FriendTask ft;
-
+	
+	//Button
+	Button btnHome;
+	Button btnAtMe;
+	Button btnFavour;
+	Button btnComment;
+	Button btnMail;
+	Button btnFriends;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -187,9 +199,8 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 		initButtonAction();
 
 		lvHomeTimeLine.setOnItemClickListener(this);
+		lvHomeTimeLine.setOnCreateContextMenuListener(this);
 	}
-	
-	
 	
 	@Override
 	protected void onResume() {
@@ -212,8 +223,8 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 	}
 
 	public void initButtonAction() {
-		Button llHome = (Button) findViewById(R.id.btnHome_TopMenu);
-		llHome.setOnClickListener(new OnClickListener() {
+		btnHome = (Button) findViewById(R.id.btnHome_TopMenu);
+		btnHome.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				showProgressDialog();
@@ -229,14 +240,17 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 					}
 					lvHomeTimeLine.setAdapter(htla);
 				}
-				
+				resetButtonBG();
+				Constant.weiboChannel = Constant.indexChannel;
+				btnHome.setBackgroundResource(R.drawable.btn_bg);
 				lvHomeTimeLine.setOnItemClickListener(IndexActivity.appref);
 				pDialog.dismiss();
 			}
 			
 		});
-		Button llAtMe = (Button) findViewById(R.id.btnAtMe_TopMenu);
-		llAtMe.setOnClickListener(new OnClickListener() {
+		
+		btnAtMe = (Button) findViewById(R.id.btnAtMe_TopMenu);
+		btnAtMe.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				showProgressDialog();
@@ -246,13 +260,16 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 				}
 				AtMeTask atMeTask = new AtMeTask();
 				atMeTask.execute();
+				Constant.weiboChannel = Constant.atMeChannel;
+				resetButtonBG();
+				btnAtMe.setBackgroundResource(R.drawable.btn_bg);
 				lvHomeTimeLine.setOnItemClickListener(null);
 				pDialog.dismiss();
 			}
 		});
 		
-		Button llFavour = (Button)findViewById(R.id.btnFavourite_TopMenu);
-		llFavour.setOnClickListener(new OnClickListener() {
+		btnFavour = (Button)findViewById(R.id.btnFavourite_TopMenu);
+		btnFavour.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View arg0) {
 				showProgressDialog();
@@ -262,12 +279,15 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 				}
 				FavourTask ftFavourTask = new FavourTask();
 				ftFavourTask.execute();
+				Constant.weiboChannel = Constant.favourChannel;
+				resetButtonBG();
 				pDialog.dismiss();
+				btnFavour.setBackgroundResource(R.drawable.btn_bg);
 			}
 		});
 		
-		Button llComment = (Button)findViewById(R.id.btnComments_TopMenu);
-		llComment.setOnClickListener(new OnClickListener() {
+		btnComment = (Button)findViewById(R.id.btnComments_TopMenu);
+		btnComment.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View arg0) {
 				showProgressDialog();
@@ -277,11 +297,14 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 				CommentsTask ct = new CommentsTask();
 				ct.execute();
 				pDialog.dismiss();
+				Constant.weiboChannel = Constant.commentChannel;
+				resetButtonBG();
+				btnComment.setBackgroundResource(R.drawable.btn_bg);
 			}
 		});
 		
-		Button llMail = (Button)findViewById(R.id.btnMail_TopMenu);
-		llMail.setOnClickListener(new OnClickListener() {
+		btnMail = (Button)findViewById(R.id.btnMail_TopMenu);
+		btnMail.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View arg0) {
 				showProgressDialog();
@@ -291,11 +314,14 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 				MailTask mt = new MailTask();
 				mt.execute();
 				pDialog.dismiss();
+				Constant.weiboChannel = Constant.mailChannel;
+				resetButtonBG();
+				btnMail.setBackgroundResource(R.drawable.btn_bg);
 			}
 		});
 		
-		Button llFriends = (Button)findViewById(R.id.btnFriends_TopMenu);
-		llFriends.setOnClickListener(new OnClickListener() {
+		btnFriends = (Button)findViewById(R.id.btnFriends_TopMenu);
+		btnFriends.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View arg0) {
 				//showProgressDialog();
@@ -305,6 +331,9 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 				FriendsTask ft = new FriendsTask();
 				ft.execute();
 				pDialog.dismiss();
+				Constant.weiboChannel = Constant.friendsChannel;
+				resetButtonBG();
+				btnFriends.setBackgroundResource(R.drawable.btn_bg);
 			}
 		});
 	}
@@ -370,19 +399,74 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 		ibtnHeaderRefresh.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				page_index = 1;
-//				lvHomeTimeLine.removeAllViewsInLayout();
-				statuses.clear();
-				statuses = new ArrayList<Status>();
-				Constant.getMsg = true;
-				ft = new FriendTask();
-				ft.execute();
-				htla.notifyDataSetChanged();
+				switch(Constant.weiboChannel){
+				case Constant.indexChannel:
+					page_index = 1;
+					statuses.clear();
+					statuses = new ArrayList<Status>();
+					Constant.getMsg = true;
+					ft = new FriendTask();
+					ft.execute();
+					htla.notifyDataSetChanged();
+					break;
+				case Constant.atMeChannel:
+					Constant.atMe_PageIndex = 1;
+					Constant.atMeList.clear();
+					Constant.statuses = new ArrayList<Status>();
+					Constant.getMsg = true;
+					AtMeTask atMeTask = new AtMeTask();
+					atMeTask.execute();
+					htla.notifyDataSetChanged();
+					break;
+				case Constant.favourChannel:
+					Constant.favour_PageIndex = 1;
+					Constant.favourList.clear();
+					Constant.statuses = new ArrayList<Status>();
+					Constant.getMsg = true;
+					FavourTask ftFavourTask = new FavourTask();
+					ftFavourTask.execute();
+					htla.notifyDataSetChanged();
+					break;
+				case Constant.commentChannel:
+					Constant.comList.clear();
+					Constant.statuses = new ArrayList<Status>();
+					Constant.getMsg = true;
+					CommentsTask ct = new CommentsTask();
+					ct.execute();
+					htla.notifyDataSetChanged();
+					break;
+				case Constant.mailChannel:
+					Constant.mail_PageIndex = 1;
+					Constant.mailList.clear();
+					Constant.mails = new ArrayList<weibo4andriod.DirectMessage>();
+					Constant.getMsg = true;
+					MailTask mt = new MailTask();
+					mt.execute();
+					htla.notifyDataSetChanged();
+					break;
+				case Constant.friendsChannel:
+					Constant.friend_PageIndex = 1;
+					Constant.friendsList.clear();
+					Constant.getMsg = true;
+					FriendsTask ft = new FriendsTask();
+					ft.execute();
+					htla.notifyDataSetChanged();
+					break;
+				}
 			}
 
 		});
 	}
 
+	public void resetButtonBG(){
+		btnHome.setBackgroundResource(R.drawable.btn_bg_normal);
+		btnAtMe.setBackgroundResource(R.drawable.btn_bg_normal);
+		btnFavour.setBackgroundResource(R.drawable.btn_bg_normal);
+		btnComment.setBackgroundResource(R.drawable.btn_bg_normal);
+		btnMail.setBackgroundResource(R.drawable.btn_bg_normal);
+		btnFriends.setBackgroundResource(R.drawable.btn_bg_normal);
+	}
+	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
 		if(keyCode == KeyEvent.KEYCODE_BACK){
@@ -414,6 +498,7 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 
 	}
 		
+	
 	private void getFriends(int page_index)
 			throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException, MalformedURLException {
 
@@ -426,9 +511,11 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 
 			if(!Constant.isRunning){
 				List<Status> temp = weibo.getHomeTimeline(new Paging(page_index));
+
 				for (Status tmpStatus : temp) {
 					statuses.add(tmpStatus);
 				}
+				
 			}
 			for(int i=0;i<statuses.size()/2;i++){
 				User user = statuses.get(i).getUser();
@@ -452,6 +539,7 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 		}
 	}
 
+	
 	private class FriendTask extends AsyncTask {
 
 		@Override
@@ -502,4 +590,33 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 		intent.putExtras(bundle);
 		IndexActivity.appref.startActivity(intent);
 	}
+
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch(item.getItemId()){
+		case Constant.Menu_First:
+			AdapterContextMenuInfo menuInfo = (AdapterContextMenuInfo) item.getMenuInfo();
+			Log.v("TAG", menuInfo.position +"");
+			break;
+		case Constant.Menu_First + 1:
+			break;
+		case Constant.Menu_First + 2:
+			break;
+		}
+		return true;
+	}
+
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		menu.setHeaderTitle("²Ù×÷");
+		menu.add(0, Constant.Menu_First, 0, R.string.context_comment);
+		menu.add(0, Constant.Menu_First + 1, 0, R.string.context_forward);
+		menu.add(0, Constant.Menu_First + 2, 0, R.string.context_replay);
+		menu.add(0, Constant.Menu_First + 3, 0, R.string.context_home);
+	}
+
+	
 }

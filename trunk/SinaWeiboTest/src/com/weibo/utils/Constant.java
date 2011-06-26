@@ -71,6 +71,10 @@ public class Constant {
 	public static boolean getMsg = false;
 	
 	/**
+	 * Menu index
+	 */
+	public static final int Menu_First = 1;
+	/**
 	 * Statuses
 	 */
 	public static ArrayList<Status> atMeList = new ArrayList<Status>();

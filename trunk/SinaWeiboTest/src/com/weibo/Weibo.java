@@ -1,11 +1,5 @@
 package com.weibo;
 
-import java.io.ByteArrayInputStream;
-
-import oauth.signpost.OAuthProvider;
-import oauth.signpost.basic.DefaultOAuthProvider;
-import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -51,9 +45,6 @@ public class Weibo extends Activity implements OnClickListener {
 	// the instance of OAuth
 
 	private DBAdapter dba;
-
-	CommonsHttpOAuthConsumer httpOauthConsumer;
-	OAuthProvider httpOauthprovider;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
