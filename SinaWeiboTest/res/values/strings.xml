@@ -59,4 +59,7 @@
 	<string name="context_forward">转发</string>
 	<string name="context_replay">回复</string>
     <string name="context_home">首页</string>
+    
+    <!-- MsgDetail -->
+    <string name="btn_detail">详情  ></string>
 </resources>

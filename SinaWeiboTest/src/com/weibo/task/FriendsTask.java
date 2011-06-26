@@ -2,8 +2,9 @@ package com.weibo.task;
 
 import java.util.ArrayList;
 
-import weibo4andriod.Weibo4sina;
-import weibo4andriod.WeiboException;
+import weibo4android.User;
+import weibo4android.Weibo;
+import weibo4android.WeiboException;
 
 import com.weibo.activity.IndexActivity;
 import com.weibo.pojo.OAuthConstant;
@@ -39,11 +40,11 @@ public class FriendsTask extends AsyncTask{
 		super.onPostExecute(result);
 	}
 	private void getFriendss(int page) {
-		Weibo4sina weibo = OAuthConstant.getInstance().getWeibo();
+		Weibo weibo = OAuthConstant.getInstance().getWeibo();
 		try {
-			Constant.useres = new ArrayList<weibo4andriod.User>();
+			Constant.useres = new ArrayList<weibo4android.User>();
 			Constant.useres = weibo.getFriendsStatuses();
-			for(weibo4andriod.User tempUser : Constant.useres){
+			for(User tempUser : Constant.useres){
 				Constant.friendsList.add(tempUser);
 			}
 		} catch (WeiboException te) {

@@ -1,6 +1,6 @@
 package com.weibo.pojo.adapter;
 
-import weibo4andriod.User;
+import weibo4android.User;
 
 import com.weibo.R;
 import com.weibo.activity.MsgDetail;

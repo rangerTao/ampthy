@@ -18,7 +18,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.weibo.R;
-import com.weibo.Weibo;
+import com.weibo.SinaWeibo;
 
 public class SettingPre extends PreferenceActivity implements
 		OnPreferenceChangeListener, OnPreferenceClickListener, OnClickListener {
@@ -75,7 +75,7 @@ public class SettingPre extends PreferenceActivity implements
 			
 			public void onClick(View v) {
 				etPasswd.setText("");
-				Toast.makeText(Weibo.appref, "Did not set the Passwd", 3000);
+				Toast.makeText(SinaWeibo.appref, "Did not set the Passwd", 3000);
 				cbp.setChecked(false);
 				btnPre.setEnabled(false);
 				passwdDialog.cancel();

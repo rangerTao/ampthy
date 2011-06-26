@@ -4,8 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 
-import weibo4andriod.RetweetDetails;
-import weibo4andriod.User;
+import weibo4android.User;
 
 import com.weibo.R;
 import com.weibo.activity.IndexActivity;

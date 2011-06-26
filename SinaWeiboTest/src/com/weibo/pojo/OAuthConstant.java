@@ -1,12 +1,12 @@
 package com.weibo.pojo;
 
-import weibo4andriod.Weibo4sina;
-import weibo4andriod.http.AccessToken;
-import weibo4andriod.http.RequestToken;
+import weibo4android.Weibo;
+import weibo4android.http.AccessToken;
+import weibo4android.http.RequestToken;
 
 
 public class OAuthConstant {
-	private static Weibo4sina weibo=null;
+	private static Weibo weibo=null;
 	private static OAuthConstant instance=null;
 	private RequestToken requestToken;
 	private AccessToken accessToken;
@@ -18,9 +18,9 @@ public class OAuthConstant {
 			instance= new OAuthConstant();
 		return instance;
 	}
-	public Weibo4sina getWeibo(){
+	public Weibo getWeibo(){
 		if(weibo==null){
-			weibo= new Weibo4sina();
+			weibo= new Weibo();
 			
 		}
 			

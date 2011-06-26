@@ -2,10 +2,9 @@ package com.weibo.task;
 
 import java.util.ArrayList;
 
-import weibo4andriod.Comment;
-import weibo4andriod.Paging;
-import weibo4andriod.Weibo4sina;
-import weibo4andriod.WeiboException;
+import weibo4android.Comment;
+import weibo4android.Weibo;
+import weibo4android.WeiboException;
 
 import com.weibo.activity.IndexActivity;
 import com.weibo.pojo.OAuthConstant;
@@ -50,11 +49,11 @@ public class CommentsTask extends AsyncTask{
 	}
 
 	private void getComments() {
-		Weibo4sina weibo = OAuthConstant.getInstance().getWeibo();
+		Weibo weibo = OAuthConstant.getInstance().getWeibo();
 		try {
-			Constant.comments = new ArrayList<weibo4andriod.Comment>();
+			Constant.comments = new ArrayList<weibo4android.Comment>();
 			Constant.comments = weibo.getCommentsToMe();
-			for(weibo4andriod.Comment tempStatus : Constant.comments){
+			for(Comment tempStatus : Constant.comments){
 				Constant.comList.add(tempStatus);
 				Log.v("TAG", tempStatus.toString());
 			}

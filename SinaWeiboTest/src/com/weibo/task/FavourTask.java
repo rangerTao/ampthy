@@ -1,8 +1,10 @@
 package com.weibo.task;
 
 import java.util.ArrayList;
-import weibo4andriod.Weibo4sina;
-import weibo4andriod.WeiboException;
+
+import weibo4android.Weibo;
+import weibo4android.WeiboException;
+
 import com.weibo.activity.IndexActivity;
 import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.adapter.HomeTimeLineAdapter;
@@ -15,7 +17,7 @@ import android.widget.Toast;
 public class FavourTask extends AsyncTask{
 
 	HomeTimeLineAdapter htla;
-	Weibo4sina weibo;
+	Weibo weibo;
 	@Override
 	protected Object doInBackground(Object... arg0) {
 		if(Constant.getMsg){
@@ -48,10 +50,10 @@ public class FavourTask extends AsyncTask{
 	private void getFavours(int page_index) {
 		weibo = OAuthConstant.getInstance().getWeibo();
 		try {
-			Constant.statuses = new ArrayList<weibo4andriod.Status>();
+			Constant.statuses = new ArrayList<weibo4android.Status>();
 			Constant.statuses = weibo.getFavorites(page_index);
 
-			for(weibo4andriod.Status tempStatus : Constant.statuses){
+			for(weibo4android.Status tempStatus : Constant.statuses){
 				Constant.favourList.add(tempStatus);
 			}
 		} catch (WeiboException te) {

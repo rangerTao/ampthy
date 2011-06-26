@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import weibo4andriod.Comment;
-import weibo4andriod.DirectMessage;
-import weibo4andriod.Status;
-import weibo4andriod.User;
+import weibo4android.Comment;
+import weibo4android.DirectMessage;
+import weibo4android.Status;
+import weibo4android.User;
+
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
