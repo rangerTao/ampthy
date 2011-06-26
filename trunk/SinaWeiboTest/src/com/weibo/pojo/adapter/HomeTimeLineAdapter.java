@@ -6,9 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import weibo4andriod.RetweetDetails;
-import weibo4andriod.Status;
-import weibo4andriod.User;
+import weibo4android.RetweetDetails;
+import weibo4android.Status;
+import weibo4android.User;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Html;
@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -69,6 +70,11 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 			holder.tvTimeCreate = (TextView)convertView.findViewById(R.id.tvTimeCreate);
 			holder.tvSource = (TextView)convertView.findViewById(R.id.tvSource);
 			holder.ivUserHead = (ImageView) convertView.findViewById(R.id.ivUserHead);
+			
+			holder.llForward = (RelativeLayout)convertView.findViewById(R.id.rlForward);
+			holder.forward_tvUserName = (TextView)convertView.findViewById(R.id.forward_tvUserName);
+			holder.forward_tvStatus = (TextView)convertView.findViewById(R.id.forward_tvStatus);
+			holder.forward_ivThumbail = (ImageView)convertView.findViewById(R.id.forward_ivThumbail);
 			
 			holder.ivStatusImage = (ImageView) convertView.findViewById(R.id.ivThumbail);
 			convertView.setTag(holder);
@@ -124,27 +130,31 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		}
 		
 		convertView.setPadding(0, 3, 0, 0);
-		RetweetDetails statusRetweet = status.getRetweetDetails();
+
 		
-		RelativeLayout rlayout = new RelativeLayout(IndexActivity.appref);
-		if (statusRetweet != null && statusRetweet.getRetweetId() != 0) {
-			View viewRetweet = new View(IndexActivity.appref);
-			TextView tvRetweetUserName = new TextView(IndexActivity.appref);
-			TextView tvRetweetDetail = new TextView(IndexActivity.appref);
-			tvRetweetUserName
-					.setText(statusRetweet.getRetweetingUser() == null ? statusRetweet
-							.getRetweetingUser().getScreenName().toString()
-							: "");
-
-			Log.v("TAG", statusRetweet.toString());
-
-			// rlayout.addView(tvRetweetUserName);
-			// rlayout.addView(tvRetweetDetail);
+		if(status.isRetweet()){
+			Status retweetStatus = status.getRetweeted_status();
+			User retweetUser = retweetStatus.getUser();
+			holder.llForward.setVisibility(View.VISIBLE);
+			holder.forward_tvUserName.setText(retweetUser.getScreenName().toString());
+			holder.forward_tvStatus.setText(retweetStatus.getText().toString());
+			if(retweetStatus.getThumbnail_pic() != null || retweetStatus.getThumbnail_pic() != ""){
+				holder.forward_ivThumbail.setVisibility(View.VISIBLE);
+				if (Constant.imageMap.containsKey(retweetStatus.getThumbnail_pic()) == false) {
+					holder.forward_ivThumbail.setImageBitmap(BitmapFactory
+							.decodeResource(IndexActivity.appref.getResources(),
+									R.drawable.refresh));
+					try {
+						Constant.sit.pushImageTask(new URL(retweetStatus.getThumbnail_pic()), holder.forward_ivThumbail);
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					}
+				} else {
+					holder.forward_ivThumbail.setImageBitmap(Constant.imageMap
+							.get(retweetStatus.getThumbnail_pic()));
+				}
+			}
 		}
-		// RelativeLayout rl = (RelativeLayout) view
-		// .findViewById(R.id.rlFriendsTimeLine);
-		// rl.addView(rlayout);
-
 		return convertView;
 	}
 	
@@ -157,5 +167,10 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		TextView tvSource;
 		ImageView ivUserHead;
 		ImageView ivStatusImage;
+		
+		RelativeLayout llForward;
+		TextView forward_tvUserName;
+		TextView forward_tvStatus;
+		ImageView forward_ivThumbail;
 	}
 }

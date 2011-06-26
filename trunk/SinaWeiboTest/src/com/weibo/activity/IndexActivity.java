@@ -5,11 +5,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import weibo4andriod.Paging;
-import weibo4andriod.Status;
-import weibo4andriod.User;
-import weibo4andriod.Weibo4sina;
-import weibo4andriod.WeiboException;
+import weibo4android.DirectMessage;
+import weibo4android.Paging;
+import weibo4android.Status;
+import weibo4android.User;
+import weibo4android.Weibo;
+import weibo4android.WeiboException;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -78,7 +80,7 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 	public static List<User> friends;
 	public static List<Status> statuses = new ArrayList<Status>();
 
-	public Weibo4sina weibo = OAuthConstant.getInstance().getWeibo();
+	public Weibo weibo = OAuthConstant.getInstance().getWeibo();
 
 	private int page_index = 1;
 	private int last_item = 0;
@@ -438,7 +440,7 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 				case Constant.mailChannel:
 					Constant.mail_PageIndex = 1;
 					Constant.mailList.clear();
-					Constant.mails = new ArrayList<weibo4andriod.DirectMessage>();
+					Constant.mails = new ArrayList<DirectMessage>();
 					Constant.getMsg = true;
 					MailTask mt = new MailTask();
 					mt.execute();

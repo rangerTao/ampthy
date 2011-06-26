@@ -2,9 +2,10 @@ package com.weibo.task;
 
 import java.util.ArrayList;
 
-import weibo4andriod.Paging;
-import weibo4andriod.Weibo4sina;
-import weibo4andriod.WeiboException;
+import weibo4android.DirectMessage;
+import weibo4android.Paging;
+import weibo4android.Weibo;
+import weibo4android.WeiboException;
 
 import com.weibo.activity.IndexActivity;
 import com.weibo.pojo.OAuthConstant;
@@ -41,11 +42,11 @@ public class MailTask extends AsyncTask{
 		super.onPostExecute(result);
 	}
 	private void getMails(int page) {
-		Weibo4sina weibo = OAuthConstant.getInstance().getWeibo();
+		Weibo weibo = OAuthConstant.getInstance().getWeibo();
 		try {
-			Constant.mails = new ArrayList<weibo4andriod.DirectMessage>();
+			Constant.mails = new ArrayList<weibo4android.DirectMessage>();
 			Constant.mails = weibo.getDirectMessages(new Paging(page));
-			for(weibo4andriod.DirectMessage tempStatus : Constant.mails){
+			for(DirectMessage tempStatus : Constant.mails){
 				Constant.mailList.add(tempStatus);
 			}
 		} catch (WeiboException te) {

@@ -2,6 +2,9 @@ package com.weibo.task;
 
 import java.util.ArrayList;
 
+import weibo4android.Paging;
+import weibo4android.Weibo;
+import weibo4android.WeiboException;
 import android.os.AsyncTask;
 import android.os.Looper;
 import android.util.Log;
@@ -12,9 +15,7 @@ import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.adapter.AtMeAdapter;
 import com.weibo.utils.Constant;
 
-import weibo4andriod.Paging;
-import weibo4andriod.Weibo4sina;
-import weibo4andriod.WeiboException;
+
 
 public class AtMeTask extends AsyncTask{
 
@@ -52,11 +53,11 @@ public class AtMeTask extends AsyncTask{
 	
 	
 	private void getAtMe(int page_index) {
-		Weibo4sina weibo = OAuthConstant.getInstance().getWeibo();
+		Weibo weibo = OAuthConstant.getInstance().getWeibo();
 		try {
-			Constant.statuses = new ArrayList<weibo4andriod.Status>();
+			Constant.statuses = new ArrayList<weibo4android.Status>();
 			Constant.statuses = weibo.getMentions(new Paging(page_index));
-			for(weibo4andriod.Status tempStatus : Constant.statuses){
+			for(weibo4android.Status tempStatus : Constant.statuses){
 				Constant.atMeList.add(tempStatus);
 			}
 		} catch (WeiboException te) {

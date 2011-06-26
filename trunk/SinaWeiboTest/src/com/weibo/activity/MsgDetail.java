@@ -4,11 +4,12 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import weibo4andriod.Comment;
-import weibo4andriod.Status;
-import weibo4andriod.User;
-import weibo4andriod.Weibo4sina;
-import weibo4andriod.WeiboException;
+import weibo4android.Comment;
+import weibo4android.RetweetDetails;
+import weibo4android.Status;
+import weibo4android.User;
+import weibo4android.Weibo;
+import weibo4android.WeiboException;
 
 import com.weibo.R;
 import com.weibo.pojo.OAuthConstant;
@@ -36,12 +37,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MsgDetail extends Activity implements OnClickListener {
 
-	Weibo4sina weibo;
+	Weibo weibo;
 	
 	TextView tvUserScreenName;
 	TextView tvLoc;
@@ -53,12 +55,19 @@ public class MsgDetail extends Activity implements OnClickListener {
 	Button btnForward;
 	Button btnAt;
 	
+	RelativeLayout rlForward;
+	TextView forward_tvUserName;
+	TextView forward_tvStatus;
+	ImageView forward_ivThumbail;
+	Button btnDetai;
 	ListView lvComments;
 	
 	ComentsAdapter ca;
 
 	Status status;
 	User user;
+	Status rd;
+	User retweetUser;
 	
 	public static MsgDetail appref;
 
@@ -74,6 +83,11 @@ public class MsgDetail extends Activity implements OnClickListener {
 		Bundle index = this.getIntent().getExtras();
 		int detailIndex = index.getInt("index");
 		status = IndexActivity.statuses.get(detailIndex);
+
+		if(status.isRetweet()){
+			rd = status.getRetweeted_status();
+			retweetUser = rd.getUser();
+		}
 		user = status.getUser();
 
 		initCompent();
@@ -90,6 +104,11 @@ public class MsgDetail extends Activity implements OnClickListener {
 		ivUserHead = (ImageView) findViewById(R.id.ivUserHead);
 		ivThumb = (ImageView) findViewById(R.id.ivDetaiThumb);
 		tvLoading = (TextView) findViewById(R.id.loadingComents);
+		
+		rlForward = (RelativeLayout)findViewById(R.id.rlForward);
+		forward_tvUserName = (TextView)findViewById(R.id.forward_tvUserName);
+		forward_tvStatus = (TextView)findViewById(R.id.forward_tvStatus);
+		forward_ivThumbail = (ImageView)findViewById(R.id.forward_ivThumbail);
 		
 		btnComment = (Button)findViewById(R.id.btnComment);
 		btnComment.setOnClickListener(this);
@@ -143,6 +162,45 @@ public class MsgDetail extends Activity implements OnClickListener {
 					Log.v("TAG", e.getMessage());
 				}
 			}
+		}
+		
+		if(status.isRetweet()){
+			btnDetai = (Button)findViewById(R.id.btnDetail);
+			btnDetai.setVisibility(View.VISIBLE);
+			btnDetai.setOnClickListener(new OnClickListener() {
+				
+				public void onClick(View arg0) {
+					btnDetai.setVisibility(View.GONE);
+					rlForward.setVisibility(View.VISIBLE);
+				}
+			});
+			
+			forward_tvUserName.setText(retweetUser.getScreenName().toString());
+			forward_tvStatus.setText(rd.getText().toString());
+			if(rd.getThumbnail_pic() != null || rd.getThumbnail_pic() != ""){
+				forward_ivThumbail.setVisibility(View.VISIBLE);
+				if (Constant.imageMap.containsKey(rd.getThumbnail_pic()) == false) {
+					forward_ivThumbail.setImageBitmap(BitmapFactory
+							.decodeResource(IndexActivity.appref.getResources(),
+									R.drawable.refresh));
+					try {
+						Constant.sit.pushImageTask(new URL(rd.getThumbnail_pic()), forward_ivThumbail);
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					}
+				} else {
+					forward_ivThumbail.setImageBitmap(Constant.imageMap
+							.get(rd.getThumbnail_pic()));
+				}
+			}
+		
+			rlForward.setOnClickListener(new OnClickListener() {
+				
+				public void onClick(View arg0) {
+					rlForward.setVisibility(View.GONE);
+					btnDetai.setVisibility(View.VISIBLE);
+				}
+			});
 		}
 		
 		tvLoading.setText(R.string.gettingcom);

@@ -2,11 +2,12 @@ package com.weibo.OAuth;
 
 import java.io.ByteArrayOutputStream;
 
-import weibo4andriod.User;
-import weibo4andriod.Weibo4sina;
-import weibo4andriod.WeiboException;
-import weibo4andriod.http.AccessToken;
-import weibo4andriod.http.RequestToken;
+import weibo4android.User;
+import weibo4android.Weibo;
+import weibo4android.WeiboException;
+import weibo4android.http.AccessToken;
+import weibo4android.http.RequestToken;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -28,7 +29,7 @@ public class OAuthActivity extends Activity {
 	String token;
 	String tokenSecret;
 	
-	Weibo4sina weibo;
+	Weibo weibo;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class OAuthActivity extends Activity {
 			e.printStackTrace();
 		}
 
-		int userId = accessToken.getUserId();
+		int userId = (int) accessToken.getUserId();
 		String userKey = accessToken.getToken();
 		String userSecret = accessToken.getTokenSecret();
 		

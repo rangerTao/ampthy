@@ -31,14 +31,14 @@ import com.weibo.pojo.DBColumns;
 import com.weibo.pojo.UserImpl;
 import com.weibo.utils.Constant;
 
-public class Weibo extends Activity implements OnClickListener {
+public class SinaWeibo extends Activity implements OnClickListener {
 	/** Called when the activity is first created. */
 	EditText etName;
 	EditText etPasswd;
 	Button btnLogin;
 	Button btnCancel;
 
-	public static Weibo appref;
+	public static SinaWeibo appref;
 	public final static String tag = "TAG";
 
 	private static boolean existBoolean = false;

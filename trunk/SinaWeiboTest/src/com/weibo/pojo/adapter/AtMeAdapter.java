@@ -3,8 +3,8 @@ package com.weibo.pojo.adapter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import weibo4andriod.Status;
-import weibo4andriod.User;
+import weibo4android.Status;
+import weibo4android.User;
 
 import com.weibo.R;
 import com.weibo.R.id;
