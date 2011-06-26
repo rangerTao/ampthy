@@ -54,6 +54,9 @@
     <string name="neterror">网络错误，请重试。</string>
     <string name="forwardsuccess">转发成功</string>
 	
-	
-	    
+	<!-- Context Menu -->
+	<string name="context_comment">评论</string>
+	<string name="context_forward">转发</string>
+	<string name="context_replay">回复</string>
+    <string name="context_home">首页</string>
 </resources>

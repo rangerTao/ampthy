@@ -1,10 +1,9 @@
 package com.weibo.pojo;
 
-import com.weibo.utils.Constant;
-
 import weibo4andriod.Weibo4sina;
 import weibo4andriod.http.AccessToken;
 import weibo4andriod.http.RequestToken;
+
 
 public class OAuthConstant {
 	private static Weibo4sina weibo=null;

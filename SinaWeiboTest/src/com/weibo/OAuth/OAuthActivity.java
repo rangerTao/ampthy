@@ -2,8 +2,6 @@ package com.weibo.OAuth;
 
 import java.io.ByteArrayOutputStream;
 
-import oauth.signpost.OAuthProvider;
-import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import weibo4andriod.User;
 import weibo4andriod.Weibo4sina;
 import weibo4andriod.WeiboException;
@@ -26,9 +24,6 @@ import com.weibo.utils.Constant;
 import com.weibo.utils.WeiboUtils;
 
 public class OAuthActivity extends Activity {
-
-	CommonsHttpOAuthConsumer httpOauthConsumer;
-	OAuthProvider httpOauthprovider;
 
 	String token;
 	String tokenSecret;
