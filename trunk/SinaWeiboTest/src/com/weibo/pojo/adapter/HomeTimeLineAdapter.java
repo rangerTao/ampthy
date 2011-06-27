@@ -135,7 +135,6 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 			
 			holder.ivStatusImage.setOnClickListener(new OnClickListener() {
 
-				@Override
 				public void onClick(View v) {
 
 					getPopup();
@@ -144,7 +143,6 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 										R.drawable.loading));
 
 					IndexActivity.handler.post(new Runnable(){
-						@Override
 						public void run() {
 							try {
 								Bitmap bmp = WeiboUtils.getImage(new URL(status.getBmiddle_pic()));
@@ -160,7 +158,6 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 					});
 					popup.setOnClickListener(new OnClickListener(){
 
-						@Override
 						public void onClick(View v) {
 							mPopup.dismiss();
 							popup = null;
@@ -203,7 +200,6 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 			}
 			holder.forward_ivThumbail.setOnClickListener(new OnClickListener() {
 
-				@Override
 				public void onClick(View v) {
 
 					getPopup();
@@ -213,7 +209,6 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 										R.drawable.loading));
 
 					IndexActivity.handler.post(new Runnable(){
-						@Override
 						public void run() {
 							try {
 								Bitmap bmp = WeiboUtils.getImage(new URL(retweetStatus.getBmiddle_pic()));
@@ -227,7 +222,6 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 					});
 					popup.setOnClickListener(new OnClickListener(){
 
-						@Override
 						public void onClick(View v) {
 							mPopup.dismiss();
 							popup = null;

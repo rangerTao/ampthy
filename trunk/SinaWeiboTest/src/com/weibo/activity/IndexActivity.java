@@ -13,7 +13,9 @@ import weibo4android.Weibo;
 import weibo4android.WeiboException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -25,10 +27,13 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
@@ -36,12 +41,14 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +64,7 @@ import com.weibo.task.MailTask;
 import com.weibo.utils.Constant;
 import com.weibo.utils.WeiboUtils;
 
-public class IndexActivity extends Activity implements OnItemClickListener{
+public class IndexActivity extends Activity implements OnItemClickListener, OnItemLongClickListener{
 
 	String token;
 	String tokenSecret;
@@ -98,6 +105,10 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 	Button btnComment;
 	Button btnMail;
 	Button btnFriends;
+	
+	//Popup
+	View popupView;
+	PopupWindow mPopup;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -201,7 +212,8 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 		initButtonAction();
 
 		lvHomeTimeLine.setOnItemClickListener(this);
-		lvHomeTimeLine.setOnCreateContextMenuListener(this);
+//		lvHomeTimeLine.setOnCreateContextMenuListener(this);
+		lvHomeTimeLine.setOnItemLongClickListener(this);
 	}
 	
 	@Override
@@ -472,6 +484,10 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
 		if(keyCode == KeyEvent.KEYCODE_BACK){
+			if(mPopup != null && mPopup.isShowing()){
+				dismissPop();
+				return true;
+			}
 			if(Constant._Back_Count == 0){
 				Toast.makeText(this, R.string.toast_back_1, 2000).show();
 				Constant._Back_Count ++;
@@ -593,32 +609,83 @@ public class IndexActivity extends Activity implements OnItemClickListener{
 		IndexActivity.appref.startActivity(intent);
 	}
 
-	
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		switch(item.getItemId()){
-		case Constant.Menu_First:
-			AdapterContextMenuInfo menuInfo = (AdapterContextMenuInfo) item.getMenuInfo();
-			Log.v("TAG", menuInfo.position +"");
-			break;
-		case Constant.Menu_First + 1:
-			break;
-		case Constant.Menu_First + 2:
-			break;
-		}
+	private void dismissPop(){
+		mPopup.dismiss();
+		popupView = null;
+		mPopup = null;
+	}
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int arg2,
+			long arg3) {
+		
+		LayoutInflater layoutInflater = LayoutInflater.from(this);
+		popupView = layoutInflater.inflate(R.layout.msg_contextmenu, null);
+		mPopup = new PopupWindow(popupView,
+				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		mPopup.showAtLocation(appref.findViewById(R.id.main), Gravity.CENTER, 0, 0);
+		popupView.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View arg0) {
+				dismissPop();
+			}
+		});
+		
+		Button btnComment = (Button)popupView.findViewById(R.id.btnComment);
+		Button btnForward = (Button)popupView.findViewById(R.id.btnForward);
+		Button btnHome = (Button)popupView.findViewById(R.id.btnHome);
+		
+		btnComment.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View arg0) {
+				final EditText etAtEditText = new EditText(appref);
+				new AlertDialog.Builder(appref).setTitle(R.string.input).setIcon(
+					     android.R.drawable.ic_dialog_info).setView(
+					    		 etAtEditText).setPositiveButton(R.string.passwd_set_confirm, new DialogInterface.OnClickListener() {
+							
+							public void onClick(DialogInterface arg0, int arg1) {
+								try {
+									weibo.updateComment(etAtEditText.getText().toString(), statuses.get(arg2).getId()+"", null);
+									Toast.makeText(appref, R.string.comsuccess, 2000).show();
+								} catch (WeiboException e) {
+									Toast.makeText(appref, R.string.neterror, 2000).show();
+								}
+							}
+						})
+					     .setNegativeButton(R.string.passwd_set_cancel, null).show();
+				dismissPop();
+			}
+		});
+
+		btnForward.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View arg0) {
+
+				final EditText etAtEditText = new EditText(appref);
+				etAtEditText.setText("// " + statuses.get(arg2).getText().toString());
+				etAtEditText.setSelection(0, 0);
+				new AlertDialog.Builder(appref).setTitle(R.string.input).setIcon(
+					     android.R.drawable.ic_dialog_info).setView(
+					    		 etAtEditText).setPositiveButton(R.string.passwd_set_confirm, new DialogInterface.OnClickListener() {
+							
+							public void onClick(DialogInterface arg0, int arg1) {
+								try {
+									if(etAtEditText.getText().toString() == ""){
+										weibo.retweetStatus(statuses.get(arg2).getId());
+										
+									}else{
+										weibo.updateStatus(etAtEditText.getText().toString(), statuses.get(arg2).getId());
+									}
+									Toast.makeText(appref, R.string.forwardsuccess, 2000).show();
+								} catch (WeiboException e) {
+									Toast.makeText(appref, R.string.neterror, 2000).show();
+								}
+							}
+						})
+					     .setNegativeButton(R.string.passwd_set_cancel, null).show();
+				dismissPop();
+			}
+		});
+
 		return true;
 	}
 
-	
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
-		menu.setHeaderTitle("²Ù×÷");
-		menu.add(0, Constant.Menu_First, 0, R.string.context_comment);
-		menu.add(0, Constant.Menu_First + 1, 0, R.string.context_forward);
-		menu.add(0, Constant.Menu_First + 2, 0, R.string.context_replay);
-		menu.add(0, Constant.Menu_First + 3, 0, R.string.context_home);
-	}
-
-	
 }
