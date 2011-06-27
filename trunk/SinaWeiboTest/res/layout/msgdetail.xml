@@ -1,66 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
-	<RelativeLayout android:id="@+id/llUserDetail"
-		android:layout_width="fill_parent" android:layout_height="wrap_content">
-		<ImageView android:src="@drawable/loading" android:id="@+id/ivUserHead"
-			android:layout_alignParentLeft="true" android:layout_width="32px"
-			android:layout_height="32px"></ImageView>
-		<TextView android:text="" android:id="@+id/tvUserScreenName"
-			style="@style/TextView" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:layout_toRightOf="@+id/ivUserHead"
-			android:paddingLeft="5px"></TextView>
-		<TextView android:text="" android:id="@+id/tvLoc" style="@style/TextView"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"></TextView>
-		<TextView android:id="@+id/tvDetail" android:layout_width="wrap_content"
-			style="@style/TextView" android:text="" android:layout_below="@+id/tvUserScreenName"
-			android:layout_height="wrap_content" android:layout_alignLeft="@+id/tvUserScreenName"></TextView>
-		<ImageView android:id="@+id/ivDetaiThumb"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:layout_alignLeft="@+id/tvUserScreenName"
-			android:layout_below="@+id/tvDetail" android:paddingTop="5px"
-			android:paddingLeft="10px"></ImageView>
-		<TextView android:id="@+id/loadingComents" android:text="Getting Coments"
-			style="@style/TextView" android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:textSize="14px"
-			android:gravity="center" android:layout_below="@+id/ivDetaiThumb"></TextView>
-	</RelativeLayout>
-	<LinearLayout android:id="@+id/llFroward" android:layout_width="fill_parent" 
-		android:layout_height="wrap_content" android:layout_below="@+id/llUserDetail">
-		<RelativeLayout android:id="@+id/rlForward"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:paddingTop="5dip" android:layout_alignLeft="@+id/tvStatus"
-			android:paddingLeft="10dip" android:layout_marginLeft="41dip"
-			android:layout_below="@+id/llUserDetail"
-			android:background="@drawable/retweet_dialog" android:visibility="gone">
-			<TextView android:id="@+id/forward_tvUserName" style="@style/TextView"
-				android:layout_width="wrap_content" android:layout_alignParentLeft="true"
-				android:layout_height="wrap_content"></TextView>
-			<TextView style="@style/TextView" android:layout_width="wrap_content"
-				android:text="TextView" android:layout_below="@+id/forward_tvUserName"
-				android:layout_height="wrap_content" android:layout_alignLeft="@+id/forward_tvUserName"
-				android:id="@+id/forward_tvStatus"></TextView>
-			<ImageView android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:src="@drawable/icon"
-				android:layout_below="@+id/forward_tvStatus" android:visibility="gone"
-				android:layout_alignLeft="@+id/forward_tvStatus" android:id="@+id/forward_ivThumbail"></ImageView>
-		</RelativeLayout>
-	</LinearLayout>
-	<LinearLayout android:id="@+id/llButton" android:background="#E5ECF4"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="horizontal" android:layout_below="@+id/llFroward" style="@android:style/ButtonBar">
-		<Button android:id="@+id/btnDetail" android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:text="@string/btn_detail" android:background="@drawable/buttonpressed" 
-			android:visibility="gone" android:layout_weight="1"/>		
-		<Button android:id="@+id/btnComment" android:layout_width="fill_parent" android:background="@drawable/buttonpressed" 
-			android:layout_height="wrap_content" android:text="评论" android:layout_weight="1"></Button>
-		<Button android:id="@+id/btnForward" android:layout_width="fill_parent" android:background="@drawable/buttonpressed" 
-			android:layout_height="wrap_content" android:text="转发" android:layout_weight="1"></Button>
-		<Button android:id="@+id/btnAtH" android:layout_width="fill_parent" android:background="@drawable/buttonpressed" 
-			android:layout_height="wrap_content" android:text="对他说" android:layout_weight="1"></Button>
-	</LinearLayout>
 	<ListView android:id="@+id/lvComent" android:layout_width="wrap_content"
 		android:cacheColorHint="#00000000" android:paddingTop="10px"
-		android:layout_height="wrap_content" android:layout_below="@+id/llButton"></ListView>
+		android:layout_height="fill_parent" android:layout_below="@+id/llButton"></ListView>
 </RelativeLayout>
