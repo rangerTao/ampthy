@@ -6,25 +6,29 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import weibo4android.RetweetDetails;
 import weibo4android.Status;
 import weibo4android.User;
+import weibo4android.Weibo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Html;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.weibo.R;
 import com.weibo.activity.IndexActivity;
+import com.weibo.pojo.OAuthConstant;
 import com.weibo.utils.Constant;
 import com.weibo.utils.WeiboUtils;
 
@@ -33,6 +37,10 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 	URL urlString;
 	Bitmap bmpUserHead;
 	ArrayList<Status> inputList;
+	LayoutInflater layoutInflater;
+	PopupWindow mPopup;
+	View popup;
+	ImageView iView;
 
 	public HomeTimeLineAdapter(List<Status> tmp){
 		inputList = (ArrayList<Status>) tmp;
@@ -52,11 +60,11 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 	}
 
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		Status status = inputList.get(position);
+		final Status status = inputList.get(position);
 		final User user = status.getUser();
 		ViewHolder holder;
 		if(convertView == null){
-			LayoutInflater layoutInflater = LayoutInflater
+			layoutInflater = LayoutInflater
 			.from(IndexActivity.appref);
 			convertView = layoutInflater.inflate(R.layout.friendstimeline_adapter, null);
 			
@@ -82,8 +90,6 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
-//		TextView tvRewardBy = (TextView)view.findViewById(R.id.tvRewardBy);
-//		TextView tvCommentBy = (TextView)view.findViewById(R.id.tvCommentBy);
 		holder.tvUserStatus.setPadding(10, 5, 0, 0);
 		holder.tvUserNameTextView.setText(user.getScreenName());
 		holder.tvUserLocationg.setText(user.getLocation());
@@ -125,6 +131,47 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 			}
 			holder.ivStatusImage.setPadding(10, 2, 0, 0);
 			holder.ivStatusImage.setVisibility(View.VISIBLE);
+			
+			
+			holder.ivStatusImage.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+
+					getPopup();
+					iView.setImageBitmap(BitmapFactory
+								.decodeResource(IndexActivity.appref.getResources(),
+										R.drawable.loading));
+
+					IndexActivity.handler.post(new Runnable(){
+						@Override
+						public void run() {
+							try {
+								Bitmap bmp = WeiboUtils.getImage(new URL(status.getBmiddle_pic()));
+								iView.setImageBitmap(bmp);
+							} catch (MalformedURLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+							
+						}
+						
+					});
+					popup.setOnClickListener(new OnClickListener(){
+
+						@Override
+						public void onClick(View v) {
+							mPopup.dismiss();
+							popup = null;
+							mPopup = null;
+						}
+						
+					});
+
+				}
+
+			});
 		} else {
 			holder.ivStatusImage.setVisibility(View.GONE);
 		}
@@ -133,7 +180,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 
 		
 		if(status.isRetweet()){
-			Status retweetStatus = status.getRetweeted_status();
+			final Status retweetStatus = status.getRetweeted_status();
 			User retweetUser = retweetStatus.getUser();
 			holder.llForward.setVisibility(View.VISIBLE);
 			holder.forward_tvUserName.setText(retweetUser.getScreenName().toString());
@@ -154,6 +201,46 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 							.get(retweetStatus.getThumbnail_pic()));
 				}
 			}
+			holder.forward_ivThumbail.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+
+					getPopup();
+					
+					iView.setImageBitmap(BitmapFactory
+								.decodeResource(IndexActivity.appref.getResources(),
+										R.drawable.loading));
+
+					IndexActivity.handler.post(new Runnable(){
+						@Override
+						public void run() {
+							try {
+								Bitmap bmp = WeiboUtils.getImage(new URL(retweetStatus.getBmiddle_pic()));
+								iView.setImageBitmap(bmp);
+							} catch (MalformedURLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						
+					});
+					popup.setOnClickListener(new OnClickListener(){
+
+						@Override
+						public void onClick(View v) {
+							mPopup.dismiss();
+							popup = null;
+							mPopup = null;
+						}
+						
+					});
+
+				}
+
+			});
+		}else{
+			holder.llForward.setVisibility(View.GONE);
 		}
 		return convertView;
 	}
@@ -172,5 +259,18 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		TextView forward_tvUserName;
 		TextView forward_tvStatus;
 		ImageView forward_ivThumbail;
+	}
+	
+	private void getPopup(){
+		popup = layoutInflater.inflate(R.layout.image_popup,
+				null);
+		iView = (ImageView) popup.findViewById(R.id.image);
+		mPopup = new PopupWindow(popup,
+				LayoutParams.FILL_PARENT,
+				LayoutParams.FILL_PARENT);
+
+		mPopup.showAtLocation(IndexActivity.appref
+				.findViewById(R.id.main),
+				Gravity.CENTER, 0, 0);
 	}
 }

@@ -1,95 +1,152 @@
 package com.weibo.pojo;
 
 import android.content.Context;
-import android.graphics.Camera;
-import android.graphics.Matrix;
 import android.util.AttributeSet;
-import android.view.View;
-import android.view.animation.Transformation;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.ViewGroup;
+import android.widget.AbsSpinner;
 import android.widget.Gallery;
 
-public class ViewGallery extends Gallery{
-	
-	private Camera mCamera = new Camera();
-    private int mMaxRotationAngle = 50;
-    private int mMaxZoom = -500;
-    private int mCoveflowCenter;
-    private boolean mAlphaMode = true;
-    private boolean mCircleMode = false;
+public class ViewGallery extends AbsSpinner implements GestureDetector.OnGestureListener {
 
+	//The position of selected item.
+	int mSelectedPosition;
+	//The sum of item.
+	int mItemCount;
+	//the position of first item.
+	int mFirstPosition;
+	//whether data changed.
+	boolean mDataChanged;
+	
+	
 	public ViewGallery(Context context) {
-		super(context);
-		this.setStaticTransformationsEnabled(true);
+		super(context, null);
 	}
 	
-	public ViewGallery(Context context,AttributeSet attrs){
-		super(context, attrs);
-		this.setStaticTransformationsEnabled(true);
+	public ViewGallery(Context context, AttributeSet attrs) {
+		super(context, attrs,android.R.attr.galleryStyle);
 	}
 	
-	public ViewGallery(Context context,AttributeSet attrs,int defStyle){
-		super(context,attrs,defStyle);
-		this.setStaticTransformationsEnabled(true);
+	public ViewGallery(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+	}
+	
+	@Override
+	protected LayoutParams generateDefaultLayoutParams() {
+		return new Gallery.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT);
+	}
+	
+	@Override
+	protected boolean checkLayoutParams(LayoutParams p) {
+		// TODO Auto-generated method stub
+		return p instanceof LayoutParams;
+	}
+	
+
+	@Override
+	protected int computeHorizontalScrollExtent() {
+		// TODO Auto-generated method stub
+		return 1;
 	}
 
 	@Override
-	protected boolean getChildStaticTransformation(View child, Transformation t) {
+	protected int computeHorizontalScrollOffset() {
+		// TODO Auto-generated method stub
+		return mSelectedPosition;
+	}
 
-		final int childCenter = getCenterOfView(child);
-		final int childWidth = child.getWidth();
-		int rotationAngle = 0;
-		t.clear();
-		t.setTransformationType(Transformation.TYPE_MATRIX);
+	@Override
+	protected int computeHorizontalScrollRange() {
+		// TODO Auto-generated method stub
+		return mItemCount;
+	}
+	
+	@Override
+	public LayoutParams generateLayoutParams(AttributeSet attrs) {
+		// TODO Auto-generated method stub
+		return new LayoutParams(getContext(),attrs);
+	}
 
-		 if (childCenter == mCoveflowCenter) {
-	            transformImageBitmap(child, t, 0, 0);
-	        } else {
-	            rotationAngle = (int) (((float) (mCoveflowCenter - childCenter) / childWidth) * mMaxRotationAngle);
-
-	            if (Math.abs(rotationAngle) > mMaxRotationAngle) {
-	                rotationAngle = (rotationAngle < 0) ? -mMaxRotationAngle
-	                        : mMaxRotationAngle;
-	            }
-	            transformImageBitmap(child, t, rotationAngle,
-	                    (int) Math.floor((mCoveflowCenter - childCenter)/ (childWidth==0?1:childWidth)));
-	        }
-	        return true;
+	@Override
+	protected LayoutParams generateLayoutParams(LayoutParams p) {
+		// TODO Auto-generated method stub
+		return new LayoutParams(p);
+	}
+	
+	@Override
+	protected int getChildDrawingOrder(int childCount, int i) {
+		int selectedIndex = mSelectedPosition - mFirstPosition;
+		
+		if(selectedIndex < 0) return i;
+		
+		if(i == childCount - 1){
+			// Draw the selected child last
+			return selectedIndex;
+		}else if(i >= selectedIndex){
+			// Move the children to the right of the selected child earlier one
+			return i + 1;
+		}else{
+			// Keep the children to the up of the selected child the same
+			return i;
+		}
+	}
+	
+	@Override
+	protected void onLayout(boolean changed, int left, int top, int right,
+			int bottom) {
+		super.onLayout(changed, left, top, right, bottom);
+		
+		layout();
+	}
+	
+	/**
+	 * The method used to creates and positions view.
+	 */
+	public void layout(){
 		
 	}
-	
-	public int getCenterOfView(View childView){
-		return (getWidth() - getPaddingLeft() - getPaddingRight()) /2 + getPaddingLeft();
+
+	@Override
+	public boolean onDown(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+			float velocityY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+			float distanceY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
-	private void transformImageBitmap(View child, Transformation t,
-            int rotationAngle, int d) {
-        mCamera.save();
-        final Matrix imageMatrix = t.getMatrix();
-        final int imageHeight = child.getLayoutParams().height;
-        final int imageWidth = child.getLayoutParams().width;
-        final int rotation = Math.abs(rotationAngle);
-
-        mCamera.translate(0.0f, 0.0f, 100.0f);
-        // As the angle of the view gets less, zoom in
-        if (rotation <= mMaxRotationAngle) {
-            float zoomAmount = (float) (mMaxZoom + (rotation * 1.5));
-            mCamera.translate(0.0f, 0.0f, 0);
-            if (mCircleMode) {
-                if (rotation < 40)
-                    mCamera.translate(0.0f, 155, 0.0f);
-                else
-                    mCamera.translate(0.0f, (255 - rotation * 2.5f), 0.0f);
-            }
-            if (mAlphaMode) {
-               // (child.setAlpha((int) (255 - rotation * 2.5));
-            }
-        }
-        //mCamera.rotateY(rotationAngle);
-        mCamera.getMatrix(imageMatrix);
-
-        imageMatrix.preTranslate(-(child.getWidth() / 2), -(child.getWidth() / 2));
-        imageMatrix.postTranslate((child.getWidth() / 2), (child.getWidth() / 2));
-        mCamera.restore();
-    }
-
+	
+	
+	
 }

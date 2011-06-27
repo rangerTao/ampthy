@@ -1,38 +1,26 @@
 package com.weibo.activity;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import weibo4android.Comment;
-import weibo4android.RetweetDetails;
 import weibo4android.Status;
 import weibo4android.User;
 import weibo4android.Weibo;
 import weibo4android.WeiboException;
-
-import com.weibo.R;
-import com.weibo.pojo.OAuthConstant;
-import com.weibo.pojo.adapter.ComentsAdapter;
-
-import com.weibo.utils.Constant;
-import com.weibo.utils.WeiboUtils;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,6 +28,12 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.weibo.R;
+import com.weibo.pojo.OAuthConstant;
+import com.weibo.pojo.adapter.ComentsAdapter;
+import com.weibo.utils.Constant;
+import com.weibo.utils.WeiboUtils;
 
 public class MsgDetail extends Activity implements OnClickListener {
 
@@ -62,6 +56,7 @@ public class MsgDetail extends Activity implements OnClickListener {
 	Button btnDetai;
 	ListView lvComments;
 	
+	View view;
 	ComentsAdapter ca;
 
 	Status status;
@@ -98,23 +93,26 @@ public class MsgDetail extends Activity implements OnClickListener {
 	private void initCompent() {
 		weibo = OAuthConstant.getInstance().getWeibo();
 		
-		tvUserScreenName = (TextView) findViewById(R.id.tvUserScreenName);
-		tvLoc = (TextView) findViewById(R.id.tvLoc);
-		tvDetail = (TextView) findViewById(R.id.tvDetail);
-		ivUserHead = (ImageView) findViewById(R.id.ivUserHead);
-		ivThumb = (ImageView) findViewById(R.id.ivDetaiThumb);
-		tvLoading = (TextView) findViewById(R.id.loadingComents);
+		LayoutInflater inflater = LayoutInflater.from(this);
+		view = inflater.inflate(R.layout.msgdetail_header, null);
 		
-		rlForward = (RelativeLayout)findViewById(R.id.rlForward);
-		forward_tvUserName = (TextView)findViewById(R.id.forward_tvUserName);
-		forward_tvStatus = (TextView)findViewById(R.id.forward_tvStatus);
-		forward_ivThumbail = (ImageView)findViewById(R.id.forward_ivThumbail);
+		tvUserScreenName = (TextView) view.findViewById(R.id.tvUserScreenName);
+		tvLoc = (TextView) view.findViewById(R.id.tvLoc);
+		tvDetail = (TextView) view.findViewById(R.id.tvDetail);
+		ivUserHead = (ImageView) view.findViewById(R.id.ivUserHead);
+		ivThumb = (ImageView) view.findViewById(R.id.ivDetaiThumb);
+		tvLoading = (TextView) view.findViewById(R.id.loadingComents);
 		
-		btnComment = (Button)findViewById(R.id.btnComment);
+		rlForward = (RelativeLayout)view.findViewById(R.id.rlForward);
+		forward_tvUserName = (TextView)view.findViewById(R.id.forward_tvUserName);
+		forward_tvStatus = (TextView)view.findViewById(R.id.forward_tvStatus);
+		forward_ivThumbail = (ImageView)view.findViewById(R.id.forward_ivThumbail);
+		
+		btnComment = (Button)view.findViewById(R.id.btnComment);
 		btnComment.setOnClickListener(this);
-		btnForward = (Button)findViewById(R.id.btnForward);
+		btnForward = (Button)view.findViewById(R.id.btnForward);
 		btnForward.setOnClickListener(this);
-		btnAt = (Button)findViewById(R.id.btnAtH);
+		btnAt = (Button)view.findViewById(R.id.btnAtH);
 		btnAt.setOnClickListener(this);
 		
 		lvComments = (ListView) findViewById(R.id.lvComent);
@@ -156,7 +154,6 @@ public class MsgDetail extends Activity implements OnClickListener {
 							ivUserHead, tempBitmap);
 					Constant.imageMap
 							.put(status.getThumbnail_pic(), tempBitmap);
-
 				} catch (Exception e) {
 					Toast.makeText(this, "Error", 2000).show();
 					Log.v("TAG", e.getMessage());
@@ -165,16 +162,8 @@ public class MsgDetail extends Activity implements OnClickListener {
 		}
 		
 		if(status.isRetweet()){
-			btnDetai = (Button)findViewById(R.id.btnDetail);
-			btnDetai.setVisibility(View.VISIBLE);
-			btnDetai.setOnClickListener(new OnClickListener() {
-				
-				public void onClick(View arg0) {
-					btnDetai.setVisibility(View.GONE);
-					rlForward.setVisibility(View.VISIBLE);
-				}
-			});
-			
+
+			rlForward.setVisibility(View.VISIBLE);
 			forward_tvUserName.setText(retweetUser.getScreenName().toString());
 			forward_tvStatus.setText(rd.getText().toString());
 			if(rd.getThumbnail_pic() != null || rd.getThumbnail_pic() != ""){
@@ -193,18 +182,11 @@ public class MsgDetail extends Activity implements OnClickListener {
 							.get(rd.getThumbnail_pic()));
 				}
 			}
-		
-			rlForward.setOnClickListener(new OnClickListener() {
-				
-				public void onClick(View arg0) {
-					rlForward.setVisibility(View.GONE);
-					btnDetai.setVisibility(View.VISIBLE);
-				}
-			});
 		}
 		
 		tvLoading.setText(R.string.gettingcom);
-		
+		lvComments.addHeaderView(view);
+		lvComments.setAdapter(null);
 		CommentTask ct = new CommentTask();
 		ct.execute();
 
