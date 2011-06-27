@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:orientation="vertical"
+	android:layout_height="fill_parent" android:background="#00000000">
+	<LinearLayout android:layout_width="fill_parent"
+		android:background="@drawable/pop_btn_bg" android:layout_height="80dip"
+		style="@android:style/ButtonBar" android:layout_centerInParent="true">
+		<Button android:id="@+id/btnComment" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:text="@string/context_comment"
+			android:layout_weight="1" android:background="#9cb0c6" android:layout_gravity="center_vertical"/>
+		<Button android:id="@+id/btnForward" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:text="@string/context_forward"
+			android:layout_weight="1" android:background="#9cb0c6" android:layout_gravity="center_vertical" />
+		<Button android:id="@+id/btnHome" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:text="@string/context_home"
+			android:layout_weight="1" android:background="#9cb0c6" android:layout_gravity="center_vertical" />
+	</LinearLayout>
+</RelativeLayout>
