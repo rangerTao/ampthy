@@ -62,4 +62,9 @@
     
     <!-- MsgDetail -->
     <string name="btn_detail">详情  ></string>
+    
+    
+    <!--  Friend Home Page -->
+    <string name="friend_status_loading">好友状态读取中...</string>
+    
 </resources>
