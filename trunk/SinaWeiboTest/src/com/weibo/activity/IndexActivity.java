@@ -685,6 +685,18 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 			}
 		});
 
+		btnHome.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View arg0) {
+				//HomePageActivity.setUser(statuses.get(arg2).getUser());
+				Intent intent = new Intent(appref,HomePageActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putInt("index", arg2);
+				intent.putExtras(bundle);
+				dismissPop();
+				startActivity(intent);
+			}
+		});
 		return true;
 	}
 
