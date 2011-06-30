@@ -88,4 +88,14 @@ public class Constant {
 	public static List<Status> statuses = new ArrayList<Status>();
 	public static List<User> useres = new ArrayList<User>();
 	public static List<DirectMessage> mails = new ArrayList<DirectMessage>();
+	
+	/**
+	 * Message Detail
+	 */
+	public static Status tmpStatus;
+	
+	/**
+	 * Chat
+	 */
+	public static User userInstan;
 }

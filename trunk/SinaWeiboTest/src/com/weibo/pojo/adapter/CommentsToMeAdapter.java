@@ -9,6 +9,7 @@ import weibo4android.User;
 
 import com.weibo.R;
 import com.weibo.activity.IndexActivity;
+import com.weibo.pojo.UserImpl;
 import com.weibo.utils.Constant;
 
 import android.graphics.BitmapFactory;
@@ -36,7 +37,13 @@ public class CommentsToMeAdapter extends BaseAdapter{
 
 	public View getView(int arg0, View view, ViewGroup arg2) {
 		Comment com = (Comment) getItem(arg0);
-		User user = com.getUser();
+		User user;
+		if(com.getUser() == null){
+			user = Constant.userInstan;
+		}else{
+			user = com.getUser();
+		}
+		
 		ViewHolder holder;
 		if(view == null){
 			LayoutInflater inflater = LayoutInflater.from(IndexActivity.appref);

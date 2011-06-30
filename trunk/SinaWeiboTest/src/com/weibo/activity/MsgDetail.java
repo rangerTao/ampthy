@@ -75,9 +75,7 @@ public class MsgDetail extends Activity implements OnClickListener {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.setContentView(R.layout.msgdetail);
 		appref = this;
-		Bundle index = this.getIntent().getExtras();
-		int detailIndex = index.getInt("index");
-		status = IndexActivity.statuses.get(detailIndex);
+		status = Constant.tmpStatus;
 
 		if(status.isRetweet()){
 			rd = status.getRetweeted_status();

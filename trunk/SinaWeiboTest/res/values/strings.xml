@@ -66,5 +66,9 @@
     
     <!--  Friend Home Page -->
     <string name="friend_status_loading">好友状态读取中...</string>
+    <string name="friend_focus">关注:</string>
+	<string name="friend_fans">粉丝:</string>
+	<string name="friend_focused">已关注</string>
+	<string name="friend_unFocused">未关注</string>    
     
 </resources>

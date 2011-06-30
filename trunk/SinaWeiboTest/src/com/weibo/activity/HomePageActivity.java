@@ -12,6 +12,7 @@ import weibo4android.Weibo;
 import weibo4android.WeiboException;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -26,6 +27,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,7 +40,7 @@ import com.weibo.pojo.adapter.HomeTimeLineAdapter;
 import com.weibo.utils.Constant;
 import com.weibo.utils.WeiboUtils;
 
-public class HomePageActivity extends Activity implements OnScrollListener{
+public class HomePageActivity extends Activity implements OnScrollListener, OnItemClickListener{
 
 	HomePageActivity appref;
 	//The friend
@@ -86,9 +89,8 @@ public class HomePageActivity extends Activity implements OnScrollListener{
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		appref = this;
-		Bundle index = this.getIntent().getExtras();
-		int detailIndex = index.getInt("index");
-		user = IndexActivity.statuses.get(detailIndex).getUser();
+		status = Constant.tmpStatus;
+		user = status.getUser();
 		setContentView(R.layout.friend_activity);
 		
 		initHeader();
@@ -98,6 +100,7 @@ public class HomePageActivity extends Activity implements OnScrollListener{
 		lvFriendHome.addHeaderView(view);
 		lvFriendHome.setAdapter(null);
 		lvFriendHome.setOnScrollListener(this);
+		lvFriendHome.setOnItemClickListener(this);
 		fst = new FriendStatusTask();
 		fst.execute();
 	}
@@ -127,13 +130,13 @@ public class HomePageActivity extends Activity implements OnScrollListener{
 			tvFriendStatus.setVisibility(View.VISIBLE);
 		}
 		
-		tvFollowerCount.setText("¹Ø×¢:" + user.getFavouritesCount());
-		tvFansCount.setText("·ÛË¿:" + user.getFollowersCount());
+		tvFollowerCount.setText(getResources().getString(R.string.friend_focus) + user.getFavouritesCount());
+		tvFansCount.setText(getResources().getString(R.string.friend_fans) + user.getFollowersCount());
 		
 		if(user.isStatusTruncated()){
-			tvIsFocused.setText("ÒÑ¹Ø×¢");
+			tvIsFocused.setText(getResources().getString(R.string.friend_focused));
 		}else{
-			tvIsFocused.setText("Î´¹Ø×¢");
+			tvIsFocused.setText(getResources().getString(R.string.friend_unFocused));
 		}
 		
 		tvIsFocused.setTextColor(Color.GRAY);
@@ -175,7 +178,7 @@ public class HomePageActivity extends Activity implements OnScrollListener{
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
 			Looper.prepare();
-			Toast.makeText(IndexActivity.appref, "ï¿½ï¿½ï¿½Ó´ï¿½ï¿½ï¿½",2000).show();
+			Toast.makeText(appref, "ï¿½ï¿½ï¿½Ó´ï¿½ï¿½ï¿½",2000).show();
 		}
 	}
 	
@@ -190,10 +193,10 @@ public class HomePageActivity extends Activity implements OnScrollListener{
 		@Override
 		protected void onPostExecute(Object result) {
 			
-			IndexActivity.handler.post(new Runnable(){
+			handler.post(new Runnable(){
 				public void run() {
 					if (lvFriendHome.getChildCount() == 1) {
-						htla = new HomeTimeLineAdapter(statuss);
+						htla = new HomeTimeLineAdapter(statuss ,appref);
 						lvFriendHome.setAdapter(htla);
 					} else {
 						htla.notifyDataSetChanged();
@@ -263,7 +266,7 @@ public class HomePageActivity extends Activity implements OnScrollListener{
 								+ "") == false) {
 							ivUserHead.setImageBitmap(BitmapFactory
 									.decodeResource(
-											IndexActivity.appref
+											appref
 													.getResources(),
 											R.drawable.loading));
 							Constant.imageMap.put(user.getId() + "",
@@ -271,7 +274,7 @@ public class HomePageActivity extends Activity implements OnScrollListener{
 							Bitmap tempBitmap = WeiboUtils
 									.getImage(user.getProfileImageURL());
 							WeiboUtils.setImage(
-									IndexActivity.appref.handler,
+									appref.handler,
 									ivUserHead, tempBitmap);
 							Constant.imageMap.put(user.getId() + "",
 									tempBitmap);
@@ -295,6 +298,12 @@ public class HomePageActivity extends Activity implements OnScrollListener{
 			}
 		}
 
+	}
+
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		Intent intent = new Intent(appref,MsgDetail.class);
+		Constant.tmpStatus = statuss.get(arg2);
+		appref.startActivity(intent);
 	}
 
 }

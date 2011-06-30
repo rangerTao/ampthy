@@ -3,7 +3,7 @@
 	android:layout_width="fill_parent" android:orientation="vertical"
 	android:layout_height="fill_parent" android:background="#00000000">
 	<LinearLayout android:layout_width="fill_parent"
-		android:background="@drawable/pop_btn_bg" android:layout_height="80dip"
+		android:background="@drawable/pop_btn_bg" android:layout_height="60dip"
 		style="@android:style/ButtonBar" android:layout_centerInParent="true">
 		<Button android:id="@+id/btnComment" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:text="@string/context_comment"

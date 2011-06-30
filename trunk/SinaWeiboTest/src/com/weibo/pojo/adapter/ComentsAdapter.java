@@ -32,7 +32,7 @@ public class ComentsAdapter extends BaseAdapter{
 
 	public View getView(int arg0, View arg1, ViewGroup arg2) {
 		LayoutInflater li = LayoutInflater.from(MsgDetail.appref);
-		
+
 		View view = li.inflate(R.layout.commentdetail, null);
 	
 		TextView tvUserScreenName = (TextView)view.findViewById(R.id.tvUserScreenName);
