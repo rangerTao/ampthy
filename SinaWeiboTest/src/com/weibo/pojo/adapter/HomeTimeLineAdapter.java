@@ -9,6 +9,8 @@ import java.util.List;
 import weibo4android.Status;
 import weibo4android.User;
 import weibo4android.Weibo;
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Html;
@@ -41,9 +43,11 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 	PopupWindow mPopup;
 	View popup;
 	ImageView iView;
+	Activity appref;
 
-	public HomeTimeLineAdapter(List<Status> tmp){
+	public HomeTimeLineAdapter(List<Status> tmp , Activity context){
 		inputList = (ArrayList<Status>) tmp;
+		appref = context;
 	}
 
 	public int getCount() {
@@ -65,7 +69,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		ViewHolder holder;
 		if(convertView == null){
 			layoutInflater = LayoutInflater
-			.from(IndexActivity.appref);
+			.from(appref);
 			convertView = layoutInflater.inflate(R.layout.friendstimeline_adapter, null);
 			
 			holder = new ViewHolder();
@@ -102,7 +106,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 
 		urlString = user.getProfileImageURL();
 		holder.ivUserHead.setImageBitmap(BitmapFactory.decodeResource(
-				IndexActivity.appref.getResources(), R.drawable.loading));
+				appref.getResources(), R.drawable.loading));
 		if (Constant.imageMap.containsKey(user.getProfileImageURL().toString()) == false) {
 			Constant.sit.pushImageTask(user.getProfileImageURL(), holder.ivUserHead);
 		} else {
@@ -118,7 +122,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 				&& status.getThumbnail_pic() != "") {
 			if (Constant.imageMap.containsKey(status.getThumbnail_pic()) == false) {
 				holder.ivStatusImage.setImageBitmap(BitmapFactory
-						.decodeResource(IndexActivity.appref.getResources(),
+						.decodeResource(appref.getResources(),
 								R.drawable.refresh));
 				try {
 					Constant.sit.pushImageTask(new URL(status.getThumbnail_pic()), holder.ivStatusImage);
@@ -139,7 +143,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 
 					getPopup();
 					iView.setImageBitmap(BitmapFactory
-								.decodeResource(IndexActivity.appref.getResources(),
+								.decodeResource(appref.getResources(),
 										R.drawable.loading));
 
 					IndexActivity.handler.post(new Runnable(){
@@ -186,7 +190,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 				holder.forward_ivThumbail.setVisibility(View.VISIBLE);
 				if (Constant.imageMap.containsKey(retweetStatus.getThumbnail_pic()) == false) {
 					holder.forward_ivThumbail.setImageBitmap(BitmapFactory
-							.decodeResource(IndexActivity.appref.getResources(),
+							.decodeResource(appref.getResources(),
 									R.drawable.refresh));
 					try {
 						Constant.sit.pushImageTask(new URL(retweetStatus.getThumbnail_pic()), holder.forward_ivThumbail);
@@ -205,7 +209,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 					getPopup();
 					
 					iView.setImageBitmap(BitmapFactory
-								.decodeResource(IndexActivity.appref.getResources(),
+								.decodeResource(appref.getResources(),
 										R.drawable.loading));
 
 					IndexActivity.handler.post(new Runnable(){
@@ -263,7 +267,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 				LayoutParams.FILL_PARENT,
 				LayoutParams.FILL_PARENT);
 
-		mPopup.showAtLocation(IndexActivity.appref
+		mPopup.showAtLocation(appref
 				.findViewById(R.id.main),
 				Gravity.CENTER, 0, 0);
 	}

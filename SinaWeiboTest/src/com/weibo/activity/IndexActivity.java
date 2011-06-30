@@ -11,7 +11,6 @@ import weibo4android.Status;
 import weibo4android.User;
 import weibo4android.Weibo;
 import weibo4android.WeiboException;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -24,13 +23,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -39,7 +36,6 @@ import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
@@ -105,10 +101,16 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 	Button btnComment;
 	Button btnMail;
 	Button btnFriends;
+	Button btnMore;
+	Button btnChat;
 	
 	//Popup
 	View popupView;
 	PopupWindow mPopup;
+	LayoutInflater layoutInflater;
+	
+	View topPop;
+	PopupWindow topPopup;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +121,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		setContentView(R.layout.index_activity);
-
+		layoutInflater = LayoutInflater.from(this);
 		lvHomeTimeLine = (ListView) findViewById(R.id.lvHomeTimeLine);
 		// initData();
 		initHeader();
@@ -154,6 +156,12 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 					ft.execute();
 				}
 				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+					if(visiableFirstItem > 0){
+						showBackTopPop();
+					}else{
+						dismissTopPop();
+					}
+					
 					for (int i = visiableFirstItem; i < visiableFirstItem
 							+ visiableItemCount; i++) {
 
@@ -216,6 +224,30 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 		lvHomeTimeLine.setOnItemLongClickListener(this);
 	}
 	
+	private void showBackTopPop(){
+		topPop = layoutInflater.inflate(R.layout.back_top, null);
+		topPopup = new PopupWindow(topPop,
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		topPopup.showAtLocation(appref.findViewById(R.id.main), Gravity.CENTER | Gravity.LEFT, 0 , 60);
+		
+		topPop.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View arg0) {
+				dismissTopPop();
+				lvHomeTimeLine.setSelectionFromTop(0, 0);
+			}
+		});
+	}
+	
+	private void dismissTopPop(){
+		if(topPopup != null || topPopup.isShowing()){
+			topPopup.dismiss();
+			topPop = null;
+			topPopup = null;
+		}
+		
+	}
+	
 	@Override
 	protected void onResume() {
 		weibo = OAuthConstant.getInstance().getWeibo();
@@ -250,7 +282,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 				}else{
 					lvHomeTimeLine.removeAllViewsInLayout();
 					if(htla == null){
-						htla = new HomeTimeLineAdapter(statuses);
+						htla = new HomeTimeLineAdapter(statuses , appref);
 					}
 					lvHomeTimeLine.setAdapter(htla);
 				}
@@ -282,72 +314,101 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 			}
 		});
 		
-		btnFavour = (Button)findViewById(R.id.btnFavourite_TopMenu);
-		btnFavour.setOnClickListener(new OnClickListener() {
+		btnChat = (Button)findViewById(R.id.btnChat_TopMenu);
+		btnChat.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View arg0) {
-				showProgressDialog();
-				lvHomeTimeLine.removeAllViewsInLayout();
-				if(Constant.favourList.size() < 1 ){
-					Constant.getMsg = true;
-				}
-				FavourTask ftFavourTask = new FavourTask();
-				ftFavourTask.execute();
-				Constant.weiboChannel = Constant.favourChannel;
+				Intent intent = new Intent(appref,ChatActivity.class);
+				startActivity(intent);
 				resetButtonBG();
-				pDialog.dismiss();
-				btnFavour.setBackgroundResource(R.drawable.btn_bg);
+				btnChat.setBackgroundResource(R.drawable.btn_bg);
 			}
 		});
 		
-		btnComment = (Button)findViewById(R.id.btnComments_TopMenu);
-		btnComment.setOnClickListener(new OnClickListener() {
-			
-			public void onClick(View arg0) {
-				showProgressDialog();
-				if(Constant.commentList.size() < 1){
-					Constant.getMsg = true;
-				}
-				CommentsTask ct = new CommentsTask();
-				ct.execute();
-				pDialog.dismiss();
-				Constant.weiboChannel = Constant.commentChannel;
-				resetButtonBG();
-				btnComment.setBackgroundResource(R.drawable.btn_bg);
-			}
-		});
+//		btnFavour = (Button)findViewById(R.id.btnFavourite_TopMenu);
+//		btnFavour.setOnClickListener(new OnClickListener() {
+//			
+//			public void onClick(View arg0) {
+//				showProgressDialog();
+//				lvHomeTimeLine.removeAllViewsInLayout();
+//				if(Constant.favourList.size() < 1 ){
+//					Constant.getMsg = true;
+//				}
+//				FavourTask ftFavourTask = new FavourTask();
+//				ftFavourTask.execute();
+//				Constant.weiboChannel = Constant.favourChannel;
+//				resetButtonBG();
+//				pDialog.dismiss();
+//				btnFavour.setBackgroundResource(R.drawable.btn_bg);
+//			}
+//		});
+//		
+//		btnComment = (Button)findViewById(R.id.btnComments_TopMenu);
+//		btnComment.setOnClickListener(new OnClickListener() {
+//			
+//			public void onClick(View arg0) {
+//				showProgressDialog();
+//				if(Constant.commentList.size() < 1){
+//					Constant.getMsg = true;
+//				}
+//				CommentsTask ct = new CommentsTask();
+//				ct.execute();
+//				pDialog.dismiss();
+//				Constant.weiboChannel = Constant.commentChannel;
+//				resetButtonBG();
+//				btnComment.setBackgroundResource(R.drawable.btn_bg);
+//			}
+//		});
+//		
+//		btnMail = (Button)findViewById(R.id.btnMail_TopMenu);
+//		btnMail.setOnClickListener(new OnClickListener() {
+//			
+//			public void onClick(View arg0) {
+//				showProgressDialog();
+//				if(Constant.mailList.size() < 1){
+//					Constant.getMsg = true;
+//				}
+//				MailTask mt = new MailTask();
+//				mt.execute();
+//				pDialog.dismiss();
+//				Constant.weiboChannel = Constant.mailChannel;
+//				resetButtonBG();
+//				btnMail.setBackgroundResource(R.drawable.btn_bg);
+//			}
+//		});
+//		
+//		btnFriends = (Button)findViewById(R.id.btnFriends_TopMenu);
+//		btnFriends.setOnClickListener(new OnClickListener() {
+//			
+//			public void onClick(View arg0) {
+//				//showProgressDialog();
+//				if(Constant.friendsList.size() < 1){
+//					Constant.getMsg = true;
+//				}
+//				FriendsTask ft = new FriendsTask();
+//				ft.execute();
+//				pDialog.dismiss();
+//				Constant.weiboChannel = Constant.friendsChannel;
+//				resetButtonBG();
+//				btnFriends.setBackgroundResource(R.drawable.btn_bg);
+//			}
+//		});
 		
-		btnMail = (Button)findViewById(R.id.btnMail_TopMenu);
-		btnMail.setOnClickListener(new OnClickListener() {
+		btnMore = (Button)findViewById(R.id.btnMore_TopMenu);
+		btnMore.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View arg0) {
-				showProgressDialog();
-				if(Constant.mailList.size() < 1){
-					Constant.getMsg = true;
-				}
-				MailTask mt = new MailTask();
-				mt.execute();
-				pDialog.dismiss();
-				Constant.weiboChannel = Constant.mailChannel;
-				resetButtonBG();
-				btnMail.setBackgroundResource(R.drawable.btn_bg);
-			}
-		});
-		
-		btnFriends = (Button)findViewById(R.id.btnFriends_TopMenu);
-		btnFriends.setOnClickListener(new OnClickListener() {
-			
-			public void onClick(View arg0) {
-				//showProgressDialog();
-				if(Constant.friendsList.size() < 1){
-					Constant.getMsg = true;
-				}
-				FriendsTask ft = new FriendsTask();
-				ft.execute();
-				pDialog.dismiss();
-				Constant.weiboChannel = Constant.friendsChannel;
-				resetButtonBG();
-				btnFriends.setBackgroundResource(R.drawable.btn_bg);
+				
+				popupView = layoutInflater.inflate(R.layout.more_menu, null);
+				mPopup = new PopupWindow(popupView,
+						LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+				mPopup.showAtLocation(appref.findViewById(R.id.main), Gravity.CENTER, 0, 0);
+				popupView.setOnClickListener(new OnClickListener() {
+					
+					public void onClick(View arg0) {
+						dismissPop();
+					}
+				});
 			}
 		});
 	}
@@ -475,10 +536,10 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 	public void resetButtonBG(){
 		btnHome.setBackgroundResource(R.drawable.btn_bg_normal);
 		btnAtMe.setBackgroundResource(R.drawable.btn_bg_normal);
-		btnFavour.setBackgroundResource(R.drawable.btn_bg_normal);
-		btnComment.setBackgroundResource(R.drawable.btn_bg_normal);
-		btnMail.setBackgroundResource(R.drawable.btn_bg_normal);
-		btnFriends.setBackgroundResource(R.drawable.btn_bg_normal);
+//		btnFavour.setBackgroundResource(R.drawable.btn_bg_normal);
+//		btnComment.setBackgroundResource(R.drawable.btn_bg_normal);
+//		btnMail.setBackgroundResource(R.drawable.btn_bg_normal);
+//		btnFriends.setBackgroundResource(R.drawable.btn_bg_normal);
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -573,7 +634,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 				public void run() {
 
 					if (lvHomeTimeLine.getChildCount() == 0) {
-						htla = new HomeTimeLineAdapter(statuses);
+						htla = new HomeTimeLineAdapter(statuses , appref);
 						lvHomeTimeLine.setAdapter(htla);
 					} else {
 						htla.notifyDataSetChanged();
@@ -603,9 +664,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		Intent intent = new Intent(IndexActivity.appref,MsgDetail.class);
-		Bundle bundle = new Bundle();
-		bundle.putInt("index", arg2);
-		intent.putExtras(bundle);
+		Constant.tmpStatus = statuses.get(arg2);
 		IndexActivity.appref.startActivity(intent);
 	}
 
@@ -614,10 +673,10 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 		popupView = null;
 		mPopup = null;
 	}
+	
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int arg2,
 			long arg3) {
-		
-		LayoutInflater layoutInflater = LayoutInflater.from(this);
+
 		popupView = layoutInflater.inflate(R.layout.msg_contextmenu, null);
 		mPopup = new PopupWindow(popupView,
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
@@ -690,9 +749,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 			public void onClick(View arg0) {
 				//HomePageActivity.setUser(statuses.get(arg2).getUser());
 				Intent intent = new Intent(appref,HomePageActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putInt("index", arg2);
-				intent.putExtras(bundle);
+				Constant.tmpStatus = statuses.get(arg2);
 				dismissPop();
 				startActivity(intent);
 			}

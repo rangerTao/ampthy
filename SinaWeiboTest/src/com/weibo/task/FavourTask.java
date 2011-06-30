@@ -31,7 +31,7 @@ public class FavourTask extends AsyncTask{
 	@Override
 	protected void onPostExecute(Object result) {
 
-		htla = new HomeTimeLineAdapter(Constant.favourList);
+		htla = new HomeTimeLineAdapter(Constant.favourList , IndexActivity.appref);
 		if (IndexActivity.lvHomeTimeLine.getAdapter() != null ){
 			IndexActivity.lvHomeTimeLine.removeAllViewsInLayout();
 			IndexActivity.lvHomeTimeLine.setAdapter(htla);

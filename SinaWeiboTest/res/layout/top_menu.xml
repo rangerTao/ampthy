@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
-	android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="#E5ECF4"
+	android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="@drawable/btn_bg_normal"
 	android:orientation="horizontal" style="@android:style/ButtonBar">
 	<Button android:id="@+id/btnHome_TopMenu" android:background="@drawable/buttonpressed" 
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
@@ -11,26 +11,6 @@
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:orientation="vertical" android:drawableTop="@drawable/at"
 		android:text="@string/top_menu_atme" android:layout_weight="1" android:layout_gravity="center_vertical">
-	</Button>
-		<Button android:id="@+id/btnFavourite_TopMenu" android:background="@drawable/buttonpressed" 
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="vertical" android:drawableTop="@drawable/favourite"
-		android:text="@string/top_menu_favor" android:layout_weight="1" android:layout_gravity="center_vertical">
-	</Button>
-		<Button android:id="@+id/btnComments_TopMenu" android:background="@drawable/buttonpressed" 
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="vertical" android:drawableTop="@drawable/comment"
-		android:text="@string/top_menu_comment" android:layout_weight="1" android:layout_gravity="center_vertical">
-	</Button>
-		<Button android:id="@+id/btnMail_TopMenu" android:background="@drawable/buttonpressed" 
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="vertical" android:drawableTop="@drawable/mail"
-		android:text="@string/top_menu_mail" android:layout_weight="1" android:layout_gravity="center_vertical">
-	</Button>
-		<Button android:id="@+id/btnFriends_TopMenu" android:background="@drawable/buttonpressed" 
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="vertical" android:drawableTop="@drawable/focus"
-		android:text="@string/top_menu_friends" android:layout_weight="1" android:layout_gravity="center_vertical">
 	</Button>
 		<Button android:id="@+id/btnChat_TopMenu" android:background="@drawable/buttonpressed" 
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
