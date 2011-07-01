@@ -156,9 +156,10 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 					ft.execute();
 				}
 				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-					if(visiableFirstItem > 0){
+					if(visiableFirstItem > 0 && topPopup == null){
 						showBackTopPop();
-					}else{
+					}
+					if(visiableFirstItem == 0){
 						dismissTopPop();
 					}
 					

@@ -45,7 +45,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 	ImageView iView;
 	Activity appref;
 
-	public HomeTimeLineAdapter(List<Status> tmp , Activity context){
+	public HomeTimeLineAdapter(List<Status> tmp, Activity context){
 		inputList = (ArrayList<Status>) tmp;
 		appref = context;
 	}
