@@ -45,19 +45,19 @@ public class ChatActivity extends Activity{
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		try{
-			User user = weibo.getAuthenticatedUser();
-			Constant.userInstan = user;
 			
 			statuses = weibo.getCommentsByMe(new Paging(page_index));
 			for(int i =0 ;i<statuses.size();i++){
 				idList.add(statuses.get(i).getId());
 				comMap.put(statuses.get(i).getId(), statuses.get(i));
 			}
+			Log.v("TAG", statuses.get(0).toString());
 			statuses = weibo.getCommentsToMe(new Paging(page_index));
 			for(int i =0 ;i<statuses.size();i++){
 				idList.add(statuses.get(i).getId());
 				comMap.put(statuses.get(i).getId(), statuses.get(i));
 			}
+			Log.v("TAG", statuses.get(0).toString());
 			Collections.sort(idList);
 			
 			setContentView(R.layout.friend_activity);
