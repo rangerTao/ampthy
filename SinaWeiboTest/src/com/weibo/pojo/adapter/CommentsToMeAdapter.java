@@ -38,11 +38,7 @@ public class CommentsToMeAdapter extends BaseAdapter{
 	public View getView(int arg0, View view, ViewGroup arg2) {
 		Comment com = (Comment) getItem(arg0);
 		User user;
-		if(com.getUser() == null){
-			user = Constant.userInstan;
-		}else{
-			user = com.getUser();
-		}
+		user = com.getUser();
 		
 		ViewHolder holder;
 		if(view == null){
