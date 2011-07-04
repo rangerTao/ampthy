@@ -1,16 +1,23 @@
 package com.weibo.activity;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import weibo4android.DirectMessage;
 import weibo4android.Paging;
 import weibo4android.Status;
 import weibo4android.User;
 import weibo4android.Weibo;
 import weibo4android.WeiboException;
+import weibo4android.org.json.JSONException;
+import weibo4android.org.json.JSONObject;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -23,7 +30,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -31,9 +37,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
@@ -85,6 +88,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 
 	public static List<User> friends;
 	public static List<Status> statuses = new ArrayList<Status>();
+	public static List<Long> statusesIds = new ArrayList<Long>();
 
 	public Weibo weibo = OAuthConstant.getInstance().getWeibo();
 
@@ -131,6 +135,28 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 		appref = this;
 		
 		if(Constant.spAll.getInt(Constant.ISRUNNING, Constant._NOTRUNNING) != Constant._ISRUNNING ){
+			try {
+				FileInputStream fis = appref.openFileInput(Constant.homeTimeLineCache);
+				BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+				String temp = "";
+				while((temp = br.readLine()) != null){
+					Status status = new Status(new JSONObject(temp));
+					statusesIds.add(status.getId());
+					statuses.add(status);
+				}
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (WeiboException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			Constant.getMsg = true;
 			ft = new FriendTask();
 			ft.execute();
@@ -520,8 +546,8 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 					break;
 				case Constant.mailChannel:
 					Constant.mail_PageIndex = 1;
-					Constant.mailList.clear();
-					Constant.mails = new ArrayList<DirectMessage>();
+//					Constant.mailList.clear();
+//					Constant.mails = new ArrayList<DirectMessage>();
 					Constant.getMsg = true;
 					MailTask mt = new MailTask();
 					mt.execute();
@@ -587,8 +613,9 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 		
 	
 	private void getFriends(int page_index)
-			throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException, MalformedURLException {
-
+			throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException, IOException {
+		
+		Status out = null;
 		try {
 			weibo.setOAuthConsumer(Constant.CONSUMER_KEY,
 					Constant.CONSUMER_SECRET);
@@ -597,11 +624,26 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 
 
 			if(!Constant.isRunning){
+				FileOutputStream file = null;
 				List<Status> temp = weibo.getHomeTimeline(new Paging(page_index));
 
-				for (Status tmpStatus : temp) {
-					statuses.add(tmpStatus);
+				try {
+					file = appref.openFileOutput(Constant.homeTimeLineCache, MODE_APPEND);
+					
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
 				}
+				
+				for (Status tmpStatus : temp) {
+					if(!statusesIds.contains(tmpStatus.getId())){
+						statuses.add(tmpStatus);
+						statusesIds.add(tmpStatus.getId());
+						out = tmpStatus;
+						file.write((tmpStatus.toString() + "\n").getBytes());
+					}
+				}
+				
+				
 				
 			}
 			for(int i=0;i<statuses.size()/2;i++){
@@ -622,7 +664,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
 			Looper.prepare();
-			Toast.makeText(IndexActivity.appref, "���Ӵ���",2000).show();
+			Toast.makeText(IndexActivity.appref, "net error",2000).show();
 		}
 	}
 
@@ -663,6 +705,9 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 			} catch (org.apache.commons.httpclient.util.TimeoutController.TimeoutException e) {
 				Toast.makeText(appref, "time out", 2000).show();
 			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

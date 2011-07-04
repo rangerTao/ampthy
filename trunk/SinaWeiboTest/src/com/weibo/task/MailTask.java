@@ -2,7 +2,6 @@ package com.weibo.task;
 
 import java.util.ArrayList;
 
-import weibo4android.DirectMessage;
 import weibo4android.Paging;
 import weibo4android.Weibo;
 import weibo4android.WeiboException;
@@ -42,18 +41,18 @@ public class MailTask extends AsyncTask{
 		super.onPostExecute(result);
 	}
 	private void getMails(int page) {
-		Weibo weibo = OAuthConstant.getInstance().getWeibo();
-		try {
-			Constant.mails = new ArrayList<weibo4android.DirectMessage>();
-			Constant.mails = weibo.getDirectMessages(new Paging(page));
-			for(DirectMessage tempStatus : Constant.mails){
-				Constant.mailList.add(tempStatus);
-			}
-		} catch (WeiboException te) {
-			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
-			Looper.prepare();
-			Toast.makeText(IndexActivity.appref, "Getting metions error", 2000).show();
-		}
+//		Weibo weibo = OAuthConstant.getInstance().getWeibo();
+//		try {
+//			Constant.mails = new ArrayList<weibo4android.DirectMessage>();
+//			Constant.mails = weibo.get
+//			for(DirectMessage tempStatus : Constant.mails){
+//				Constant.mailList.add(tempStatus);
+//			}
+//		} catch (WeiboException te) {
+//			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
+//			Looper.prepare();
+//			Toast.makeText(IndexActivity.appref, "Getting metions error", 2000).show();
+//		}
 	}
 
 }

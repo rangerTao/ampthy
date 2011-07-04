@@ -1,21 +1,30 @@
 package com.weibo.utils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Log;
 
 public class GetImageThread implements Runnable {
 
 	private static ArrayList<URL> imageTask = new ArrayList<URL>();
 
+	private File file;
+	private File dstFolder;
 	public void run() {
 
 		while (imageTask.size() > 0) {
 			try {
 				URL tempUrl = popImageTask();
 				Bitmap bmpTemp = WeiboUtils.getImage(tempUrl);
+				writeFileToSD(bmpTemp, tempUrl.toString());
 				Constant.imageMap.put(tempUrl.toString(), bmpTemp);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -39,6 +48,29 @@ public class GetImageThread implements Runnable {
 				this.wait();
 			}
 			return null;
+	}
+	
+	private void writeFileToSD(Bitmap bmp,String filename) throws IOException{
+		Log.v("TAG", "write file start");
+		if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+			//File file = new File("/sdcard"+Constant.image_cache_dir, filename);
+			file = Environment.getExternalStorageDirectory();
+			dstFolder = new File(file.getAbsolutePath() + Constant.image_cache_dir);
+			if(!dstFolder.exists()){
+				dstFolder.createNewFile();
+			}
+			File outFile = new File(dstFolder.getAbsolutePath() + filename);
+			FileOutputStream fos = new FileOutputStream(outFile);
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			bmp.compress(Bitmap.CompressFormat.PNG, 100, os);
+			
+			fos.write(os.toByteArray());
+			
+			fos.close();
+		}else{
+			Log.v("TAG", "no sd");
+		}
+		Log.v("TAG", "write file end");
 	}
 
 }
