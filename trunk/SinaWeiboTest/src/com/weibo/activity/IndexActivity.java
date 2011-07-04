@@ -31,6 +31,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
@@ -241,7 +244,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 	}
 	
 	private void dismissTopPop(){
-		if(topPopup != null || topPopup.isShowing()){
+		if(topPopup != null && topPopup.isShowing()){
 			topPopup.dismiss();
 			topPop = null;
 			topPopup = null;
@@ -403,7 +406,11 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 				popupView = layoutInflater.inflate(R.layout.more_menu, null);
 				mPopup = new PopupWindow(popupView,
 						LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+				mPopup.setAnimationStyle(R.style.popupAlpha);
 				mPopup.showAtLocation(appref.findViewById(R.id.main), Gravity.CENTER, 0, 0);
+				mPopup.update();
+//				Animation manim = AnimationUtils.loadAnimation(appref, R.anim.myalpha);
+//				popupView.startAnimation(manim);
 				popupView.setOnClickListener(new OnClickListener() {
 					
 					public void onClick(View arg0) {

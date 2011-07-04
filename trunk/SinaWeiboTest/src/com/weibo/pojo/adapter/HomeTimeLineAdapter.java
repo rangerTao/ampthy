@@ -22,8 +22,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -142,9 +145,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 				public void onClick(View v) {
 
 					getPopup();
-					iView.setImageBitmap(BitmapFactory
-								.decodeResource(appref.getResources(),
-										R.drawable.loading));
+					iView.setImageBitmap(Constant.imageMap.get(status.getThumbnail_pic()));
 
 					IndexActivity.handler.post(new Runnable(){
 						public void run() {
@@ -163,9 +164,12 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 					popup.setOnClickListener(new OnClickListener(){
 
 						public void onClick(View v) {
-							mPopup.dismiss();
-							popup = null;
-							mPopup = null;
+							if(mPopup != null && mPopup.isShowing()){
+								mPopup.dismiss();
+								popup = null;
+								mPopup = null;
+							}
+							
 						}
 						
 					});
@@ -185,7 +189,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 			User retweetUser = retweetStatus.getUser();
 			holder.llForward.setVisibility(View.VISIBLE);
 			holder.forward_tvUserName.setText(retweetUser.getScreenName().toString());
-			holder.forward_tvStatus.setText(retweetStatus.getText().toString());
+			holder.forward_tvStatus.setText(Html.fromHtml(retweetStatus.getText().toString()));
 			if(retweetStatus.getThumbnail_pic() != null || retweetStatus.getThumbnail_pic() != ""){
 				holder.forward_ivThumbail.setVisibility(View.VISIBLE);
 				if (Constant.imageMap.containsKey(retweetStatus.getThumbnail_pic()) == false) {
@@ -266,7 +270,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		mPopup = new PopupWindow(popup,
 				LayoutParams.FILL_PARENT,
 				LayoutParams.FILL_PARENT);
-
+		mPopup.setAnimationStyle(R.style.imagePopScale);
 		mPopup.showAtLocation(appref
 				.findViewById(R.id.main),
 				Gravity.CENTER, 0, 0);

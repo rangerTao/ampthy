@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent" android:background="@drawable/popup_bg">
-	<RelativeLayout android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
-		<ImageView android:id="@+id/image" android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:layout_centerInParent="true"
-			android:scaleType="fitXY" />
-	</RelativeLayout>
-</LinearLayout>
+<RelativeLayout android:id="@+id/relativeLayout1"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:background="#40898b8d">
+	<LinearLayout android:id="@+id/linearLayout1"
+		android:layout_width="wrap_content" android:layout_centerInParent="true"
+		android:layout_height="wrap_content">
+		<ImageView android:id="@+id/image" android:src="@drawable/icon"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"></ImageView>
+	</LinearLayout>
+</RelativeLayout>
