@@ -9,4 +9,14 @@
 	</style>
 	
 	<drawable name="translucent_background">#E5ECF4</drawable>
+	
+	<style name="popupAlpha" parent="android:Animation">
+		<item name="android:windowEnterAnimation">@anim/mytrans</item>
+		<item name="android:windowExitAnimation">@anim/topmenupopexit</item>
+	</style>
+	
+	<style name="imagePopScale" parent="android:Animation">
+		<item name="android:windowEnterAnimation">@anim/imagepopupenter</item>
+		<item name="android:windowExitAnimation">@anim/imagepopupexit</item>
+	</style>
 </resources>

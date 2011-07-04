@@ -302,7 +302,7 @@ public class HomePageActivity extends Activity implements OnScrollListener, OnIt
 
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		Intent intent = new Intent(appref,MsgDetail.class);
-		Constant.tmpStatus = statuss.get(arg2);
+		Constant.tmpStatus = statuss.get(arg2 - 1);
 		appref.startActivity(intent);
 	}
 
