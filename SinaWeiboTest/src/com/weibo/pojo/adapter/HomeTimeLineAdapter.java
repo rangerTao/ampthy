@@ -69,6 +69,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		final Status status = inputList.get(position);
 		final User user = status.getUser();
+		
 		ViewHolder holder;
 		if(convertView == null){
 			layoutInflater = LayoutInflater

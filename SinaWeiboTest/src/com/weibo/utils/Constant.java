@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import weibo4android.Comment;
-import weibo4android.DirectMessage;
 import weibo4android.Status;
 import weibo4android.User;
 
@@ -82,12 +81,12 @@ public class Constant {
 	public static List<Comment> comList = new ArrayList<Comment>();
 	public static List<Status> favourList = new ArrayList<Status>();
 	public static List<User> friendsList = new ArrayList<User>();
-	public static List<DirectMessage> mailList = new ArrayList<DirectMessage>();
+//	public static List<DirectMessage> mailList = new ArrayList<DirectMessage>();
 	
 	public static List<Comment> comments = new ArrayList<Comment>();
 	public static List<Status> statuses = new ArrayList<Status>();
 	public static List<User> useres = new ArrayList<User>();
-	public static List<DirectMessage> mails = new ArrayList<DirectMessage>();
+//	public static List<DirectMessage> mails = new ArrayList<DirectMessage>();
 	
 	/**
 	 * Message Detail
@@ -98,4 +97,10 @@ public class Constant {
 	 * Chat
 	 */
 	public static User userInstan;
+	
+	/**
+	 * Buffer
+	 */
+	public static String homeTimeLineCache = "HomeTimeLineCache.txt";
+	public static String image_cache_dir = "weiboCache";
 }
