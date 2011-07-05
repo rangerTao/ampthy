@@ -146,22 +146,17 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 				public void onClick(View v) {
 
 					getPopup();
-					iView.setImageBitmap(Constant.imageMap.get(status.getThumbnail_pic()));
-
-					IndexActivity.handler.post(new Runnable(){
-						public void run() {
-							try {
-								Bitmap bmp = WeiboUtils.getImage(new URL(status.getBmiddle_pic()));
-								iView.setImageBitmap(bmp);
-							} catch (MalformedURLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							
-							
+					if(Constant.imageMap.containsKey(status.getBmiddle_pic())){
+						iView.setImageBitmap(Constant.imageMap.get(status.getBmiddle_pic()));
+					}else{
+						try {
+							Bitmap bmp = WeiboUtils.getImage(new URL(status.getBmiddle_pic()));
+							iView.setImageBitmap(bmp);
+						} catch (MalformedURLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
-						
-					});
+					}
 					popup.setOnClickListener(new OnClickListener(){
 
 						public void onClick(View v) {
@@ -191,7 +186,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 			holder.llForward.setVisibility(View.VISIBLE);
 			holder.forward_tvUserName.setText(retweetUser.getScreenName().toString());
 			holder.forward_tvStatus.setText(Html.fromHtml(retweetStatus.getText().toString()));
-			if(retweetStatus.getThumbnail_pic() != null || retweetStatus.getThumbnail_pic() != ""){
+			if(retweetStatus.getThumbnail_pic() != null && retweetStatus.getThumbnail_pic() != ""){
 				holder.forward_ivThumbail.setVisibility(View.VISIBLE);
 				if (Constant.imageMap.containsKey(retweetStatus.getThumbnail_pic()) == false) {
 					holder.forward_ivThumbail.setImageBitmap(BitmapFactory
@@ -206,29 +201,25 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 					holder.forward_ivThumbail.setImageBitmap(Constant.imageMap
 							.get(retweetStatus.getThumbnail_pic()));
 				}
+			}else{
+				holder.forward_ivThumbail.setVisibility(View.GONE);
 			}
 			holder.forward_ivThumbail.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
 
 					getPopup();
-					
-					iView.setImageBitmap(BitmapFactory
-								.decodeResource(appref.getResources(),
-										R.drawable.loading));
-
-					IndexActivity.handler.post(new Runnable(){
-						public void run() {
-							try {
-								Bitmap bmp = WeiboUtils.getImage(new URL(retweetStatus.getBmiddle_pic()));
-								iView.setImageBitmap(bmp);
-							} catch (MalformedURLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+					if(Constant.imageMap.containsKey(status.getThumbnail_pic())){
+						iView.setImageBitmap(Constant.imageMap.get(retweetStatus.getBmiddle_pic()));
+					}else{
+						try {
+							Bitmap bmp = WeiboUtils.getImage(new URL(retweetStatus.getBmiddle_pic()));
+							iView.setImageBitmap(bmp);
+						} catch (MalformedURLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
-						
-					});
+					}
 					popup.setOnClickListener(new OnClickListener(){
 
 						public void onClick(View v) {

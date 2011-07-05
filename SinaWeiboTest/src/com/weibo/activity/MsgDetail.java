@@ -164,7 +164,7 @@ public class MsgDetail extends Activity implements OnClickListener {
 			rlForward.setVisibility(View.VISIBLE);
 			forward_tvUserName.setText(retweetUser.getScreenName().toString());
 			forward_tvStatus.setText(rd.getText().toString());
-			if(rd.getThumbnail_pic() != null || rd.getThumbnail_pic() != ""){
+			if(rd.getThumbnail_pic() != null && rd.getThumbnail_pic() != ""){
 				forward_ivThumbail.setVisibility(View.VISIBLE);
 				if (Constant.imageMap.containsKey(rd.getThumbnail_pic()) == false) {
 					forward_ivThumbail.setImageBitmap(BitmapFactory
@@ -179,6 +179,8 @@ public class MsgDetail extends Activity implements OnClickListener {
 					forward_ivThumbail.setImageBitmap(Constant.imageMap
 							.get(rd.getThumbnail_pic()));
 				}
+			}else{
+				forward_ivThumbail.setVisibility(View.GONE);
 			}
 		}
 		

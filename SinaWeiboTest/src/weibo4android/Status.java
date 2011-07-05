@@ -34,6 +34,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.weibo.utils.Constant;
+
 import weibo4android.http.Response;
 import weibo4android.org.json.JSONArray;
 import weibo4android.org.json.JSONException;
@@ -389,7 +391,7 @@ public class Status extends WeiboResponse implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "{\"created_at\":\"" + createdAt + "\", \"id\":" + id + ", \"text\":\""
+		return "{\"created_at\":\"" + createdAt.toString().replace(Constant.GMT, "GMT") + "\", \"id\":" + id + ", \"text\":\""
 				+ text + "\", \"source\":\"" + source.replace("\"", "\\\"") + "\", \"truncated\":" + isTruncated
 				+ ", \"in_reply_to_status_id\":\"" + inReplyToStatusId
 				+ "\", \"in_reply_to_user_id\":\"" + inReplyToUserId + "\", \"favorited\":\""

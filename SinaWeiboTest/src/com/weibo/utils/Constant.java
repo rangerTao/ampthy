@@ -58,6 +58,7 @@ public class Constant {
 	public static int friend_PageIndex = 1;
 	public static int mail_PageIndex = 1;
 	
+	public static String GMT = "格林尼治标准时间";
 	//The flag of channel.
 	public static int weiboChannel = 1;
 	
@@ -102,5 +103,5 @@ public class Constant {
 	 * Buffer
 	 */
 	public static String homeTimeLineCache = "HomeTimeLineCache.txt";
-	public static String image_cache_dir = "weiboCache";
+	public static String image_cache_dir = "/sdcard/weiboCache/";
 }

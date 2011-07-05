@@ -7,7 +7,7 @@
 	<ImageView android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:src="@drawable/icon"
 		android:layout_below="@+id/retweetUserName" android:layout_alignLeft="@+id/retweetUserName"
-		android:id="@+id/retweetImage"></ImageView>
+		android:id="@+id/retweetImage" android:visibility="gone"></ImageView>
 	<TextView android:layout_height="wrap_content"
 		android:layout_toRightOf="@+id/retweetUserName" android:layout_width="wrap_content"
 		android:text="TextView" android:layout_alignTop="@+id/retweetUserName"
