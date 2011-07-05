@@ -1,5 +1,9 @@
 package com.weibo.utils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -12,12 +16,15 @@ import weibo4android.Status;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
 
 public class WeiboUtils {
 
+
+	private static File dstFolder;
 	/**
 	 * To check the format of email
 	 */
@@ -43,7 +50,7 @@ public class WeiboUtils {
 			InputStream is = hr.getEntity().getContent();
 
 			bmpUserHead = BitmapFactory.decodeStream(is);
-
+			WeiboUtils.writeFileToSD(bmpUserHead, url.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -58,6 +65,30 @@ public class WeiboUtils {
 				iv.setImageBitmap(bm);
 			}
 		});
+	}
+	
+	
+	public static void writeFileToSD(Bitmap bmp,String filename) throws IOException{
+		if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+			dstFolder = new File(Constant.image_cache_dir);
+			if(!dstFolder.exists()){
+				dstFolder.mkdir();
+			}
+			File outFile = new File(dstFolder.getAbsolutePath() +"/" + filename.replace("http://", "http_").replace("/", "_"));
+			if(!outFile.exists()){
+				outFile.createNewFile();
+				
+				FileOutputStream fos = new FileOutputStream(outFile);
+				ByteArrayOutputStream os = new ByteArrayOutputStream();
+				bmp.compress(Bitmap.CompressFormat.PNG, 100, os);
+				
+				fos.write(os.toByteArray());
+				
+				fos.close();
+			}else{
+			}
+			
+		}
 	}
 
 

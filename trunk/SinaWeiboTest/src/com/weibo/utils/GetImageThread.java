@@ -16,15 +16,13 @@ public class GetImageThread implements Runnable {
 
 	private static ArrayList<URL> imageTask = new ArrayList<URL>();
 
-	private File file;
-	private File dstFolder;
 	public void run() {
 
 		while (imageTask.size() > 0) {
 			try {
 				URL tempUrl = popImageTask();
 				Bitmap bmpTemp = WeiboUtils.getImage(tempUrl);
-				writeFileToSD(bmpTemp, tempUrl.toString());
+
 				Constant.imageMap.put(tempUrl.toString(), bmpTemp);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -48,28 +46,6 @@ public class GetImageThread implements Runnable {
 				this.wait();
 			}
 			return null;
-	}
-	
-	private void writeFileToSD(Bitmap bmp,String filename) throws IOException{
-		if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-			file = new File("/sdcard/");
-			dstFolder = new File("/sdcard/" + Constant.image_cache_dir +"/");
-			if(!dstFolder.exists()){
-				dstFolder.mkdir();
-			}
-			File outFile = new File(dstFolder.getAbsolutePath() +"/" + filename.replace("http://", "http_").replace("/", "_"));
-			Log.v("TAG", outFile.getAbsolutePath());
-			if(!outFile.exists()){
-				outFile.createNewFile();
-			}
-			FileOutputStream fos = new FileOutputStream(outFile);
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			bmp.compress(Bitmap.CompressFormat.PNG, 100, os);
-			
-			fos.write(os.toByteArray());
-			
-			fos.close();
-		}
 	}
 
 }

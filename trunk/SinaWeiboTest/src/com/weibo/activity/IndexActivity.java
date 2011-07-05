@@ -1,6 +1,7 @@
 package com.weibo.activity;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -10,6 +11,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.httpclient.util.TimeoutController.TimeoutException;
 
 import weibo4android.Paging;
 import weibo4android.Status;
@@ -135,28 +138,6 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 		appref = this;
 		
 		if(Constant.spAll.getInt(Constant.ISRUNNING, Constant._NOTRUNNING) != Constant._ISRUNNING ){
-			try {
-				FileInputStream fis = appref.openFileInput(Constant.homeTimeLineCache);
-				BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-				String temp = "";
-				while((temp = br.readLine()) != null){
-					Status status = new Status(new JSONObject(temp));
-					statusesIds.add(status.getId());
-					statuses.add(status);
-				}
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (WeiboException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			Constant.getMsg = true;
 			ft = new FriendTask();
 			ft.execute();
@@ -622,7 +603,6 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 			weibo.setToken(Constant._token, Constant._tokenSecret);
 			weibo.setOAuthAccessToken(Constant._access, Constant._accessSecret);
 
-
 			if(!Constant.isRunning){
 				FileOutputStream file = null;
 				List<Status> temp = weibo.getHomeTimeline(new Paging(page_index));
@@ -636,6 +616,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 				
 				for (Status tmpStatus : temp) {
 					if(!statusesIds.contains(tmpStatus.getId())){
+						Log.v("TAG", tmpStatus.getId()+"");
 						statuses.add(tmpStatus);
 						statusesIds.add(tmpStatus.getId());
 						out = tmpStatus;
@@ -646,21 +627,6 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 				
 				
 			}
-			for(int i=0;i<statuses.size()/2;i++){
-				User user = statuses.get(i).getUser();
-				if(user.getProfileImageURL() != null && user.getProfileImageURL().toString().startsWith("http")){
-					if(Constant.imageMap.get(user.getProfileImageURL().toString())==null){
-						Constant.git.pushImageTask(user.getProfileImageURL());
-					}
-				}
-				Status status = statuses.get(i);
-				if(status.getThumbnail_pic() !=null && status.getThumbnail_pic().startsWith("http")){
-					if(Constant.imageMap.get(status.getThumbnail_pic())==null){
-						Constant.git.pushImageTask(new URL(status.getThumbnail_pic()));
-					}
-				}
-			}
-			Constant.git.run();
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
 			Looper.prepare();
@@ -698,16 +664,45 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 		@Override
 		protected Object doInBackground(Object... arg0) {
 			try {
+				try {
+					if (statuses.size() <= 0) {
+						FileInputStream fis = appref
+								.openFileInput(Constant.homeTimeLineCache);
+						BufferedReader br = new BufferedReader(
+								new InputStreamReader(fis));
+						String temp = "";
+						while ((temp = br.readLine()) != null) {
+							weibo4android.Status statusCache = new weibo4android.Status(
+									new JSONObject(temp));
+							statusesIds.add(statusCache.getId());
+							statuses.add(statusCache);
+						}
+					}
+					
+				} catch (Exception e) {
+				}
+				
+				File imageCache = new File(Constant.image_cache_dir);
+				if (imageCache.exists() && imageCache.isDirectory()) {
+					for (File image : imageCache.listFiles()) {
+						String imageName = image.getName().replace("http_",
+								"http://").replace("_", "/");
+						FileInputStream imageFis = new FileInputStream(image);
+						Bitmap bmp = BitmapFactory.decodeStream(imageFis);
+						Constant.imageMap.put(imageName, bmp);
+					}
+				}
 				if(Constant.getMsg){
 					getFriends(page_index);
 				}
 				Constant.getMsg = false;
-			} catch (org.apache.commons.httpclient.util.TimeoutController.TimeoutException e) {
-				Toast.makeText(appref, "time out", 2000).show();
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}catch (TimeoutException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

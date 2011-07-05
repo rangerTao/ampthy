@@ -1,5 +1,6 @@
 package com.weibo.utils;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ public class SetImageThread extends Thread {
 				}
 				popImageTask();
 				final Bitmap tmp = WeiboUtils.getImage(this.temp);
+
 				IndexActivity.handler.post(new Runnable() {
 					
 					public void run() {
@@ -39,8 +41,6 @@ public class SetImageThread extends Thread {
 				e.printStackTrace();
 			}
 		}
-		
-
 	}
 
 	public void pushImageTask(URL url, ImageView view) {

@@ -110,6 +110,7 @@ public class OAuthActivity extends Activity {
 		DBAdapter dba = new DBAdapter(this, Constant.dbName, Constant.dbVersion);
 		dba.open();
 		dba.insertData(userId + "", cv);
+		Constant.getMsg = true;
 		startActivity(new Intent(this, IndexActivity.class));
 	}
 
