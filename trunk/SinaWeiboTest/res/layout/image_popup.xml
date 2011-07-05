@@ -2,7 +2,7 @@
 <RelativeLayout android:id="@+id/relativeLayout1"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:background="#40898b8d">
+	android:background="#70898b8d">
 	<LinearLayout android:id="@+id/linearLayout1"
 		android:layout_width="wrap_content" android:layout_centerInParent="true"
 		android:layout_height="wrap_content">
