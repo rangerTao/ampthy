@@ -51,15 +51,17 @@ public class GetImageThread implements Runnable {
 	}
 	
 	private void writeFileToSD(Bitmap bmp,String filename) throws IOException{
-		Log.v("TAG", "write file start");
 		if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-			//File file = new File("/sdcard"+Constant.image_cache_dir, filename);
-			file = Environment.getExternalStorageDirectory();
-			dstFolder = new File(file.getAbsolutePath() + Constant.image_cache_dir);
+			file = new File("/sdcard/");
+			dstFolder = new File("/sdcard/" + Constant.image_cache_dir +"/");
 			if(!dstFolder.exists()){
-				dstFolder.createNewFile();
+				dstFolder.mkdir();
 			}
-			File outFile = new File(dstFolder.getAbsolutePath() + filename);
+			File outFile = new File(dstFolder.getAbsolutePath() +"/" + filename.replace("http://", "http_").replace("/", "_"));
+			Log.v("TAG", outFile.getAbsolutePath());
+			if(!outFile.exists()){
+				outFile.createNewFile();
+			}
 			FileOutputStream fos = new FileOutputStream(outFile);
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			bmp.compress(Bitmap.CompressFormat.PNG, 100, os);
@@ -67,10 +69,7 @@ public class GetImageThread implements Runnable {
 			fos.write(os.toByteArray());
 			
 			fos.close();
-		}else{
-			Log.v("TAG", "no sd");
 		}
-		Log.v("TAG", "write file end");
 	}
 
 }
