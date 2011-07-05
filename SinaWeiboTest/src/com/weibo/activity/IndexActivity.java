@@ -91,6 +91,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 
 	public static List<User> friends;
 	public static List<Status> statuses = new ArrayList<Status>();
+	public static List<Status> statuses2 = new ArrayList<Status>();
 	public static List<Long> statusesIds = new ArrayList<Long>();
 
 	public Weibo weibo = OAuthConstant.getInstance().getWeibo();
@@ -492,8 +493,17 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 				switch(Constant.weiboChannel){
 				case Constant.indexChannel:
 					page_index = 1;
-					statuses.clear();
-					statuses = new ArrayList<Status>();
+					clearArrayList();
+					try {
+						FileOutputStream fos = appref.openFileOutput(Constant.homeTimeLineCache, MODE_PRIVATE);
+						fos.write("".getBytes());
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					Constant.getMsg = true;
 					ft = new FriendTask();
 					ft.execute();
@@ -616,12 +626,17 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 				
 				for (Status tmpStatus : temp) {
 					if(!statusesIds.contains(tmpStatus.getId())){
-						Log.v("TAG", tmpStatus.getId()+"");
 						statuses.add(tmpStatus);
 						statusesIds.add(tmpStatus.getId());
 						out = tmpStatus;
 						file.write((tmpStatus.toString() + "\n").getBytes());
 					}
+				}
+				for(Status tempStatus : statuses2){
+					if(!statuses.contains(tempStatus)){
+						statuses.add(tempStatus);
+					}
+					
 				}
 				
 				
@@ -675,11 +690,12 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 							weibo4android.Status statusCache = new weibo4android.Status(
 									new JSONObject(temp));
 							statusesIds.add(statusCache.getId());
-							statuses.add(statusCache);
+							statuses2.add(statusCache);
 						}
 					}
 					
 				} catch (Exception e) {
+					e.printStackTrace();
 				}
 				
 				File imageCache = new File(Constant.image_cache_dir);
@@ -720,6 +736,15 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 		mPopup.dismiss();
 		popupView = null;
 		mPopup = null;
+	}
+	
+	private void clearArrayList(){
+		statuses.clear();
+		statuses2.clear();
+		statuses2 = new ArrayList<Status>();
+		statuses = new ArrayList<Status>();
+		statusesIds.clear();
+		statusesIds = new ArrayList<Long>();
 	}
 	
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int arg2,
