@@ -1,7 +1,9 @@
 package com.weibo.activity;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import weibo4android.Comment;
 import weibo4android.Status;
@@ -15,12 +17,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,14 +32,16 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.weibo.R;
 import com.weibo.pojo.OAuthConstant;
+import com.weibo.pojo.UserImpl;
 import com.weibo.pojo.adapter.ComentsAdapter;
 import com.weibo.utils.Constant;
 import com.weibo.utils.WeiboUtils;
 
-public class MsgDetail extends Activity implements OnClickListener {
+public class MsgDetail extends Activity implements OnClickListener, OnItemClickListener {
 
 	Weibo weibo;
 	
@@ -63,6 +69,8 @@ public class MsgDetail extends Activity implements OnClickListener {
 	User user;
 	Status rd;
 	User retweetUser;
+	
+	Handler handler = new Handler();
 	
 	public static MsgDetail appref;
 
@@ -185,11 +193,13 @@ public class MsgDetail extends Activity implements OnClickListener {
 		}
 		
 		tvLoading.setText(R.string.gettingcom);
-		lvComments.addHeaderView(view);
+		if(lvComments.getHeaderViewsCount() <= 0){
+			lvComments.addHeaderView(view);
+		}
 		lvComments.setAdapter(null);
 		CommentTask ct = new CommentTask();
 		ct.execute();
-
+		lvComments.setOnItemClickListener(this);
 	}
 
 	public void onClick(View arg0) {
@@ -205,9 +215,10 @@ public class MsgDetail extends Activity implements OnClickListener {
 						public void onClick(DialogInterface arg0, int arg1) {
 							try {
 								weibo.updateComment(etAtEditText.getText().toString(), status.getId()+"", null);
-								Toast.makeText(appref, R.string.comsuccess, 2000).show();
+								showToast(appref.getResources().getString(R.string.comsuccess, 2000));
+								initCompentData();
 							} catch (WeiboException e) {
-								Toast.makeText(appref, R.string.neterror, 2000).show();
+								showToast(appref.getResources().getString(R.string.neterror, 2000));
 							}
 						}
 					})
@@ -277,5 +288,62 @@ public class MsgDetail extends Activity implements OnClickListener {
 			return arg0;
 		}
 		
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+
+		final Comment comment = Constant.commentList.get(position -1 );
+
+		if (!(comment.getUser().getId() + "").equalsIgnoreCase(UserImpl.getID())) {
+			final EditText etReply = new EditText(this);
+			etReply.setHint(R.string.text_hint);
+			new AlertDialog.Builder(this).setTitle(appref.getResources().getString(R.string.reply_title)).setView(etReply)
+					.setPositiveButton(R.string.passwd_set_confirm,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface arg0,
+										int arg1) {
+										if(etReply.getText().toString().length() <= 0){
+											showToast(appref.getResources().getString(R.string.toast_too_short));
+											return;
+										}else if(etReply.getText().toString().getBytes().length > 140){
+											showToast(appref.getResources().getString(R.string.toast_too_long));
+											return;
+										}
+										handler.post(new Runnable(){
+
+											@Override
+											public void run() {
+												try {
+													weibo.updateComment(URLEncoder.encode(etReply.getText().toString(),"UTF-8"), 
+															status.getId() +"", comment.getId()+"",0);
+													initCompentData();
+												} catch (UnsupportedEncodingException e) {
+													
+												} catch (WeiboException e) {
+													showToast(appref.getResources().getString(R.string.neterror));
+												}
+												showToast(appref.getResources().getString(R.string.reply_success));												
+											}
+											
+										});
+								}
+							}).setNegativeButton(R.string.passwd_set_cancel,
+							null).show();
+		}else{
+			Toast.makeText(appref, appref.getResources().getString(R.string.toast_cannot_reply_to_self), 1000).show();
+		}
+	}
+	
+	private void showToast(final String in){
+		handler.post(new Runnable(){
+
+			@Override
+			public void run() {
+				Toast.makeText(appref, in, 2000).show();
+			}
+			
+		});
 	}
 }

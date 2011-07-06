@@ -507,7 +507,9 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 					Constant.getMsg = true;
 					ft = new FriendTask();
 					ft.execute();
-					htla.notifyDataSetChanged();
+					if(htla!= null){
+						htla.notifyDataSetChanged();
+					}
 					break;
 				case Constant.atMeChannel:
 					Constant.atMe_PageIndex = 1;

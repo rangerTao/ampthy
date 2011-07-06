@@ -11,6 +11,22 @@ public class UserImpl {
 	private static String userHeadUrl;
 
 	private static Bitmap userHead;
+	
+	private static String ID;
+	
+	/**
+	 * @return the iD
+	 */
+	public static String getID() {
+		return ID;
+	}
+
+	/**
+	 * @param iD the iD to set
+	 */
+	public static void setID(String iD) {
+		ID = iD;
+	}
 
 	public static String getUserScreenName() {
 		return userScreenName;

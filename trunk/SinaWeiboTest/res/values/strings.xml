@@ -70,5 +70,13 @@
 	<string name="friend_fans">粉丝:</string>
 	<string name="friend_focused">已关注</string>
 	<string name="friend_unFocused">未关注</string>    
+	
+	<!-- Chat -->
+	<string name="reply_title">回复...</string>
+	<string name="reply_success">回复成功...</string>
+	<string name="text_hint">回复内容不能长于140个字</string>
+	<string name="toast_cannot_reply_to_self">亲，想说给自己的话，直接说就好了哟！</string>
+	<string name="toast_too_short">亲，不能什么都不说哟！</string>
+	<string name="toast_too_long">亲，说太多我记不住哟！</string>
     
 </resources>
