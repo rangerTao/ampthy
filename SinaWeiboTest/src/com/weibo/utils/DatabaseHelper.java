@@ -24,7 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("CREATE TABLE " + Constant.tableName + " (" + DBColumns.ID
 				+ " TEXT PRIMARY KEY," + DBColumns.TOKEN + " TEXT,"
 				+ DBColumns.TOKENSECRET + " TEXT," + DBColumns.ACCESSTOKEN
-				+ " TEXT, " + DBColumns.ACCESSTOKENSECRET + " TEXT, "
+				+ " TEXT, " + DBColumns.ACCESSTOKENSECRET + " TEXT, " + DBColumns.userID + " TEXT, "
 				+ DBColumns.ScreenName + " TEXT, " + DBColumns.SITE + " TEXT, "
 				+ DBColumns.USERHEADURI + " BLOB, " + DBColumns.USERHEADURL
 				+ " TEXT, " + DBColumns.CREATE_TIME + " TEXT,"

@@ -13,6 +13,7 @@ public final class DBColumns implements BaseColumns {
 	public static final String ACCESSTOKEN = "ACCESSTOKEN";
 	public static final String ACCESSTOKENSECRET = "ACCESSTOKENSECRET";
 	public static final String SITE = "SITE";
+	public static final String userID = "USERID";
 	public static final String ScreenName = "SCREENNAME";
 	public static final String USERHEADURI = "URI";
 	public static final String USERHEADURL = "UserHeadUrl";

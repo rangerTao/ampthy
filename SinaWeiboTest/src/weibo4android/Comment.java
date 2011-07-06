@@ -41,7 +41,8 @@ public class Comment extends WeiboResponse implements java.io.Serializable {
     }
 
     /*modify by sycheng add json define */
-    /*package*/Comment(Response res) throws WeiboException {
+    /*package*/
+    Comment(Response res) throws WeiboException {
         super(res);
         JSONObject json =res.asJSONObject();
         try {

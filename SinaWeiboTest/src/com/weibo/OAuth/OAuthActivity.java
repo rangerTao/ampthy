@@ -103,6 +103,7 @@ public class OAuthActivity extends Activity {
 		cv.put(DBColumns.TOKENSECRET, tokenSecret);
 		cv.put(DBColumns.ACCESSTOKEN, userKey);
 		cv.put(DBColumns.ACCESSTOKENSECRET, userSecret);
+		cv.put(DBColumns.userID, user.getId());
 		cv.put(DBColumns.ScreenName, user.getScreenName());
 		cv.put(DBColumns.SITE, "Sina");
 		cv.put(DBColumns.USERHEADURL, user.getProfileImageURL().toString());

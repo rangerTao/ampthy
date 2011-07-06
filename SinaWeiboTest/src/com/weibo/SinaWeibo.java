@@ -83,6 +83,7 @@ public class SinaWeibo extends Activity implements OnClickListener {
 		if (cr != null && cr.getCount() > 0) {
 			cr.moveToFirst();
 			existBoolean = true;
+			UserImpl.setID(cr.getString(cr.getColumnIndex(DBColumns.userID)));
 			UserImpl.setUserScreenName(cr.getString(cr.getColumnIndex(DBColumns.ScreenName)));
 			UserImpl.setFromSite(cr.getString(cr.getColumnIndex(DBColumns.SITE)));
 			UserImpl.setUserHeadUrl(cr.getString(cr.getColumnIndex(DBColumns.USERHEADURL)));
