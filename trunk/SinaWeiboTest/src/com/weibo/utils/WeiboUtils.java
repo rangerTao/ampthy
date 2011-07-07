@@ -74,7 +74,21 @@ public class WeiboUtils {
 			if(!dstFolder.exists()){
 				dstFolder.mkdir();
 			}
-			File outFile = new File(dstFolder.getAbsolutePath() +"/" + filename.replace("http://", "http_").replace("/", "_"));
+			String fileName = filename.replace("http://", "http_").replace("/", "_");
+			if(fileName.endsWith(".jpg")){
+				fileName = fileName.replace(".jpg", ".jpga");
+			}else if(fileName.endsWith(".JPG")){
+				fileName = fileName.replace(".JPG", ".JPGA");
+			}else if(fileName.endsWith(".png")){
+				fileName = fileName.replace(".png", ".pnga");
+			}else if(fileName.endsWith(".PNG")){
+				fileName = fileName.replace(".PNG", ".PNGA");
+			}else if(filename.endsWith(".gif")){
+				filename = fileName.replace(".gif", ".gifa");
+			}else if(fileName.endsWith(".GIF")){
+				fileName = fileName.replace(".GIF", ".GIFA");
+			}
+			File outFile = new File(dstFolder.getAbsolutePath() +"/" + fileName);
 			if(!outFile.exists()){
 				outFile.createNewFile();
 				

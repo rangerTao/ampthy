@@ -290,7 +290,6 @@ public class MsgDetail extends Activity implements OnClickListener, OnItemClickL
 		
 	}
 
-	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 
@@ -313,7 +312,6 @@ public class MsgDetail extends Activity implements OnClickListener, OnItemClickL
 										}
 										handler.post(new Runnable(){
 
-											@Override
 											public void run() {
 												try {
 													weibo.updateComment(URLEncoder.encode(etReply.getText().toString(),"UTF-8"), 
@@ -339,7 +337,6 @@ public class MsgDetail extends Activity implements OnClickListener, OnItemClickL
 	private void showToast(final String in){
 		handler.post(new Runnable(){
 
-			@Override
 			public void run() {
 				Toast.makeText(appref, in, 2000).show();
 			}

@@ -17,11 +17,15 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -47,6 +51,7 @@ public class ChatActivity extends Activity implements OnItemClickListener {
 	List<Long> idList = new ArrayList<Long>();
 	Map<Long, Comment> comMap = new HashMap<Long, Comment>();
 	
+	CommentsToMeAdapter ctma;
 	Handler handler = new Handler();
 
 	@Override
@@ -57,13 +62,7 @@ public class ChatActivity extends Activity implements OnItemClickListener {
 		appref = this;
 		super.onCreate(savedInstanceState);
 		try {
-
-			statuses = weibo.getCommentsByMe(new Paging(page_index));
-			for (int i = 0; i < statuses.size(); i++) {
-				idList.add(statuses.get(i).getId());
-				comMap.put(statuses.get(i).getId(), statuses.get(i));
-			}
-			statuses = weibo.getCommentsToMe(new Paging(page_index));
+			statuses = weibo.getCommentsTimeline(new Paging(page_index));
 			for (int i = 0; i < statuses.size(); i++) {
 				idList.add(statuses.get(i).getId());
 				comMap.put(statuses.get(i).getId(), statuses.get(i));
@@ -76,18 +75,49 @@ public class ChatActivity extends Activity implements OnItemClickListener {
 			for (int i = 0; i < idList.size(); i++) {
 				Constant.comList.add(comMap.get(idList.get(i)));
 			}
-			CommentsToMeAdapter ctma = new CommentsToMeAdapter();
-
+			ctma = new CommentsToMeAdapter();
+			addFootView();
 			lvComments.setAdapter(ctma);
 
 			lvComments.setOnItemClickListener(this);
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
+	
+	private void addFootView(){
+		Button btnRefresh = new Button(this);
+		btnRefresh.setText("refresh");
+		btnRefresh.setWidth(200);
+		btnRefresh.setHeight(50);
+		lvComments.addFooterView(btnRefresh);
+		btnRefresh.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View arg0) {
+				statuses.clear();
+				page_index += 1;
+				try {
+					statuses = weibo.getCommentsTimeline(new Paging(page_index));
+					
+					for (int i = 0; i < statuses.size(); i++) {
+						idList.add(statuses.get(i).getId());
+						comMap.put(statuses.get(i).getId(), statuses.get(i));
+					}
+					Collections.sort(idList, Collections.reverseOrder());
+					
+					ctma.notifyDataSetChanged();
+					
+				} catch (WeiboException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 
-	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		final Comment status = Constant.comList.get(position);
@@ -110,7 +140,6 @@ public class ChatActivity extends Activity implements OnItemClickListener {
 										}
 										handler.post(new Runnable(){
 
-											@Override
 											public void run() {
 												try {
 													weibo.updateComment(URLEncoder.encode(etReply.getText().toString(),"UTF-8"), 
@@ -136,7 +165,6 @@ public class ChatActivity extends Activity implements OnItemClickListener {
 	private void showToast(final String in){
 		handler.post(new Runnable(){
 
-			@Override
 			public void run() {
 				Toast.makeText(appref, in, 2000).show();
 			}
