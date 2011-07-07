@@ -10,7 +10,10 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.httpclient.util.TimeoutController.TimeoutException;
 
@@ -93,6 +96,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 	public static List<Status> statuses = new ArrayList<Status>();
 	public static List<Status> statuses2 = new ArrayList<Status>();
 	public static List<Long> statusesIds = new ArrayList<Long>();
+	public static Map<Long, Status>statusToId = new HashMap<Long, Status>();
 
 	public Weibo weibo = OAuthConstant.getInstance().getWeibo();
 
@@ -615,34 +619,35 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 			weibo.setToken(Constant._token, Constant._tokenSecret);
 			weibo.setOAuthAccessToken(Constant._access, Constant._accessSecret);
 
-			if(!Constant.isRunning){
+			if (!Constant.isRunning) {
 				FileOutputStream file = null;
-				List<Status> temp = weibo.getHomeTimeline(new Paging(page_index));
+				List<Status> temp = weibo
+						.getHomeTimeline(new Paging(page_index));
 
 				try {
-					file = appref.openFileOutput(Constant.homeTimeLineCache, MODE_APPEND);
-					
+					file = appref.openFileOutput(Constant.homeTimeLineCache,
+							MODE_APPEND);
+
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
-				
+
 				for (Status tmpStatus : temp) {
-					if(!statusesIds.contains(tmpStatus.getId())){
-						statuses.add(tmpStatus);
+					if (!statusesIds.contains(tmpStatus.getId())) {
+						statusToId.put(tmpStatus.getId(), tmpStatus);
 						statusesIds.add(tmpStatus.getId());
+						Log.v("TAG", tmpStatus.getId() + "");
 						out = tmpStatus;
 						file.write((tmpStatus.toString() + "\n").getBytes());
 					}
 				}
-				for(Status tempStatus : statuses2){
-					if(!statuses.contains(tempStatus)){
-						statuses.add(tempStatus);
-					}
-					
+
+				Collections.sort(statusesIds, Collections.reverseOrder());
+				for (int k = 0; k < statusesIds.size(); k++) {
+
+					statuses.add(statusToId.get(statusesIds.get(k)));
 				}
-				
-				
-				
+
 			}
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
@@ -692,7 +697,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 							weibo4android.Status statusCache = new weibo4android.Status(
 									new JSONObject(temp));
 							statusesIds.add(statusCache.getId());
-							statuses2.add(statusCache);
+							statusToId.put(statusCache.getId(), statusCache);
 						}
 					}
 					
@@ -705,6 +710,19 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 					for (File image : imageCache.listFiles()) {
 						String imageName = image.getName().replace("http_",
 								"http://").replace("_", "/");
+						if(imageName.endsWith(".jpga")){
+							imageName = imageName.replace(".jpga", ".jpg");
+						}else if(imageName.endsWith(".JPGA")){
+							imageName = imageName.replace(".JPGA", ".JPG");
+						}else if(imageName.endsWith(".pnga")){
+							imageName = imageName.replace(".pnga", ".png");
+						}else if(imageName.endsWith(".PNGA")){
+							imageName = imageName.replace(".PNGA", ".PNG");
+						}else if(imageName.endsWith(".gifa")){
+							imageName = imageName.replace(".gifa", ".gif");
+						}else if(imageName.endsWith(".GIFA")){
+							imageName = imageName.replace(".GIFA", ".GIF");
+						}
 						FileInputStream imageFis = new FileInputStream(image);
 						Bitmap bmp = BitmapFactory.decodeStream(imageFis);
 						Constant.imageMap.put(imageName, bmp);
