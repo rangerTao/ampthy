@@ -631,23 +631,20 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
-
 				for (Status tmpStatus : temp) {
 					if (!statusesIds.contains(tmpStatus.getId())) {
+						Log.v("TAG", "add id into ids"+tmpStatus.getId());
 						statusToId.put(tmpStatus.getId(), tmpStatus);
 						statusesIds.add(tmpStatus.getId());
-						Log.v("TAG", tmpStatus.getId() + "");
 						out = tmpStatus;
 						file.write((tmpStatus.toString() + "\n").getBytes());
 					}
 				}
-
+				statuses.clear();
 				Collections.sort(statusesIds, Collections.reverseOrder());
 				for (int k = 0; k < statusesIds.size(); k++) {
-
 					statuses.add(statusToId.get(statusesIds.get(k)));
 				}
-
 			}
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
@@ -688,6 +685,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 			try {
 				try {
 					if (statuses.size() <= 0) {
+						Log.v("TAG", "reading cache");
 						FileInputStream fis = appref
 								.openFileInput(Constant.homeTimeLineCache);
 						BufferedReader br = new BufferedReader(
@@ -763,8 +761,16 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 		statuses2.clear();
 		statuses2 = new ArrayList<Status>();
 		statuses = new ArrayList<Status>();
-		statusesIds.clear();
-		statusesIds = new ArrayList<Long>();
+		if(statusesIds != null){
+			statusesIds.clear();
+		}else{
+			statusesIds = new ArrayList<Long>();
+		}
+		if(statusToId != null){
+			statusToId.clear();
+		}else{
+			statusToId = new HashMap<Long,Status>();
+		}
 	}
 	
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int arg2,

@@ -84,7 +84,7 @@ public class MsgDetail extends Activity implements OnClickListener, OnItemClickL
 		this.setContentView(R.layout.msgdetail);
 		appref = this;
 		status = Constant.tmpStatus;
-
+		Log.v("TAG", status.getText());
 		if(status.isRetweet()){
 			rd = status.getRetweeted_status();
 			retweetUser = rd.getUser();
@@ -223,7 +223,6 @@ public class MsgDetail extends Activity implements OnClickListener, OnItemClickL
 						}
 					})
 				     .setNegativeButton(R.string.passwd_set_cancel, null).show();
-		
 		}
 		
 		//Forward
