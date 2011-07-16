@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<RelativeLayout android:layout_height="fill_parent"
+		android:id="@+id/rlSearch" android:layout_width="fill_parent">
+		<Spinner android:layout_height="wrap_content" android:id="@+id/spChoose"
+			android:layout_alignParentRight="true" android:layout_width="wrap_content" android:entries="@array/search"></Spinner>
+		<Button android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="Button"
+			android:id="@+id/btnSearch" android:layout_toLeftOf="@+id/spChoose"
+			android:layout_alignTop="@+id/spChoose" android:layout_alignBottom="@+id/spChoose"></Button>
+		<EditText android:layout_height="wrap_content" android:text=""
+			android:id="@+id/etSearch" android:layout_toLeftOf="@+id/btnSearch"
+			android:layout_alignTop="@+id/btnSearch" android:layout_alignBottom="@+id/btnSearch"
+			android:layout_width="fill_parent"></EditText>
+		</RelativeLayout>
+		<ListView android:id="@+id/lvSearchResult" 
+			android:layout_height="fill_parent" android:layout_width="fill_parent"></ListView>
+
+</LinearLayout>

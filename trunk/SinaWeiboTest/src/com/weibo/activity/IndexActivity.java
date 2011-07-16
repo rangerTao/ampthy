@@ -18,6 +18,8 @@ import java.util.Map;
 import org.apache.commons.httpclient.util.TimeoutController.TimeoutException;
 
 import weibo4android.Paging;
+import weibo4android.Query;
+import weibo4android.SearchResult;
 import weibo4android.Status;
 import weibo4android.User;
 import weibo4android.Weibo;
@@ -423,6 +425,14 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 				mPopup.update();
 //				Animation manim = AnimationUtils.loadAnimation(appref, R.anim.myalpha);
 //				popupView.startAnimation(manim);
+				
+				Button btnSearch = (Button) popupView.findViewById(R.id.btnSearch_TopMenu);
+				btnSearch.setOnClickListener(new OnClickListener() {
+					
+					public void onClick(View arg0) {
+						startActivity(new Intent(appref,SearchActivity.class));
+					}
+				});
 				popupView.setOnClickListener(new OnClickListener() {
 					
 					public void onClick(View arg0) {

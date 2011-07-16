@@ -8,7 +8,7 @@
 		<Button android:id="@+id/btnFavourite_TopMenu"
 			android:background="@drawable/buttonpressed" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="vertical"
-			android:drawableTop="@drawable/favourite" android:text="@string/top_menu_favor"
+			android:drawableTop="@drawable/favourite" android:text="@string/top_menu_query"
 			android:layout_weight="1" android:layout_gravity="center_vertical">
 		</Button>
 		<Button android:id="@+id/btnComments_TopMenu"
@@ -17,13 +17,13 @@
 			android:drawableTop="@drawable/comment" android:text="@string/top_menu_comment"
 			android:layout_weight="1" android:layout_gravity="center_vertical">
 		</Button>
-		<Button android:id="@+id/btnMail_TopMenu" android:background="@drawable/buttonpressed"
+		<Button android:id="@+id/btnSearch_TopMenu" android:background="@drawable/buttonpressed"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:orientation="vertical" android:drawableTop="@drawable/mail"
-			android:text="@string/top_menu_mail" android:layout_weight="1"
+			android:text="@string/top_menu_query" android:layout_weight="1"
 			android:layout_gravity="center_vertical">
 		</Button>
-		<Button android:id="@+id/btnFriends_TopMenu"
+		<Button android:id="@+id/btnSetting_TopMenu"
 			android:background="@drawable/buttonpressed" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="vertical"
 			android:drawableTop="@drawable/focus" android:text="@string/top_menu_friends"
