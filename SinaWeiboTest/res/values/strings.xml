@@ -8,6 +8,10 @@
     <string name="cancel">取消</string>
     <string name="uNameError">用户名格式错误，请重新输入！</string>
     
+    <string name="weibo">微博</string>
+    <string name="user">用户 </string>
+    <string name="status">状态</string>
+    
     <!-- IndexActivity ListView Header -->
     <string name="btnsend">发布</string>
     <string name="btncancel">取消</string>
@@ -37,14 +41,14 @@
     <string name="top_menu_home">首页</string>
     <string name="top_menu_mytwitter">微博</string>
     <string name="top_menu_atme">\@ME</string>
-    <string name="top_menu_favor">收藏</string>
+    <string name="top_menu_search">查询</string>
     <string name="top_menu_comment">评论</string>
     <string name="top_menu_mail">私信</string>
     <string name="top_menu_focus">关注</string>
     <string name="top_menu_friends">好友</string>
     <string name="top_menu_fans">粉丝</string>
     <string name="top_menu_chat">聊天</string>
-    <string name="top_menu_search">查询</string>
+    <string name="top_menu_query">查询</string>
     <string name="top_menu_broadcast">发布</string>
     <string name="top_menu_more">更多</string>
     <string name="nocomments">\u6682\u65f6\u6ca1\u6709\u8bc4\u8bba</string><!-- 暂时没有评论 -->

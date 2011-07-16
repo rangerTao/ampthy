@@ -4,7 +4,7 @@
         <item>@string/top_menu_home</item>
         <item>@string/top_menu_mytwitter</item>
         <item>@string/top_menu_atme</item>
-        <item>@string/top_menu_favor</item>
+        <item>@string/top_menu_query</item>
         <item>@string/top_menu_comment</item>
         <item>@string/top_menu_mail</item>
         <item>@string/top_menu_focus</item>
@@ -12,5 +12,10 @@
         <item>@string/top_menu_chat</item>
         <item>@string/top_menu_search</item>
         <item>@string/top_menu_broadcast</item>
+    </string-array>
+    <string-array name="search">
+    	<item>@string/weibo</item>
+    	<item>@string/user</item>
+    	<item>@string/status</item>
     </string-array>
 </resources>
