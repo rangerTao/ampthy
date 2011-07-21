@@ -5,6 +5,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 
 import weibo4android.Comment;
+import weibo4android.Status;
 import weibo4android.User;
 
 import com.weibo.R;
@@ -14,6 +15,7 @@ import com.weibo.utils.Constant;
 
 import android.graphics.BitmapFactory;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,7 @@ public class CommentsToMeAdapter extends BaseAdapter{
 
 	public View getView(int arg0, View view, ViewGroup arg2) {
 		Comment com = (Comment) getItem(arg0);
+		Status status = com.getStatus();
 		User user;
 		user = com.getUser();
 		
