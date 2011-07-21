@@ -643,7 +643,6 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 				}
 				for (Status tmpStatus : temp) {
 					if (!statusesIds.contains(tmpStatus.getId())) {
-						Log.v("TAG", "add id into ids"+tmpStatus.getId());
 						statusToId.put(tmpStatus.getId(), tmpStatus);
 						statusesIds.add(tmpStatus.getId());
 						out = tmpStatus;
@@ -695,7 +694,6 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 			try {
 				try {
 					if (statuses.size() <= 0) {
-						Log.v("TAG", "reading cache");
 						FileInputStream fis = appref
 								.openFileInput(Constant.homeTimeLineCache);
 						BufferedReader br = new BufferedReader(

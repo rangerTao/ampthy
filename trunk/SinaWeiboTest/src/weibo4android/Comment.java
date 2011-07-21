@@ -4,6 +4,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import android.util.Log;
+
 import weibo4android.http.Response;
 import weibo4android.org.json.JSONArray;
 import weibo4android.org.json.JSONException;
@@ -30,6 +32,7 @@ public class Comment extends WeiboResponse implements java.io.Serializable {
     private String inReplyToScreenName;
     private double latitude = -1;
     private double longitude = -1;
+    private Status status;
 
     private RetweetDetails retweetDetails;
     private static final long serialVersionUID = 1608000492860584608L;
@@ -45,6 +48,7 @@ public class Comment extends WeiboResponse implements java.io.Serializable {
     Comment(Response res) throws WeiboException {
         super(res);
         JSONObject json =res.asJSONObject();
+        Log.v("TAG", json.toString());
         try {
 			id = json.getLong("id");
 			text = json.getString("text");
@@ -66,6 +70,8 @@ public class Comment extends WeiboResponse implements java.io.Serializable {
 		createdAt = parseDate(json.getString("created_at"), "EEE MMM dd HH:mm:ss z yyyy");
 		if(!json.isNull("user"))
 			user = new User(json.getJSONObject("user"));
+		if(!json.isNull("status"))
+			status = new Status(json.getJSONObject("status"));
     }
 
     /*package*/Comment(Response res, Element elem, Weibo weibo) throws
@@ -217,6 +223,10 @@ public class Comment extends WeiboResponse implements java.io.Serializable {
         return user;
     }
 
+    public Status getStatus(){
+    	return status;
+    }
+    
     /**
      *
      * @since Weibo4J 1.2.0
@@ -267,6 +277,7 @@ public class Comment extends WeiboResponse implements java.io.Serializable {
             for (int i = 0; i < size; i++) {
             	comments.add(new Comment(list.getJSONObject(i)));
             }
+
             return comments;
         } catch (JSONException jsone) {
             throw new WeiboException(jsone);

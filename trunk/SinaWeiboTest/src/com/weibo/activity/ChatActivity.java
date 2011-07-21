@@ -10,6 +10,7 @@ import java.util.Map;
 
 import weibo4android.Comment;
 import weibo4android.Paging;
+import weibo4android.Query;
 import weibo4android.Weibo;
 import weibo4android.WeiboException;
 import android.app.Activity;
@@ -17,6 +18,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.text.Layout;
 import android.util.Log;
 import android.view.View;
@@ -31,13 +33,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.weibo.BaseActivity;
 import com.weibo.R;
 import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.UserImpl;
 import com.weibo.pojo.adapter.CommentsToMeAdapter;
 import com.weibo.utils.Constant;
 
-public class ChatActivity extends Activity implements OnItemClickListener {
+public class ChatActivity extends BaseActivity implements OnItemClickListener {
 
 	Weibo weibo = OAuthConstant.getInstance().getWeibo();
 
@@ -47,9 +50,9 @@ public class ChatActivity extends Activity implements OnItemClickListener {
 
 	ListView lvComments;
 
-	List<Comment> statuses = new ArrayList<Comment>();
-	List<Long> idList = new ArrayList<Long>();
-	Map<Long, Comment> comMap = new HashMap<Long, Comment>();
+	List<Comment> statuses;
+	List<Long> idList;
+	Map<Long, Comment> comMap;
 	
 	CommentsToMeAdapter ctma;
 	Handler handler = new Handler();
@@ -61,7 +64,24 @@ public class ChatActivity extends Activity implements OnItemClickListener {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		appref = this;
 		super.onCreate(savedInstanceState);
+		
+		initData();
+		Message msg = new Message();
+		msg.what = 1;
+		mHandler.sendMessage(msg);
+	}
+	
+	private void initVar(){
+		statuses = new ArrayList<Comment>();
+		Constant.comList.clear();
+		idList = new ArrayList<Long>();
+		comMap  = new HashMap<Long, Comment>();
+	}
+	
+	private void initData(){
 		try {
+			initProgressDialog();
+			initVar();
 			statuses = weibo.getCommentsTimeline(new Paging(page_index));
 			for (int i = 0; i < statuses.size(); i++) {
 				idList.add(statuses.get(i).getId());
@@ -71,7 +91,7 @@ public class ChatActivity extends Activity implements OnItemClickListener {
 
 			setContentView(R.layout.friend_activity);
 			lvComments = (ListView) findViewById(R.id.lvFriendListView);
-
+			lvComments.removeAllViewsInLayout();
 			for (int i = 0; i < idList.size(); i++) {
 				Constant.comList.add(comMap.get(idList.get(i)));
 			}
@@ -81,7 +101,7 @@ public class ChatActivity extends Activity implements OnItemClickListener {
 
 			lvComments.setOnItemClickListener(this);
 			
-			
+			ctma.notifyDataSetChanged();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -120,10 +140,10 @@ public class ChatActivity extends Activity implements OnItemClickListener {
 
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		final Comment status = Constant.comList.get(position);
+		final Comment com = Constant.comList.get(position);
 
-		Log.v("TAG", status.getId()+"");
-		if (!(status.getUser().getId() + "").equalsIgnoreCase(UserImpl.getID())) {
+		Log.v("TAG", com.getId()+"");
+		if (!(com.getUser().getId() + "").equalsIgnoreCase(UserImpl.getID())) {
 			final EditText etReply = new EditText(this);
 			etReply.setHint(R.string.text_hint);
 			new AlertDialog.Builder(this).setTitle(appref.getResources().getString(R.string.reply_title)).setView(etReply)
@@ -138,21 +158,22 @@ public class ChatActivity extends Activity implements OnItemClickListener {
 											showToast(appref.getResources().getString(R.string.toast_too_long));
 											return;
 										}
-										handler.post(new Runnable(){
+										new Runnable(){
 
 											public void run() {
 												try {
 													weibo.updateComment(URLEncoder.encode(etReply.getText().toString(),"UTF-8"), 
-															status.getUser().getId()+"", status.getId()+"",0);
+															com.getStatus().getId() + "", com.getId()+"",0);
 												} catch (UnsupportedEncodingException e) {
 													
 												} catch (WeiboException e) {
 													showToast(appref.getResources().getString(R.string.neterror));
 												}
-												showToast(appref.getResources().getString(R.string.reply_success));												
+												showToast(appref.getResources().getString(R.string.reply_success));		
+												initData();
 											}
 											
-										});
+										}.run();
 								}
 							}).setNegativeButton(R.string.passwd_set_cancel,
 							null).show();
