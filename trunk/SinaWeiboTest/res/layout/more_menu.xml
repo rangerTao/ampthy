@@ -19,7 +19,7 @@
 		</Button>
 		<Button android:id="@+id/btnSearch_TopMenu" android:background="@drawable/buttonpressed"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:orientation="vertical" android:drawableTop="@drawable/mail"
+			android:orientation="vertical" android:drawableTop="@drawable/search_button"
 			android:text="@string/top_menu_query" android:layout_weight="1"
 			android:layout_gravity="center_vertical">
 		</Button>

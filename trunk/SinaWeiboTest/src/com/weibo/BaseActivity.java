@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.weibo.activity.IndexActivity;
 
@@ -15,7 +16,15 @@ public class BaseActivity extends Activity {
 		pd = ProgressDialog.show(IndexActivity.appref, this.getResources()
 				.getString(R.string.progress_title), this.getResources()
 				.getString(R.string.progress_content));
+		pd.setCancelable(true);
 		pd.show();
+		Log.v("TAG", "PD show");
+	}
+	
+	public void dismissPD(){
+		Message msg = new Message();
+		msg.what = 1;
+		mHandler.sendMessage(msg);
 	}
 
 	public Handler mHandler = new Handler() {
