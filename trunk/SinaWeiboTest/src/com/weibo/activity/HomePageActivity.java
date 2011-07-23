@@ -34,13 +34,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.weibo.BaseActivity;
 import com.weibo.R;
 import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.adapter.HomeTimeLineAdapter;
 import com.weibo.utils.Constant;
 import com.weibo.utils.WeiboUtils;
 
-public class HomePageActivity extends Activity implements OnScrollListener, OnItemClickListener{
+public class HomePageActivity extends BaseActivity implements OnScrollListener, OnItemClickListener{
 
 	HomePageActivity appref;
 	//The friend
@@ -74,7 +75,7 @@ public class HomePageActivity extends Activity implements OnScrollListener, OnIt
 	int last_item = 0;
 	int visiableFirstItem = 0;
 	int visiableItemCount = 0;
-	ProgressDialog pDialog;
+
 	
 	Handler handler = new Handler();
 	
@@ -89,8 +90,12 @@ public class HomePageActivity extends Activity implements OnScrollListener, OnIt
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		appref = this;
-		status = Constant.tmpStatus;
-		user = status.getUser();
+		if(Constant.tmpStatus != null){
+			status = Constant.tmpStatus;
+			user = status.getUser();
+		}else{
+			user = Constant.tmpUser;
+		}
 		setContentView(R.layout.friend_activity);
 		
 		initHeader();
@@ -133,7 +138,7 @@ public class HomePageActivity extends Activity implements OnScrollListener, OnIt
 		tvFollowerCount.setText(getResources().getString(R.string.friend_focus) + user.getFavouritesCount());
 		tvFansCount.setText(getResources().getString(R.string.friend_fans) + user.getFollowersCount());
 		
-		if(user.isStatusTruncated()){
+		if(user.isStatusFavorited()){
 			tvIsFocused.setText(getResources().getString(R.string.friend_focused));
 		}else{
 			tvIsFocused.setText(getResources().getString(R.string.friend_unFocused));
@@ -204,9 +209,7 @@ public class HomePageActivity extends Activity implements OnScrollListener, OnIt
 				}
 			});
 			tvLoading.setVisibility(View.GONE);
-			if(pDialog != null && pDialog.isShowing()){
-				pDialog.dismiss();
-			}
+			appref.dismissPD();
 			super.onPostExecute(result);
 		}
 
@@ -235,11 +238,7 @@ public class HomePageActivity extends Activity implements OnScrollListener, OnIt
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		if (last_item == htla.getCount() + 1
 				&& scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-			pDialog = ProgressDialog.show(appref, appref
-					.getResources().getString(R.string.progress_title), appref
-					.getResources().getString(R.string.progress_content));
-			pDialog.setCancelable(true);
-			pDialog.show();
+			this.showProgressDialog();
 			page_index += 1;
 			Constant.getMsg = true;
 			fst = new FriendStatusTask();
@@ -301,9 +300,11 @@ public class HomePageActivity extends Activity implements OnScrollListener, OnIt
 	}
 
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		Intent intent = new Intent(appref,MsgDetail.class);
-		Constant.tmpStatus = statuss.get(arg2 - 1);
-		appref.startActivity(intent);
+		if(arg2 > 0){
+			Intent intent = new Intent(appref,MsgDetail.class);
+			Constant.tmpStatus = statuss.get(arg2 - 1);
+			appref.startActivity(intent);
+		}
 	}
 
 }

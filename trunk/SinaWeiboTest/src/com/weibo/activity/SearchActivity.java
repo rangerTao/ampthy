@@ -4,8 +4,10 @@ import java.util.List;
 
 import weibo4android.Query;
 import weibo4android.SearchResult;
+import weibo4android.User;
 import weibo4android.Weibo;
 import weibo4android.WeiboException;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +16,8 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -23,13 +27,19 @@ import com.weibo.BaseActivity;
 import com.weibo.R;
 import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.adapter.SearchResultAdapter;
+import com.weibo.pojo.adapter.SearchUserResultAdapter;
+import com.weibo.utils.Constant;
 
-public class SearchActivity extends BaseActivity{
+public class SearchActivity extends BaseActivity implements OnItemClickListener{
 
 	Spinner spSearchType;
 	Button btnSearch;
 	EditText etSearchContent;
+	
+	public List<User> lsu;
 	public static List<SearchResult> lsr;
+	
+	public int resultType = 0;
 	
 	ListView lvSearch;
 	
@@ -65,6 +75,8 @@ public class SearchActivity extends BaseActivity{
 				
 			}
 		});
+		
+		lvSearch.setOnItemClickListener(this);
 	}
 	
 	
@@ -78,27 +90,19 @@ public class SearchActivity extends BaseActivity{
 			case 0:
 				
 				try {
+					resultType = 0;
 					lsr = weibo.search(query);
 				} catch (WeiboException e) {
-					Log.v("TAG", e.getMessage());
+					appref.toastNetError();
 				}
 				break;
 			case 1:
-				
+				resultType = 1;
 				try {
-					Log.v("TAG", weibo.searchUser(query).get(0).toString());
+					lsu = weibo.searchUser(query);
 				} catch (WeiboException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				break;
-			case 2:
-				
-				try {
-					Log.v("TAG", weibo.statussearch(query).get(0).toString());
-				} catch (WeiboException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.v("TAG", e.getMessage());
+					appref.toastNetError();
 				}
 				break;
 			default:
@@ -110,8 +114,18 @@ public class SearchActivity extends BaseActivity{
 		@Override
 		protected void onPostExecute(Object result) {
 			dismissPD();
-			SearchResultAdapter sra = new SearchResultAdapter(lsr);
-			lvSearch.setAdapter(sra);
+			if(0== resultType && lsr != null){
+				SearchResultAdapter sra = new SearchResultAdapter(lsr);
+				lvSearch.setAdapter(sra);
+			}
+			
+			if(1== resultType && lsu != null){
+				lvSearch.removeAllViewsInLayout();
+				SearchUserResultAdapter sura = new SearchUserResultAdapter(lsu);
+				lvSearch.setAdapter(sura);
+				sura.notifyDataSetChanged();
+			}
+
 			super.onPostExecute(result);
 		}
 
@@ -123,5 +137,31 @@ public class SearchActivity extends BaseActivity{
 		
 	}
 
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		
+		switch(resultType){
+		case 0:
+			showProgressDialog();
+			Intent intent = new Intent(SearchActivity.appref,MsgDetail.class);
+			try {
+				Constant.tmpStatus = weibo.showStatus(lsr.get(position).getId());
+				this.dismissPD();
+				IndexActivity.appref.startActivity(intent);
+			} catch (WeiboException e) {
+				this.toastNetError();
+			}
+
+			break;
+		case 1:
+			Intent intent1 = new Intent(SearchActivity.appref,HomePageActivity.class);
+			Constant.tmpStatus = null;
+			Constant.tmpUser = lsu.get(position);
+			appref.startActivity(intent1);
+			break;
+		}
+		
+	}
 	
 }

@@ -37,6 +37,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import android.util.Log;
+
 import weibo4android.http.Response;
 import weibo4android.org.json.JSONArray;
 import weibo4android.org.json.JSONException;
@@ -61,13 +63,13 @@ public class User extends WeiboResponse implements java.io.Serializable {
 
     private Date statusCreatedAt;
     private long statusId = -1;
-    private String statusText = null;
-    private String statusSource = null;
+    private String statusText = "";
+    private String statusSource = "";
     private boolean statusTruncated = false;
     private long statusInReplyToStatusId = -1;
     private long statusInReplyToUserId = -1;
     private boolean statusFavorited = false;
-    private String statusInReplyToScreenName = null;
+    private String statusInReplyToScreenName = "";
 
     private String profileBackgroundColor;
     private String profileTextColor;
@@ -404,6 +406,7 @@ public class User extends WeiboResponse implements java.io.Serializable {
     public static List<User> constructUsers(Response res) throws WeiboException {
     	try {
             JSONArray list = res.asJSONArray();
+            Log.v("TAG", list.get(0).toString());
             int size = list.length();
             List<User> users = new ArrayList<User>(size);
             for (int i = 0; i < size; i++) {
