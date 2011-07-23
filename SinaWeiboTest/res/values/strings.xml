@@ -51,6 +51,7 @@
     <string name="top_menu_query">查询</string>
     <string name="top_menu_broadcast">发布</string>
     <string name="top_menu_more">更多</string>
+    <string name="btn_search">查询</string>
     <string name="nocomments">\u6682\u65f6\u6ca1\u6709\u8bc4\u8bba</string><!-- 暂时没有评论 -->
     <string name="gettingcom">\u6b63\u5728\u83b7\u53d6\u8bc4\u8bba</string><!-- 正在获取评论 -->
     <string name="input">请输入</string>

@@ -38,6 +38,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -62,6 +63,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.weibo.BaseActivity;
 import com.weibo.R;
 import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.UserImpl;
@@ -74,7 +76,7 @@ import com.weibo.task.MailTask;
 import com.weibo.utils.Constant;
 import com.weibo.utils.WeiboUtils;
 
-public class IndexActivity extends Activity implements OnItemClickListener, OnItemLongClickListener{
+public class IndexActivity extends BaseActivity implements OnItemClickListener, OnItemLongClickListener{
 
 	String token;
 	String tokenSecret;
@@ -291,7 +293,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 		btnHome.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				showProgressDialog();
+				initProgressDialog();
 				lvHomeTimeLine.removeAllViewsInLayout();
 				if(statuses.size() < 1){
 					Constant.getMsg = true;
@@ -308,7 +310,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 				Constant.weiboChannel = Constant.indexChannel;
 				btnHome.setBackgroundResource(R.drawable.btn_bg);
 				lvHomeTimeLine.setOnItemClickListener(IndexActivity.appref);
-				pDialog.dismiss();
+				dismissPD();
 			}
 			
 		});
@@ -317,7 +319,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 		btnAtMe.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				showProgressDialog();
+				initProgressDialog();
 				lvHomeTimeLine.removeAllViewsInLayout();
 				if(Constant.atMeList.size() < 1){
 					Constant.getMsg = true;
@@ -328,7 +330,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 				resetButtonBG();
 				btnAtMe.setBackgroundResource(R.drawable.btn_bg);
 				lvHomeTimeLine.setOnItemClickListener(null);
-				pDialog.dismiss();
+				dismissPD();
 			}
 		});
 		
@@ -347,7 +349,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 //		btnFavour.setOnClickListener(new OnClickListener() {
 //			
 //			public void onClick(View arg0) {
-//				showProgressDialog();
+//				initProgressDialog();
 //				lvHomeTimeLine.removeAllViewsInLayout();
 //				if(Constant.favourList.size() < 1 ){
 //					Constant.getMsg = true;
@@ -356,7 +358,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 //				ftFavourTask.execute();
 //				Constant.weiboChannel = Constant.favourChannel;
 //				resetButtonBG();
-//				pDialog.dismiss();
+//				dismissPD();
 //				btnFavour.setBackgroundResource(R.drawable.btn_bg);
 //			}
 //		});
@@ -365,13 +367,13 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 //		btnComment.setOnClickListener(new OnClickListener() {
 //			
 //			public void onClick(View arg0) {
-//				showProgressDialog();
+//				initProgressDialog();
 //				if(Constant.commentList.size() < 1){
 //					Constant.getMsg = true;
 //				}
 //				CommentsTask ct = new CommentsTask();
 //				ct.execute();
-//				pDialog.dismiss();
+//				dismissPD();
 //				Constant.weiboChannel = Constant.commentChannel;
 //				resetButtonBG();
 //				btnComment.setBackgroundResource(R.drawable.btn_bg);
@@ -382,13 +384,13 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 //		btnMail.setOnClickListener(new OnClickListener() {
 //			
 //			public void onClick(View arg0) {
-//				showProgressDialog();
+//				initProgressDialog();
 //				if(Constant.mailList.size() < 1){
 //					Constant.getMsg = true;
 //				}
 //				MailTask mt = new MailTask();
 //				mt.execute();
-//				pDialog.dismiss();
+//				dismissPD();
 //				Constant.weiboChannel = Constant.mailChannel;
 //				resetButtonBG();
 //				btnMail.setBackgroundResource(R.drawable.btn_bg);
@@ -399,13 +401,13 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 //		btnFriends.setOnClickListener(new OnClickListener() {
 //			
 //			public void onClick(View arg0) {
-//				//showProgressDialog();
+//				//initProgressDialog();
 //				if(Constant.friendsList.size() < 1){
 //					Constant.getMsg = true;
 //				}
 //				FriendsTask ft = new FriendsTask();
 //				ft.execute();
-//				pDialog.dismiss();
+//				dismissPD();
 //				Constant.weiboChannel = Constant.friendsChannel;
 //				resetButtonBG();
 //				btnFriends.setBackgroundResource(R.drawable.btn_bg);
@@ -577,6 +579,7 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 	public void resetButtonBG(){
 		btnHome.setBackgroundResource(R.drawable.btn_bg_normal);
 		btnAtMe.setBackgroundResource(R.drawable.btn_bg_normal);
+		btnChat.setBackgroundResource(R.drawable.btn_bg_normal);
 //		btnFavour.setBackgroundResource(R.drawable.btn_bg_normal);
 //		btnComment.setBackgroundResource(R.drawable.btn_bg_normal);
 //		btnMail.setBackgroundResource(R.drawable.btn_bg_normal);
@@ -667,23 +670,23 @@ public class IndexActivity extends Activity implements OnItemClickListener, OnIt
 
 		@Override
 		protected void onPreExecute() {
-			showProgressDialog();
+			initProgressDialog();
 			super.onPreExecute();
 		}
 
 		@Override
 		protected void onPostExecute(Object result) {
-			
-			IndexActivity.handler.post(new Runnable(){
+
+			IndexActivity.handler.post(new Runnable() {
 				public void run() {
 
 					if (lvHomeTimeLine.getChildCount() == 0) {
-						htla = new HomeTimeLineAdapter(statuses , appref);
+						htla = new HomeTimeLineAdapter(statuses, appref);
 						lvHomeTimeLine.setAdapter(htla);
 					} else {
 						htla.notifyDataSetChanged();
 					}
-					pDialog.dismiss();
+					dismissPD();
 				}
 			});
 			super.onPostExecute(result);

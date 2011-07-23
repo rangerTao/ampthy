@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.util.Log;
+
 import weibo4android.http.Response;
 import weibo4android.org.json.JSONArray;
 import weibo4android.org.json.JSONException;
@@ -49,6 +51,7 @@ public class SearchResult extends WeiboResponse implements java.io.Serializable 
 			JSONArray list = json.getJSONArray("results");
 			int size=list.length();
 			List<SearchResult> rt=new ArrayList<SearchResult>(size);
+			Log.v("TAG", list.get(0).toString());
 			for(int i=0;i<size;i++){
 				rt.add(new SearchResult(list.getJSONObject(i)));
 			}
