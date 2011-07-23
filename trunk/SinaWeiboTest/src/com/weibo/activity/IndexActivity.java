@@ -434,9 +434,6 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener,
 				mPopup.showAtLocation(appref.findViewById(R.id.main),
 						Gravity.CENTER, 0, 0);
 				mPopup.update();
-				// Animation manim = AnimationUtils.loadAnimation(appref,
-				// R.anim.myalpha);
-				// popupView.startAnimation(manim);
 
 				Button btnSearch = (Button) popupView
 						.findViewById(R.id.btnSearch_TopMenu);
@@ -444,8 +441,55 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener,
 
 					public void onClick(View arg0) {
 						startActivity(new Intent(appref, SearchActivity.class));
+						dismissPop();
 					}
 				});
+				
+				Button btnSetting = (Button) popupView.findViewById(R.id.btnSetting_TopMenu);
+				btnSetting.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View arg0) {
+						Intent intent = new Intent(appref,SettingPre.class);
+						appref.startActivity(intent);
+						dismissPop();
+					}
+					
+				});
+				
+				btnComment = (Button)popupView.findViewById(R.id.btnComments_TopMenu);
+				btnComment.setOnClickListener(new OnClickListener() {
+				public void onClick(View arg0) {
+				initProgressDialog();
+				if(Constant.commentList.size() < 1){
+				Constant.getMsg = true;
+				}
+				CommentsTask ct = new CommentsTask();
+				ct.execute();
+				dismissPD();
+				Constant.weiboChannel = Constant.commentChannel;
+				resetButtonBG();
+				btnComment.setBackgroundResource(R.drawable.btn_bg);
+				}
+				});
+				
+				btnFriends = (Button) popupView.findViewById(R.id.btnFriend_TopMenu);
+				btnFriends.setOnClickListener(new OnClickListener() {
+
+					public void onClick(View arg0) {
+						// initProgressDialog();
+						if (Constant.friendsList.size() < 1) {
+							Constant.getMsg = true;
+						}
+						FriendsTask ft = new FriendsTask();
+						ft.execute();
+						dismissPD();
+						Constant.weiboChannel = Constant.friendsChannel;
+						resetButtonBG();
+						btnFriends.setBackgroundResource(R.drawable.btn_bg);
+					}
+				});
+				
 				popupView.setOnClickListener(new OnClickListener() {
 
 					public void onClick(View arg0) {
