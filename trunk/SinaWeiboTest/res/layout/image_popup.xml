@@ -5,8 +5,11 @@
 	android:background="#70898b8d">
 	<LinearLayout android:id="@+id/linearLayout1"
 		android:layout_width="wrap_content" android:layout_centerInParent="true"
-		android:layout_height="wrap_content">
+		android:visibility="gone" android:layout_height="wrap_content">
 		<ImageView android:id="@+id/image" android:src="@drawable/icon"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"></ImageView>
 	</LinearLayout>
+	<ProgressBar android:id="@+id/pbImagePopup" android:layout_centerInParent="true"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		style="?android:attr/progressBarStyleLarge" />
 </RelativeLayout>
