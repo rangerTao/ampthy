@@ -27,7 +27,8 @@ public class OAuthConstant {
 					Constant.CONSUMER_SECRET);
 			weibo.setToken(Constant._token, Constant._tokenSecret);
 			weibo.setOAuthAccessToken(Constant._access, Constant._accessSecret);
-			
+			weibo.CONSUMER_KEY = Constant.CONSUMER_KEY;
+			weibo.CONSUMER_SECRET = Constant.CONSUMER_SECRET;
 		}
 			
 		return weibo;

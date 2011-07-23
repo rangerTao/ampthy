@@ -3,8 +3,10 @@ package com.weibo;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.weibo.activity.IndexActivity;
 
@@ -13,7 +15,7 @@ public class BaseActivity extends Activity {
 	public static ProgressDialog pd;
 
 	public void initProgressDialog() {
-		pd = ProgressDialog.show(IndexActivity.appref, this.getResources()
+		pd = ProgressDialog.show(this, this.getResources()
 				.getString(R.string.progress_title), this.getResources()
 				.getString(R.string.progress_content));
 		pd.setCancelable(true);
@@ -35,6 +37,7 @@ public class BaseActivity extends Activity {
 			case 1:
 				if (pd != null)
 					pd.dismiss();
+				pd = null;
 				break;
 			case 2:
 				if (pd != null){
@@ -54,6 +57,11 @@ public class BaseActivity extends Activity {
 		Message msg = new Message();
 		msg.what = 2;
 		mHandler.sendMessage(msg);
-		pd = null;
+		
+	}
+	
+	public void toastNetError(){
+		Looper.prepare();
+		Toast.makeText(this, this.getResources().getString(R.string.neterror), 2000).show();
 	}
 }

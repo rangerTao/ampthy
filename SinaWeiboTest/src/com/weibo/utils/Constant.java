@@ -93,6 +93,7 @@ public class Constant {
 	 * Message Detail
 	 */
 	public static Status tmpStatus;
+	public static User tmpUser;
 	
 	/**
 	 * Chat

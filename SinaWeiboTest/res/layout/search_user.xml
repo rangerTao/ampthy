@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_height="wrap_content"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:id="@+id/relativeLayout1"
+	android:layout_weight="0.21">
+	<ImageView android:src="@drawable/refresh"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+		android:id="@+id/ivUserHead"></ImageView>
+	<TextView android:layout_width="wrap_content" style="@style/TextView"
+		android:layout_height="wrap_content" android:text="TextView"
+		android:layout_alignParentTop="true" android:layout_toRightOf="@+id/ivUserHead"
+		android:id="@+id/tvUserName" android:layout_alignBottom="@+id/tvLocation"></TextView>
+	<TextView android:layout_width="wrap_content" style="@style/TextView"
+		android:layout_height="wrap_content" android:text="TextView"
+		android:layout_alignParentTop="true" android:layout_alignParentRight="true"
+		android:id="@+id/tvLocation"></TextView>
+	<TextView android:layout_width="wrap_content" style="@style/TextView"
+		android:layout_height="wrap_content" android:text="TextView"
+		android:layout_alignTop="@+id/tvCreateAt" android:layout_toRightOf="@+id/tvCreateAt"
+		android:layout_marginLeft="16dp" android:id="@+id/tvSource"></TextView>
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/tvStatusText"
+		style="@style/TextView" android:text="TextView" android:layout_below="@+id/tvUserName"
+		android:layout_alignLeft="@+id/tvUserName"
+		android:layout_alignParentRight="true"></TextView>
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/btnFollowers"
+		style="@style/TextView" android:text="Button" android:layout_alignTop="@+id/btnFans"
+		android:layout_alignParentRight="true" android:layout_marginRight="33dp"></TextView>
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/btnFans" style="@style/TextView"
+		android:text="Button" android:layout_below="@+id/tvStatusText"
+		android:layout_toRightOf="@+id/ivUserHead"></TextView>
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/tvCreateAt"
+		style="@style/TextView" android:text="TextView" android:layout_below="@+id/btnFans"
+		android:layout_alignParentLeft="true"></TextView>
+</RelativeLayout>

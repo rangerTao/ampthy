@@ -692,19 +692,23 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 		protected Object doInBackground(Object... arg0) {
 			try {
 				try {
+					
 					if (statuses.size() <= 0) {
-						FileInputStream fis = appref
-								.openFileInput(Constant.homeTimeLineCache);
-						BufferedReader br = new BufferedReader(
-								new InputStreamReader(fis));
-						String temp = "";
-						while ((temp = br.readLine()) != null) {
-							weibo4android.Status statusCache = new weibo4android.Status(
-									new JSONObject(temp));
-							statusesIds.add(statusCache.getId());
-							statusToId.put(statusCache.getId(), statusCache);
-						}
-						
+//						Log.v("TAG", statuses.size() + "");
+//						FileInputStream fis = appref
+//								.openFileInput(Constant.homeTimeLineCache);
+//						BufferedReader br = new BufferedReader(
+//								new InputStreamReader(fis));
+//						String temp = "";
+//
+//						while ((temp = br.readLine()) != null) {
+//							weibo4android.Status statusCache = new weibo4android.Status(
+//									new JSONObject(temp));
+//							statusesIds.add(statusCache.getId());
+//							statusToId.put(statusCache.getId(), statusCache);
+//						}
+//						Log.v("TAG", statuses.size() + "");
+//						Log.v("TAG", "Read cache");
 						
 						File imageCache = new File(Constant.image_cache_dir);
 						if (imageCache.exists() && imageCache.isDirectory()) {
@@ -719,7 +723,7 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 					}
 					
 				} catch (Exception e) {
-					e.printStackTrace();
+					Log.v("TAG", e.getMessage());
 				}
 
 				if(Constant.getMsg){

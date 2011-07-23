@@ -16,6 +16,5 @@
     <string-array name="search">
     	<item>@string/weibo</item>
     	<item>@string/user</item>
-    	<item>@string/status</item>
     </string-array>
 </resources>
