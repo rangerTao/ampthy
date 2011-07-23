@@ -47,6 +47,7 @@
     <string name="top_menu_focus">关注</string>
     <string name="top_menu_friends">好友</string>
     <string name="top_menu_fans">粉丝</string>
+    <string name="top_menu_setting">设置</string>
     <string name="top_menu_chat">聊天</string>
     <string name="top_menu_query">查询</string>
     <string name="top_menu_broadcast">发布</string>

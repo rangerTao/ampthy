@@ -4,13 +4,8 @@
 	android:layout_height="fill_parent" android:background="#00000000">
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="horizontal" style="@android:style/ButtonBar" android:layout_alignParentBottom="true">
-		<Button android:id="@+id/btnFavourite_TopMenu"
-			android:background="@drawable/buttonpressed" android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:orientation="vertical"
-			android:drawableTop="@drawable/favourite" android:text="@string/top_menu_query"
-			android:layout_weight="1" android:layout_gravity="center_vertical">
-		</Button>
+		android:orientation="horizontal" style="@android:style/ButtonBar"
+		android:layout_alignParentBottom="true">
 		<Button android:id="@+id/btnComments_TopMenu"
 			android:background="@drawable/buttonpressed" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="vertical"
@@ -23,10 +18,16 @@
 			android:text="@string/top_menu_query" android:layout_weight="1"
 			android:layout_gravity="center_vertical">
 		</Button>
-		<Button android:id="@+id/btnSetting_TopMenu"
+		<Button android:id="@+id/btnFriend_TopMenu"
 			android:background="@drawable/buttonpressed" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="vertical"
 			android:drawableTop="@drawable/focus" android:text="@string/top_menu_friends"
+			android:layout_weight="1" android:layout_gravity="center_vertical">
+		</Button>
+		<Button android:id="@+id/btnSetting_TopMenu"
+			android:background="@drawable/buttonpressed" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:orientation="vertical"
+			android:drawableTop="@drawable/setting" android:text="@string/top_menu_setting"
 			android:layout_weight="1" android:layout_gravity="center_vertical">
 		</Button>
 	</LinearLayout>
