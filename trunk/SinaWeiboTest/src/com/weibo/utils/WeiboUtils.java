@@ -74,20 +74,7 @@ public class WeiboUtils {
 			if(!dstFolder.exists()){
 				dstFolder.mkdir();
 			}
-			String fileName = filename.replace("http://", "http_").replace("/", "_");
-			if(fileName.endsWith(".jpg")){
-				fileName = fileName.replace(".jpg", ".jpga");
-			}else if(fileName.endsWith(".JPG")){
-				fileName = fileName.replace(".JPG", ".JPGA");
-			}else if(fileName.endsWith(".png")){
-				fileName = fileName.replace(".png", ".pnga");
-			}else if(fileName.endsWith(".PNG")){
-				fileName = fileName.replace(".PNG", ".PNGA");
-			}else if(filename.endsWith(".gif")){
-				filename = fileName.replace(".gif", ".gifa");
-			}else if(fileName.endsWith(".GIF")){
-				fileName = fileName.replace(".GIF", ".GIFA");
-			}
+			String fileName = encodeImageName(filename);
 			File outFile = new File(dstFolder.getAbsolutePath() +"/" + fileName);
 			if(!outFile.exists()){
 				outFile.createNewFile();
@@ -103,6 +90,43 @@ public class WeiboUtils {
 			}
 			
 		}
+	}
+	
+	public static String encodeImageName(String name){
+		String filename = name.replace("http://", "http_").replace("/", "_");
+		if(filename.endsWith(".jpg")){
+			filename = filename.replace(".jpg", ".jpga");
+		}else if(filename.endsWith(".JPG")){
+			filename = filename.replace(".JPG", ".JPGA");
+		}else if(filename.endsWith(".png")){
+			filename = filename.replace(".png", ".pnga");
+		}else if(filename.endsWith(".PNG")){
+			filename = filename.replace(".PNG", ".PNGA");
+		}else if(filename.endsWith(".gif")){
+			filename = filename.replace(".gif", ".gifa");
+		}else if(filename.endsWith(".GIF")){
+			filename = filename.replace(".GIF", ".GIFA");
+		}
+		return filename;
+	}
+	
+	public static String decodeImageName(File image){
+		String filename = image.getName().replace("http_",
+		"http://").replace("_", "/");
+		if(filename.endsWith(".jpga")){
+			filename = filename.replace(".jpga", ".jpg");
+		}else if(filename.endsWith(".JPGA")){
+			filename = filename.replace(".JPGA", ".JPG");
+		}else if(filename.endsWith(".pnga")){
+			filename = filename.replace(".pnga", ".png");
+		}else if(filename.endsWith(".PNGA")){
+			filename = filename.replace(".PNGA", ".PNG");
+		}else if(filename.endsWith(".gifa")){
+			filename = filename.replace(".gifa", ".gif");
+		}else if(filename.endsWith(".GIFA")){
+			filename = filename.replace(".GIFA", ".GIF");
+		}
+		return filename;
 	}
 
 

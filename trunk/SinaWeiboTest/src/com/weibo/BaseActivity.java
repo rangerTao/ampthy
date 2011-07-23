@@ -18,7 +18,6 @@ public class BaseActivity extends Activity {
 				.getString(R.string.progress_content));
 		pd.setCancelable(true);
 		pd.show();
-		Log.v("TAG", "PD show");
 	}
 	
 	public void dismissPD(){
@@ -50,4 +49,11 @@ public class BaseActivity extends Activity {
 		}
 
 	};
+
+	public void showProgressDialog(){
+		Message msg = new Message();
+		msg.what = 2;
+		mHandler.sendMessage(msg);
+		pd = null;
+	}
 }
