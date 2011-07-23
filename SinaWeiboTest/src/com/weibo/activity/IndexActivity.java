@@ -48,6 +48,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
@@ -76,7 +77,8 @@ import com.weibo.task.MailTask;
 import com.weibo.utils.Constant;
 import com.weibo.utils.WeiboUtils;
 
-public class IndexActivity extends BaseActivity implements OnItemClickListener, OnItemLongClickListener{
+public class IndexActivity extends BaseActivity implements OnItemClickListener,
+		OnItemLongClickListener {
 
 	String token;
 	String tokenSecret;
@@ -100,7 +102,7 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 	public static List<Status> statuses = new ArrayList<Status>();
 	public static List<Status> statuses2 = new ArrayList<Status>();
 	public static List<Long> statusesIds = new ArrayList<Long>();
-	public static Map<Long, Status>statusToId = new HashMap<Long, Status>();
+	public static Map<Long, Status> statusToId = new HashMap<Long, Status>();
 
 	public Weibo weibo = OAuthConstant.getInstance().getWeibo();
 
@@ -112,8 +114,8 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 
 	HomeTimeLineAdapter htla;
 	FriendTask ft;
-	
-	//Button
+
+	// Button
 	Button btnHome;
 	Button btnAtMe;
 	Button btnFavour;
@@ -122,15 +124,15 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 	Button btnFriends;
 	Button btnMore;
 	Button btnChat;
-	
-	//Popup
+
+	// Popup
 	View popupView;
 	PopupWindow mPopup;
 	LayoutInflater layoutInflater;
-	
+
 	View topPop;
 	PopupWindow topPopup;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -145,18 +147,17 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 		// initData();
 		initHeader();
 		appref = this;
-		
-		if(Constant.spAll.getInt(Constant.ISRUNNING, Constant._NOTRUNNING) != Constant._ISRUNNING ){
+
+		if (Constant.spAll.getInt(Constant.ISRUNNING, Constant._NOTRUNNING) != Constant._ISRUNNING) {
 			Constant.getMsg = true;
 			ft = new FriendTask();
 			ft.execute();
 		}
-		
-		
-		if(!Constant.sit.isAlive()){
+
+		if (!Constant.sit.isAlive()) {
 			Constant.sit.start();
 		}
-		
+
 		lvHomeTimeLine.setOnScrollListener(new OnScrollListener() {
 
 			public void onScroll(AbsListView view, int firstVisibleItem,
@@ -175,13 +176,13 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 					ft.execute();
 				}
 				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-					if(visiableFirstItem > 0 && topPopup == null){
+					if (visiableFirstItem > 0 && topPopup == null) {
 						showBackTopPop();
 					}
-					if(visiableFirstItem == 0){
+					if (visiableFirstItem == 0) {
 						dismissTopPop();
 					}
-					
+
 					for (int i = visiableFirstItem; i < visiableFirstItem
 							+ visiableItemCount; i++) {
 
@@ -240,34 +241,35 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 		initButtonAction();
 
 		lvHomeTimeLine.setOnItemClickListener(this);
-//		lvHomeTimeLine.setOnCreateContextMenuListener(this);
+		// lvHomeTimeLine.setOnCreateContextMenuListener(this);
 		lvHomeTimeLine.setOnItemLongClickListener(this);
 	}
-	
-	private void showBackTopPop(){
+
+	private void showBackTopPop() {
 		topPop = layoutInflater.inflate(R.layout.back_top, null);
-		topPopup = new PopupWindow(topPop,
-				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		topPopup.showAtLocation(appref.findViewById(R.id.main), Gravity.CENTER | Gravity.LEFT, 0 , 60);
-		
+		topPopup = new PopupWindow(topPop, LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT);
+		topPopup.showAtLocation(appref.findViewById(R.id.main), Gravity.CENTER
+				| Gravity.LEFT, 0, 60);
+
 		topPop.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View arg0) {
 				dismissTopPop();
 				lvHomeTimeLine.setSelectionFromTop(0, 0);
 			}
 		});
 	}
-	
-	private void dismissTopPop(){
-		if(topPopup != null && topPopup.isShowing()){
+
+	private void dismissTopPop() {
+		if (topPopup != null && topPopup.isShowing()) {
 			topPopup.dismiss();
 			topPop = null;
 			topPopup = null;
 		}
-		
+
 	}
-	
+
 	@Override
 	protected void onResume() {
 		weibo = OAuthConstant.getInstance().getWeibo();
@@ -287,7 +289,7 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 		editor.commit();
 		super.onStop();
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		this.dismissPD();
@@ -301,14 +303,14 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 			public void onClick(View v) {
 				initProgressDialog();
 				lvHomeTimeLine.removeAllViewsInLayout();
-				if(statuses.size() < 1){
+				if (statuses.size() < 1) {
 					Constant.getMsg = true;
 					ft = new FriendTask();
 					ft.execute();
-				}else{
+				} else {
 					lvHomeTimeLine.removeAllViewsInLayout();
-					if(htla == null){
-						htla = new HomeTimeLineAdapter(statuses , appref);
+					if (htla == null) {
+						htla = new HomeTimeLineAdapter(statuses, appref);
 					}
 					lvHomeTimeLine.setAdapter(htla);
 				}
@@ -318,16 +320,16 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 				lvHomeTimeLine.setOnItemClickListener(IndexActivity.appref);
 				dismissPD();
 			}
-			
+
 		});
-		
+
 		btnAtMe = (Button) findViewById(R.id.btnAtMe_TopMenu);
 		btnAtMe.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				initProgressDialog();
 				lvHomeTimeLine.removeAllViewsInLayout();
-				if(Constant.atMeList.size() < 1){
+				if (Constant.atMeList.size() < 1) {
 					Constant.getMsg = true;
 				}
 				AtMeTask atMeTask = new AtMeTask();
@@ -339,110 +341,113 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 				dismissPD();
 			}
 		});
-		
-		btnChat = (Button)findViewById(R.id.btnChat_TopMenu);
+
+		btnChat = (Button) findViewById(R.id.btnChat_TopMenu);
 		btnChat.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View arg0) {
-				Intent intent = new Intent(appref,ChatActivity.class);
+				Intent intent = new Intent(appref, ChatActivity.class);
 				startActivity(intent);
 				resetButtonBG();
 				btnChat.setBackgroundResource(R.drawable.btn_bg);
 			}
 		});
-		
-//		btnFavour = (Button)findViewById(R.id.btnFavourite_TopMenu);
-//		btnFavour.setOnClickListener(new OnClickListener() {
-//			
-//			public void onClick(View arg0) {
-//				initProgressDialog();
-//				lvHomeTimeLine.removeAllViewsInLayout();
-//				if(Constant.favourList.size() < 1 ){
-//					Constant.getMsg = true;
-//				}
-//				FavourTask ftFavourTask = new FavourTask();
-//				ftFavourTask.execute();
-//				Constant.weiboChannel = Constant.favourChannel;
-//				resetButtonBG();
-//				dismissPD();
-//				btnFavour.setBackgroundResource(R.drawable.btn_bg);
-//			}
-//		});
-//		
-//		btnComment = (Button)findViewById(R.id.btnComments_TopMenu);
-//		btnComment.setOnClickListener(new OnClickListener() {
-//			
-//			public void onClick(View arg0) {
-//				initProgressDialog();
-//				if(Constant.commentList.size() < 1){
-//					Constant.getMsg = true;
-//				}
-//				CommentsTask ct = new CommentsTask();
-//				ct.execute();
-//				dismissPD();
-//				Constant.weiboChannel = Constant.commentChannel;
-//				resetButtonBG();
-//				btnComment.setBackgroundResource(R.drawable.btn_bg);
-//			}
-//		});
-//		
-//		btnMail = (Button)findViewById(R.id.btnMail_TopMenu);
-//		btnMail.setOnClickListener(new OnClickListener() {
-//			
-//			public void onClick(View arg0) {
-//				initProgressDialog();
-//				if(Constant.mailList.size() < 1){
-//					Constant.getMsg = true;
-//				}
-//				MailTask mt = new MailTask();
-//				mt.execute();
-//				dismissPD();
-//				Constant.weiboChannel = Constant.mailChannel;
-//				resetButtonBG();
-//				btnMail.setBackgroundResource(R.drawable.btn_bg);
-//			}
-//		});
-//		
-//		btnFriends = (Button)findViewById(R.id.btnFriends_TopMenu);
-//		btnFriends.setOnClickListener(new OnClickListener() {
-//			
-//			public void onClick(View arg0) {
-//				//initProgressDialog();
-//				if(Constant.friendsList.size() < 1){
-//					Constant.getMsg = true;
-//				}
-//				FriendsTask ft = new FriendsTask();
-//				ft.execute();
-//				dismissPD();
-//				Constant.weiboChannel = Constant.friendsChannel;
-//				resetButtonBG();
-//				btnFriends.setBackgroundResource(R.drawable.btn_bg);
-//			}
-//		});
-		
-		btnMore = (Button)findViewById(R.id.btnMore_TopMenu);
+
+		// btnFavour = (Button)findViewById(R.id.btnFavourite_TopMenu);
+		// btnFavour.setOnClickListener(new OnClickListener() {
+		//
+		// public void onClick(View arg0) {
+		// initProgressDialog();
+		// lvHomeTimeLine.removeAllViewsInLayout();
+		// if(Constant.favourList.size() < 1 ){
+		// Constant.getMsg = true;
+		// }
+		// FavourTask ftFavourTask = new FavourTask();
+		// ftFavourTask.execute();
+		// Constant.weiboChannel = Constant.favourChannel;
+		// resetButtonBG();
+		// dismissPD();
+		// btnFavour.setBackgroundResource(R.drawable.btn_bg);
+		// }
+		// });
+		//
+		// btnComment = (Button)findViewById(R.id.btnComments_TopMenu);
+		// btnComment.setOnClickListener(new OnClickListener() {
+		//
+		// public void onClick(View arg0) {
+		// initProgressDialog();
+		// if(Constant.commentList.size() < 1){
+		// Constant.getMsg = true;
+		// }
+		// CommentsTask ct = new CommentsTask();
+		// ct.execute();
+		// dismissPD();
+		// Constant.weiboChannel = Constant.commentChannel;
+		// resetButtonBG();
+		// btnComment.setBackgroundResource(R.drawable.btn_bg);
+		// }
+		// });
+		//
+		// btnMail = (Button)findViewById(R.id.btnMail_TopMenu);
+		// btnMail.setOnClickListener(new OnClickListener() {
+		//
+		// public void onClick(View arg0) {
+		// initProgressDialog();
+		// if(Constant.mailList.size() < 1){
+		// Constant.getMsg = true;
+		// }
+		// MailTask mt = new MailTask();
+		// mt.execute();
+		// dismissPD();
+		// Constant.weiboChannel = Constant.mailChannel;
+		// resetButtonBG();
+		// btnMail.setBackgroundResource(R.drawable.btn_bg);
+		// }
+		// });
+		//
+		// btnFriends = (Button)findViewById(R.id.btnFriends_TopMenu);
+		// btnFriends.setOnClickListener(new OnClickListener() {
+		//
+		// public void onClick(View arg0) {
+		// //initProgressDialog();
+		// if(Constant.friendsList.size() < 1){
+		// Constant.getMsg = true;
+		// }
+		// FriendsTask ft = new FriendsTask();
+		// ft.execute();
+		// dismissPD();
+		// Constant.weiboChannel = Constant.friendsChannel;
+		// resetButtonBG();
+		// btnFriends.setBackgroundResource(R.drawable.btn_bg);
+		// }
+		// });
+
+		btnMore = (Button) findViewById(R.id.btnMore_TopMenu);
 		btnMore.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View arg0) {
-				
+
 				popupView = layoutInflater.inflate(R.layout.more_menu, null);
-				mPopup = new PopupWindow(popupView,
-						LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+				mPopup = new PopupWindow(popupView, LayoutParams.FILL_PARENT,
+						LayoutParams.FILL_PARENT);
 				mPopup.setAnimationStyle(R.style.popupAlpha);
-				mPopup.showAtLocation(appref.findViewById(R.id.main), Gravity.CENTER, 0, 0);
+				mPopup.showAtLocation(appref.findViewById(R.id.main),
+						Gravity.CENTER, 0, 0);
 				mPopup.update();
-//				Animation manim = AnimationUtils.loadAnimation(appref, R.anim.myalpha);
-//				popupView.startAnimation(manim);
-				
-				Button btnSearch = (Button) popupView.findViewById(R.id.btnSearch_TopMenu);
+				// Animation manim = AnimationUtils.loadAnimation(appref,
+				// R.anim.myalpha);
+				// popupView.startAnimation(manim);
+
+				Button btnSearch = (Button) popupView
+						.findViewById(R.id.btnSearch_TopMenu);
 				btnSearch.setOnClickListener(new OnClickListener() {
-					
+
 					public void onClick(View arg0) {
-						startActivity(new Intent(appref,SearchActivity.class));
+						startActivity(new Intent(appref, SearchActivity.class));
 					}
 				});
 				popupView.setOnClickListener(new OnClickListener() {
-					
+
 					public void onClick(View arg0) {
 						dismissPop();
 					}
@@ -477,20 +482,23 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 
 					@SuppressWarnings("deprecation")
 					public void onClick(View v) {
-						ProgressDialog pdSend = null;
 						try {
-							pdSend = ProgressDialog.show(IndexActivity.appref,
-									"Sending", "please wait");
+							((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+							.hideSoftInputFromWindow(appref
+									.getCurrentFocus().getWindowToken(),
+									InputMethodManager.HIDE_NOT_ALWAYS);
+							appref.initProgressDialog();
 							if (etTwitter.getText().toString().length() > 0) {
 								weibo.update(etTwitter.getText().toString());
 							}
+							appref.dismissPD();
 						} catch (WeiboException e) {
 							Toast.makeText(appref, "Updating error", 2000)
 									.show();
-							e.printStackTrace();
+							appref.dismissPD();
 						} finally {
 							llEditTwitter.setVisibility(View.GONE);
-							pdSend.dismiss();
+
 						}
 
 					}
@@ -512,12 +520,13 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 		ibtnHeaderRefresh.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				switch(Constant.weiboChannel){
+				switch (Constant.weiboChannel) {
 				case Constant.indexChannel:
 					page_index = 1;
 					clearArrayList();
 					try {
-						FileOutputStream fos = appref.openFileOutput(Constant.homeTimeLineCache, MODE_PRIVATE);
+						FileOutputStream fos = appref.openFileOutput(
+								Constant.homeTimeLineCache, MODE_PRIVATE);
 						fos.write("".getBytes());
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
@@ -529,7 +538,7 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 					Constant.getMsg = true;
 					ft = new FriendTask();
 					ft.execute();
-					if(htla!= null){
+					if (htla != null) {
 						htla.notifyDataSetChanged();
 					}
 					break;
@@ -561,8 +570,8 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 					break;
 				case Constant.mailChannel:
 					Constant.mail_PageIndex = 1;
-//					Constant.mailList.clear();
-//					Constant.mails = new ArrayList<DirectMessage>();
+					// Constant.mailList.clear();
+					// Constant.mails = new ArrayList<DirectMessage>();
 					Constant.getMsg = true;
 					MailTask mt = new MailTask();
 					mt.execute();
@@ -582,28 +591,28 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 		});
 	}
 
-	public void resetButtonBG(){
+	public void resetButtonBG() {
 		btnHome.setBackgroundResource(R.drawable.btn_bg_normal);
 		btnAtMe.setBackgroundResource(R.drawable.btn_bg_normal);
 		btnChat.setBackgroundResource(R.drawable.btn_bg_normal);
-//		btnFavour.setBackgroundResource(R.drawable.btn_bg_normal);
-//		btnComment.setBackgroundResource(R.drawable.btn_bg_normal);
-//		btnMail.setBackgroundResource(R.drawable.btn_bg_normal);
-//		btnFriends.setBackgroundResource(R.drawable.btn_bg_normal);
+		// btnFavour.setBackgroundResource(R.drawable.btn_bg_normal);
+		// btnComment.setBackgroundResource(R.drawable.btn_bg_normal);
+		// btnMail.setBackgroundResource(R.drawable.btn_bg_normal);
+		// btnFriends.setBackgroundResource(R.drawable.btn_bg_normal);
 	}
-	
+
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-		if(keyCode == KeyEvent.KEYCODE_BACK){
-			if(mPopup != null && mPopup.isShowing()){
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (mPopup != null && mPopup.isShowing()) {
 				dismissPop();
 				return true;
 			}
-			if(Constant._Back_Count == 0){
+			if (Constant._Back_Count == 0) {
 				Toast.makeText(this, R.string.toast_back_1, 2000).show();
-				Constant._Back_Count ++;
+				Constant._Back_Count++;
 				return true;
-			}else if(Constant._Back_Count == 1){
+			} else if (Constant._Back_Count == 1) {
 				SharedPreferences.Editor editor = Constant.spAll.edit();
 				editor.putInt(Constant.ISRUNNING, Constant._NOTRUNNING);
 				editor.commit();
@@ -612,12 +621,13 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 			}
 		}
 		return super.onKeyDown(keyCode, event);
-		
-	}		
-	
+
+	}
+
 	private void getFriends(int page_index)
-			throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException, IOException {
-		
+			throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException,
+			IOException {
+
 		Status out = null;
 		try {
 			weibo.setOAuthConsumer(Constant.CONSUMER_KEY,
@@ -654,11 +664,10 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 		} catch (WeiboException te) {
 			Log.v("TAG", "Failed to get timeline: " + te.getMessage());
 			Looper.prepare();
-			Toast.makeText(IndexActivity.appref, "net error",2000).show();
+			Toast.makeText(IndexActivity.appref, "net error", 2000).show();
 		}
 	}
 
-	
 	private class FriendTask extends AsyncTask {
 
 		@Override
@@ -679,12 +688,12 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 					} else {
 						htla.notifyDataSetChanged();
 					}
-					
+
 				}
 			});
-			
+
 			dismissPD();
-			
+
 			super.onPostExecute(result);
 		}
 
@@ -692,41 +701,45 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 		protected Object doInBackground(Object... arg0) {
 			try {
 				try {
-					
+
 					if (statuses.size() <= 0) {
-//						Log.v("TAG", statuses.size() + "");
-//						FileInputStream fis = appref
-//								.openFileInput(Constant.homeTimeLineCache);
-//						BufferedReader br = new BufferedReader(
-//								new InputStreamReader(fis));
-//						String temp = "";
-//
-//						while ((temp = br.readLine()) != null) {
-//							weibo4android.Status statusCache = new weibo4android.Status(
-//									new JSONObject(temp));
-//							statusesIds.add(statusCache.getId());
-//							statusToId.put(statusCache.getId(), statusCache);
-//						}
-//						Log.v("TAG", statuses.size() + "");
-//						Log.v("TAG", "Read cache");
-						
+						// Log.v("TAG", statuses.size() + "");
+						// FileInputStream fis = appref
+						// .openFileInput(Constant.homeTimeLineCache);
+						// BufferedReader br = new BufferedReader(
+						// new InputStreamReader(fis));
+						// String temp = "";
+						//
+						// while ((temp = br.readLine()) != null) {
+						// weibo4android.Status statusCache = new
+						// weibo4android.Status(
+						// new JSONObject(temp));
+						// statusesIds.add(statusCache.getId());
+						// statusToId.put(statusCache.getId(), statusCache);
+						// }
+						// Log.v("TAG", statuses.size() + "");
+						// Log.v("TAG", "Read cache");
+
 						File imageCache = new File(Constant.image_cache_dir);
 						if (imageCache.exists() && imageCache.isDirectory()) {
 							for (File image : imageCache.listFiles()) {
-								String imageName = WeiboUtils.decodeImageName(image);
-								
-								FileInputStream imageFis = new FileInputStream(image);
-								Bitmap bmp = BitmapFactory.decodeStream(imageFis);
+								String imageName = WeiboUtils
+										.decodeImageName(image);
+
+								FileInputStream imageFis = new FileInputStream(
+										image);
+								Bitmap bmp = BitmapFactory
+										.decodeStream(imageFis);
 								Constant.imageMap.put(imageName, bmp);
 							}
 						}
 					}
-					
+
 				} catch (Exception e) {
 					Log.v("TAG", e.getMessage());
 				}
 
-				if(Constant.getMsg){
+				if (Constant.getMsg) {
 					getFriends(page_index);
 				}
 				Constant.getMsg = false;
@@ -736,7 +749,7 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}catch (TimeoutException e) {
+			} catch (TimeoutException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -745,109 +758,137 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 	}
 
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		Intent intent = new Intent(IndexActivity.appref,MsgDetail.class);
+		Intent intent = new Intent(IndexActivity.appref, MsgDetail.class);
 		Constant.tmpStatus = statuses.get(arg2);
 		IndexActivity.appref.startActivity(intent);
 	}
 
-	private void dismissPop(){
+	private void dismissPop() {
 		mPopup.dismiss();
 		popupView = null;
 		mPopup = null;
 	}
-	
-	private void clearArrayList(){
+
+	private void clearArrayList() {
 		statuses.clear();
 		statuses2.clear();
 		statuses2 = new ArrayList<Status>();
 		statuses = new ArrayList<Status>();
-		if(statusesIds != null){
+		if (statusesIds != null) {
 			statusesIds.clear();
-		}else{
+		} else {
 			statusesIds = new ArrayList<Long>();
 		}
-		if(statusToId != null){
+		if (statusToId != null) {
 			statusToId.clear();
-		}else{
-			statusToId = new HashMap<Long,Status>();
+		} else {
+			statusToId = new HashMap<Long, Status>();
 		}
 	}
-	
-	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int arg2,
-			long arg3) {
+
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+			final int arg2, long arg3) {
 
 		popupView = layoutInflater.inflate(R.layout.msg_contextmenu, null);
-		mPopup = new PopupWindow(popupView,
-				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-		mPopup.showAtLocation(appref.findViewById(R.id.main), Gravity.CENTER, 0, 0);
+		mPopup = new PopupWindow(popupView, LayoutParams.FILL_PARENT,
+				LayoutParams.FILL_PARENT);
+		mPopup.showAtLocation(appref.findViewById(R.id.main), Gravity.CENTER,
+				0, 0);
 		popupView.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View arg0) {
 				dismissPop();
 			}
 		});
-		
-		Button btnComment = (Button)popupView.findViewById(R.id.btnComment);
-		Button btnForward = (Button)popupView.findViewById(R.id.btnForward);
-		Button btnHome = (Button)popupView.findViewById(R.id.btnHome);
-		
+
+		Button btnComment = (Button) popupView.findViewById(R.id.btnComment);
+		Button btnForward = (Button) popupView.findViewById(R.id.btnForward);
+		Button btnHome = (Button) popupView.findViewById(R.id.btnHome);
+
 		btnComment.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View arg0) {
 				final EditText etAtEditText = new EditText(appref);
-				new AlertDialog.Builder(appref).setTitle(R.string.input).setIcon(
-					     android.R.drawable.ic_dialog_info).setView(
-					    		 etAtEditText).setPositiveButton(R.string.passwd_set_confirm, new DialogInterface.OnClickListener() {
-							
-							public void onClick(DialogInterface arg0, int arg1) {
-								try {
-									weibo.updateComment(etAtEditText.getText().toString(), statuses.get(arg2).getId()+"", null);
-									Toast.makeText(appref, R.string.comsuccess, 2000).show();
-								} catch (WeiboException e) {
-									Toast.makeText(appref, R.string.neterror, 2000).show();
-								}
-							}
-						})
-					     .setNegativeButton(R.string.passwd_set_cancel, null).show();
+				new AlertDialog.Builder(appref)
+						.setTitle(R.string.input)
+						.setIcon(android.R.drawable.ic_dialog_info)
+						.setView(etAtEditText)
+						.setPositiveButton(R.string.passwd_set_confirm,
+								new DialogInterface.OnClickListener() {
+
+									public void onClick(DialogInterface arg0,
+											int arg1) {
+										try {
+											weibo.updateComment(etAtEditText
+													.getText().toString(),
+													statuses.get(arg2).getId()
+															+ "", null);
+											Toast.makeText(appref,
+													R.string.comsuccess, 2000)
+													.show();
+										} catch (WeiboException e) {
+											Toast.makeText(appref,
+													R.string.neterror, 2000)
+													.show();
+										}
+									}
+								})
+						.setNegativeButton(R.string.passwd_set_cancel, null)
+						.show();
 				dismissPop();
 			}
 		});
 
 		btnForward.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View arg0) {
 
 				final EditText etAtEditText = new EditText(appref);
-				etAtEditText.setText("// " + statuses.get(arg2).getText().toString());
+				etAtEditText.setText("// "
+						+ statuses.get(arg2).getText().toString());
 				etAtEditText.setSelection(0, 0);
-				new AlertDialog.Builder(appref).setTitle(R.string.input).setIcon(
-					     android.R.drawable.ic_dialog_info).setView(
-					    		 etAtEditText).setPositiveButton(R.string.passwd_set_confirm, new DialogInterface.OnClickListener() {
-							
-							public void onClick(DialogInterface arg0, int arg1) {
-								try {
-									if(etAtEditText.getText().toString() == ""){
-										weibo.retweetStatus(statuses.get(arg2).getId());
-										
-									}else{
-										weibo.updateStatus(etAtEditText.getText().toString(), statuses.get(arg2).getId());
+				new AlertDialog.Builder(appref)
+						.setTitle(R.string.input)
+						.setIcon(android.R.drawable.ic_dialog_info)
+						.setView(etAtEditText)
+						.setPositiveButton(R.string.passwd_set_confirm,
+								new DialogInterface.OnClickListener() {
+
+									public void onClick(DialogInterface arg0,
+											int arg1) {
+										try {
+											if (etAtEditText.getText()
+													.toString() == "") {
+												weibo.retweetStatus(statuses
+														.get(arg2).getId());
+
+											} else {
+												weibo.updateStatus(etAtEditText
+														.getText().toString(),
+														statuses.get(arg2)
+																.getId());
+											}
+											Toast.makeText(appref,
+													R.string.forwardsuccess,
+													2000).show();
+										} catch (WeiboException e) {
+											Toast.makeText(appref,
+													R.string.neterror, 2000)
+													.show();
+										}
 									}
-									Toast.makeText(appref, R.string.forwardsuccess, 2000).show();
-								} catch (WeiboException e) {
-									Toast.makeText(appref, R.string.neterror, 2000).show();
-								}
-							}
-						})
-					     .setNegativeButton(R.string.passwd_set_cancel, null).show();
+								})
+						.setNegativeButton(R.string.passwd_set_cancel, null)
+						.show();
 				dismissPop();
 			}
 		});
 
 		btnHome.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View arg0) {
-				//HomePageActivity.setUser(statuses.get(arg2).getUser());
-				Intent intent = new Intent(appref,HomePageActivity.class);
+				// HomePageActivity.setUser(statuses.get(arg2).getUser());
+				Intent intent = new Intent(appref, HomePageActivity.class);
 				Constant.tmpStatus = statuses.get(arg2);
 				dismissPop();
 				startActivity(intent);

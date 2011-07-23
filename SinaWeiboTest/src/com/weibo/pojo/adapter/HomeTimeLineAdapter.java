@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -27,7 +28,9 @@ import android.view.animation.ScaleAnimation;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -45,10 +48,14 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 	LayoutInflater layoutInflater;
 	PopupWindow mPopup;
 	View popup;
+	ProgressBar pb;
 	ImageView iView;
 	Activity appref;
+	LinearLayout llImagePopup;
 
-	public HomeTimeLineAdapter(List<Status> tmp, Activity context){
+	Bitmap bmpPopup;
+
+	public HomeTimeLineAdapter(List<Status> tmp, Activity context) {
 		inputList = (ArrayList<Status>) tmp;
 		appref = context;
 	}
@@ -58,7 +65,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 	}
 
 	public Object getItem(int position) {
-		return getView(position,null,null);
+		return getView(position, null, null);
 	}
 
 	public long getItemId(int position) {
@@ -69,39 +76,51 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		final Status status = inputList.get(position);
 		final User user = status.getUser();
-		
+
 		ViewHolder holder;
-		if(convertView == null){
-			layoutInflater = LayoutInflater
-			.from(appref);
-			convertView = layoutInflater.inflate(R.layout.friendstimeline_adapter, null);
-			
+		if (convertView == null) {
+			layoutInflater = LayoutInflater.from(appref);
+			convertView = layoutInflater.inflate(
+					R.layout.friendstimeline_adapter, null);
+
 			holder = new ViewHolder();
-			
-			holder.tvUserNameTextView = (TextView) convertView.findViewById(R.id.tvUserName);
-			holder.tvUserLocationg = (TextView) convertView.findViewById(R.id.tvUserLocation);
-			holder.tvUserDesc = (TextView) convertView.findViewById(R.id.tvUserDesc);
+
+			holder.tvUserNameTextView = (TextView) convertView
+					.findViewById(R.id.tvUserName);
+			holder.tvUserLocationg = (TextView) convertView
+					.findViewById(R.id.tvUserLocation);
+			holder.tvUserDesc = (TextView) convertView
+					.findViewById(R.id.tvUserDesc);
 			holder.tvUserDesc.setVisibility(View.GONE);
-			holder.tvUserStatus = (TextView) convertView.findViewById(R.id.tvStatus);
-			holder.tvTimeCreate = (TextView)convertView.findViewById(R.id.tvTimeCreate);
-			holder.tvSource = (TextView)convertView.findViewById(R.id.tvSource);
-			holder.ivUserHead = (ImageView) convertView.findViewById(R.id.ivUserHead);
-			
-			holder.llForward = (RelativeLayout)convertView.findViewById(R.id.rlForward);
-			holder.forward_tvUserName = (TextView)convertView.findViewById(R.id.forward_tvUserName);
-			holder.forward_tvStatus = (TextView)convertView.findViewById(R.id.forward_tvStatus);
-			holder.forward_ivThumbail = (ImageView)convertView.findViewById(R.id.forward_ivThumbail);
-			
-			holder.ivStatusImage = (ImageView) convertView.findViewById(R.id.ivThumbail);
+			holder.tvUserStatus = (TextView) convertView
+					.findViewById(R.id.tvStatus);
+			holder.tvTimeCreate = (TextView) convertView
+					.findViewById(R.id.tvTimeCreate);
+			holder.tvSource = (TextView) convertView
+					.findViewById(R.id.tvSource);
+			holder.ivUserHead = (ImageView) convertView
+					.findViewById(R.id.ivUserHead);
+
+			holder.llForward = (RelativeLayout) convertView
+					.findViewById(R.id.rlForward);
+			holder.forward_tvUserName = (TextView) convertView
+					.findViewById(R.id.forward_tvUserName);
+			holder.forward_tvStatus = (TextView) convertView
+					.findViewById(R.id.forward_tvStatus);
+			holder.forward_ivThumbail = (ImageView) convertView
+					.findViewById(R.id.forward_ivThumbail);
+
+			holder.ivStatusImage = (ImageView) convertView
+					.findViewById(R.id.ivThumbail);
 			convertView.setTag(holder);
-		}else{
+		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		
+
 		holder.tvUserStatus.setPadding(10, 5, 0, 0);
 		holder.tvUserNameTextView.setText(user.getScreenName());
 		holder.tvUserLocationg.setText(user.getLocation());
-		
+
 		if (user.getDescription() == null || user.getDescription().equals("")) {
 			holder.tvUserDesc.setVisibility(View.GONE);
 		} else {
@@ -112,9 +131,11 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		holder.ivUserHead.setImageBitmap(BitmapFactory.decodeResource(
 				appref.getResources(), R.drawable.loading));
 		if (Constant.imageMap.containsKey(user.getProfileImageURL().toString()) == false) {
-			Constant.sit.pushImageTask(user.getProfileImageURL(), holder.ivUserHead);
+			Constant.sit.pushImageTask(user.getProfileImageURL(),
+					holder.ivUserHead);
 		} else {
-			holder.ivUserHead.setImageBitmap(Constant.imageMap.get(user.getProfileImageURL().toString() + ""));
+			holder.ivUserHead.setImageBitmap(Constant.imageMap.get(user
+					.getProfileImageURL().toString() + ""));
 		}
 		holder.tvUserStatus.setText(status.getText().toString());
 
@@ -129,7 +150,9 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 						.decodeResource(appref.getResources(),
 								R.drawable.refresh));
 				try {
-					Constant.sit.pushImageTask(new URL(status.getThumbnail_pic()), holder.ivStatusImage);
+					Constant.sit.pushImageTask(
+							new URL(status.getThumbnail_pic()),
+							holder.ivStatusImage);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
@@ -139,61 +162,52 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 			}
 			holder.ivStatusImage.setPadding(10, 2, 0, 0);
 			holder.ivStatusImage.setVisibility(View.VISIBLE);
-			
-			
+
 			holder.ivStatusImage.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
 
 					getPopup();
-					if(Constant.imageMap.containsKey(status.getBmiddle_pic())){
-						iView.setImageBitmap(Constant.imageMap.get(status.getBmiddle_pic()));
-					}else{
-						try {
-							Bitmap bmp = WeiboUtils.getImage(new URL(status.getBmiddle_pic()));
-							iView.setImageBitmap(bmp);
-						} catch (MalformedURLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-					popup.setOnClickListener(new OnClickListener(){
+					imageTask it = new imageTask(status.getBmiddle_pic());
+					it.execute();
+					popup.setOnClickListener(new OnClickListener() {
 
 						public void onClick(View v) {
-							if(mPopup != null && mPopup.isShowing()){
+							if (mPopup != null && mPopup.isShowing()) {
 								mPopup.dismiss();
 								popup = null;
 								mPopup = null;
 							}
-							
 						}
-						
 					});
-
 				}
-
 			});
 		} else {
 			holder.ivStatusImage.setVisibility(View.GONE);
 		}
-		
+
 		convertView.setPadding(0, 3, 0, 0);
 
-		
-		if(status.isRetweet()){
+		if (status.isRetweet()) {
 			final Status retweetStatus = status.getRetweeted_status();
 			User retweetUser = retweetStatus.getUser();
 			holder.llForward.setVisibility(View.VISIBLE);
-			holder.forward_tvUserName.setText(retweetUser.getScreenName().toString());
-			holder.forward_tvStatus.setText(Html.fromHtml(retweetStatus.getText().toString()));
-			if(retweetStatus.getThumbnail_pic() != null && retweetStatus.getThumbnail_pic() != ""){
+			holder.forward_tvUserName.setText(retweetUser.getScreenName()
+					.toString());
+			holder.forward_tvStatus.setText(Html.fromHtml(retweetStatus
+					.getText().toString()));
+			if (retweetStatus.getThumbnail_pic() != null
+					&& retweetStatus.getThumbnail_pic() != "") {
 				holder.forward_ivThumbail.setVisibility(View.VISIBLE);
-				if (Constant.imageMap.containsKey(retweetStatus.getThumbnail_pic()) == false) {
+				if (Constant.imageMap.containsKey(retweetStatus
+						.getThumbnail_pic()) == false) {
 					holder.forward_ivThumbail.setImageBitmap(BitmapFactory
 							.decodeResource(appref.getResources(),
 									R.drawable.refresh));
 					try {
-						Constant.sit.pushImageTask(new URL(retweetStatus.getThumbnail_pic()), holder.forward_ivThumbail);
+						Constant.sit.pushImageTask(
+								new URL(retweetStatus.getThumbnail_pic()),
+								holder.forward_ivThumbail);
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					}
@@ -201,7 +215,7 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 					holder.forward_ivThumbail.setImageBitmap(Constant.imageMap
 							.get(retweetStatus.getThumbnail_pic()));
 				}
-			}else{
+			} else {
 				holder.forward_ivThumbail.setVisibility(View.GONE);
 			}
 			holder.forward_ivThumbail.setOnClickListener(new OnClickListener() {
@@ -209,37 +223,28 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 				public void onClick(View v) {
 
 					getPopup();
-					if(Constant.imageMap.containsKey(status.getThumbnail_pic())){
-						iView.setImageBitmap(Constant.imageMap.get(retweetStatus.getBmiddle_pic()));
-					}else{
-						try {
-							Bitmap bmp = WeiboUtils.getImage(new URL(retweetStatus.getBmiddle_pic()));
-							iView.setImageBitmap(bmp);
-						} catch (MalformedURLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-					popup.setOnClickListener(new OnClickListener(){
+					imageTask it = new imageTask(retweetStatus.getBmiddle_pic());
+					it.execute();
+					popup.setOnClickListener(new OnClickListener() {
 
 						public void onClick(View v) {
 							mPopup.dismiss();
 							popup = null;
 							mPopup = null;
 						}
-						
+
 					});
 
 				}
 
 			});
-		}else{
+		} else {
 			holder.llForward.setVisibility(View.GONE);
 		}
 		return convertView;
 	}
-	
-	static class ViewHolder{
+
+	static class ViewHolder {
 		TextView tvUserNameTextView;
 		TextView tvUserLocationg;
 		TextView tvUserDesc;
@@ -248,23 +253,58 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		TextView tvSource;
 		ImageView ivUserHead;
 		ImageView ivStatusImage;
-		
+
 		RelativeLayout llForward;
 		TextView forward_tvUserName;
 		TextView forward_tvStatus;
 		ImageView forward_ivThumbail;
 	}
-	
-	private void getPopup(){
-		popup = layoutInflater.inflate(R.layout.image_popup,
-				null);
+
+	private void getPopup() {
+		popup = layoutInflater.inflate(R.layout.image_popup, null);
 		iView = (ImageView) popup.findViewById(R.id.image);
-		mPopup = new PopupWindow(popup,
-				LayoutParams.FILL_PARENT,
+		pb = (ProgressBar) popup.findViewById(R.id.pbImagePopup);
+		llImagePopup = (LinearLayout) popup.findViewById(R.id.linearLayout1);
+		mPopup = new PopupWindow(popup, LayoutParams.FILL_PARENT,
 				LayoutParams.FILL_PARENT);
 		mPopup.setAnimationStyle(R.style.imagePopScale);
-		mPopup.showAtLocation(appref
-				.findViewById(R.id.main),
-				Gravity.CENTER, 0, 0);
+		mPopup.showAtLocation(appref.findViewById(R.id.main), Gravity.CENTER,
+				0, 0);
+	}
+
+	class imageTask extends AsyncTask {
+
+		String url;
+		Bitmap bmp;
+
+		public imageTask(String url) {
+			this.url = url;
+		}
+
+		@Override
+		protected Object doInBackground(Object... arg0) {
+			try {
+				
+				if (Constant.imageMap.containsKey(url)) {
+					bmp = Constant.imageMap
+							.get(url);
+				} else {
+					bmp = WeiboUtils.getImage(new URL(url));
+				}
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Object result) {
+			iView.setImageBitmap(bmp);
+			llImagePopup.setVisibility(View.VISIBLE);
+			mPopup.update();
+			pb.setVisibility(View.GONE);
+			super.onPostExecute(result);
+		}
+
 	}
 }

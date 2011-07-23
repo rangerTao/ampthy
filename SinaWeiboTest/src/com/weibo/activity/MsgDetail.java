@@ -10,7 +10,6 @@ import weibo4android.Status;
 import weibo4android.User;
 import weibo4android.Weibo;
 import weibo4android.WeiboException;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -19,21 +18,27 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
+import com.weibo.BaseActivity;
 import com.weibo.R;
 import com.weibo.pojo.OAuthConstant;
 import com.weibo.pojo.UserImpl;
@@ -41,9 +46,16 @@ import com.weibo.pojo.adapter.ComentsAdapter;
 import com.weibo.utils.Constant;
 import com.weibo.utils.WeiboUtils;
 
-public class MsgDetail extends Activity implements OnClickListener, OnItemClickListener {
+public class MsgDetail extends BaseActivity implements OnClickListener, OnItemClickListener {
 
 	Weibo weibo;
+	
+	LayoutInflater layoutInflater;
+	PopupWindow mPopup;
+	View popup;
+	ProgressBar pb;
+	ImageView iView;
+	LinearLayout llImagePopup;
 	
 	TextView tvUserScreenName;
 	TextView tvLoc;
@@ -82,6 +94,7 @@ public class MsgDetail extends Activity implements OnClickListener, OnItemClickL
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.setContentView(R.layout.msgdetail);
+		layoutInflater = this.getLayoutInflater();
 		appref = this;
 		status = Constant.tmpStatus;
 
@@ -167,6 +180,27 @@ public class MsgDetail extends Activity implements OnClickListener, OnItemClickL
 			}
 		}
 		
+		ivThumb.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				getPopup();
+				imageTask it = new imageTask(status.getBmiddle_pic());
+				it.execute();
+				popup.setOnClickListener(new OnClickListener() {
+
+					public void onClick(View v) {
+						if (mPopup != null && mPopup.isShowing()) {
+							mPopup.dismiss();
+							popup = null;
+							mPopup = null;
+						}
+					}
+				});
+			}
+			
+		});
+		
 		if(status.isRetweet()){
 
 			rlForward.setVisibility(View.VISIBLE);
@@ -190,6 +224,27 @@ public class MsgDetail extends Activity implements OnClickListener, OnItemClickL
 			}else{
 				forward_ivThumbail.setVisibility(View.GONE);
 			}
+			
+			forward_ivThumbail.setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View arg0) {
+					getPopup();
+					imageTask it = new imageTask(rd.getBmiddle_pic());
+					it.execute();
+					popup.setOnClickListener(new OnClickListener() {
+
+						public void onClick(View v) {
+							if (mPopup != null && mPopup.isShowing()) {
+								mPopup.dismiss();
+								popup = null;
+								mPopup = null;
+							}
+						}
+					});
+				}
+				
+			});
 		}
 		
 		tvLoading.setText(R.string.gettingcom);
@@ -214,7 +269,9 @@ public class MsgDetail extends Activity implements OnClickListener, OnItemClickL
 						
 						public void onClick(DialogInterface arg0, int arg1) {
 							try {
+								appref.showProgressDialog();
 								weibo.updateComment(etAtEditText.getText().toString(), status.getId()+"", null);
+								appref.dismissPD();
 								showToast(appref.getResources().getString(R.string.comsuccess, 2000));
 								initCompentData();
 							} catch (WeiboException e) {
@@ -226,13 +283,40 @@ public class MsgDetail extends Activity implements OnClickListener, OnItemClickL
 		}
 		
 		//Forward
-		if(arg0.getId() == btnForward.getId()){
-			try {
-				weibo.retweetStatus(status.getId());
-				Toast.makeText(this, R.string.forwardsuccess , 2000).show();
-			} catch (WeiboException e) {
-				Toast.makeText(this, R.string.neterror , 2000).show();
-			}
+		if (arg0.getId() == btnForward.getId()) {
+			final EditText etAtEditText = new EditText(appref);
+			etAtEditText.setText("// " + status.getText().toString());
+			etAtEditText.setSelection(0, 0);
+			new AlertDialog.Builder(appref)
+					.setTitle(R.string.input)
+					.setIcon(android.R.drawable.ic_dialog_info)
+					.setView(etAtEditText)
+					.setPositiveButton(R.string.passwd_set_confirm,
+							new DialogInterface.OnClickListener() {
+
+								public void onClick(DialogInterface arg0,
+										int arg1) {
+									appref.showProgressDialog();
+									try {
+										if (etAtEditText.getText().toString() == "") {
+											weibo.retweetStatus(status.getId());
+
+										} else {
+											weibo.updateStatus(etAtEditText
+													.getText().toString(),
+													status.getId());
+										}
+										appref.dismissPD();
+										Toast.makeText(appref,
+												R.string.forwardsuccess, 2000)
+												.show();
+									} catch (WeiboException e) {
+										Toast.makeText(appref,
+												R.string.neterror, 2000).show();
+									}
+								}
+							})
+					.setNegativeButton(R.string.passwd_set_cancel, null).show();
 		}
 		
 		//At her or him
@@ -245,8 +329,10 @@ public class MsgDetail extends Activity implements OnClickListener, OnItemClickL
 						
 						public void onClick(DialogInterface arg0, int arg1) {
 							try {
-								Toast.makeText(appref, R.string.comsuccess, 2000).show();
+								appref.showProgressDialog();
 								weibo.updateStatus(etAtEditText.getText().toString());
+								Toast.makeText(appref, R.string.comsuccess, 2000).show();
+								appref.dismissPD();
 							} catch (WeiboException e) {
 								Toast.makeText(appref, R.string.neterror, 2000).show();
 							}
@@ -342,4 +428,53 @@ public class MsgDetail extends Activity implements OnClickListener, OnItemClickL
 			
 		});
 	}
+
+	private void getPopup() {
+		popup = layoutInflater.inflate(R.layout.image_popup, null);
+		iView = (ImageView) popup.findViewById(R.id.image);
+		pb = (ProgressBar) popup.findViewById(R.id.pbImagePopup);
+		llImagePopup = (LinearLayout) popup.findViewById(R.id.linearLayout1);
+		mPopup = new PopupWindow(popup, LayoutParams.FILL_PARENT,
+				LayoutParams.FILL_PARENT);
+		mPopup.setAnimationStyle(R.style.imagePopScale);
+		mPopup.showAtLocation(this.findViewById(R.id.main), Gravity.CENTER,
+				0, 0);
+	}
+	
+	class imageTask extends AsyncTask {
+
+		String url;
+		Bitmap bmp;
+
+		public imageTask(String url) {
+			this.url = url;
+		}
+
+		@Override
+		protected Object doInBackground(Object... arg0) {
+			try {
+				
+				if (Constant.imageMap.containsKey(url)) {
+					bmp = Constant.imageMap
+							.get(url);
+				} else {
+					bmp = WeiboUtils.getImage(new URL(url));
+				}
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Object result) {
+			iView.setImageBitmap(bmp);
+			llImagePopup.setVisibility(View.VISIBLE);
+			mPopup.update();
+			pb.setVisibility(View.GONE);
+			super.onPostExecute(result);
+		}
+
+	}
+
 }
