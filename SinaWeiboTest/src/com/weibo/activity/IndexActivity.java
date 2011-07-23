@@ -287,6 +287,12 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 		editor.commit();
 		super.onStop();
 	}
+	
+	@Override
+	protected void onDestroy() {
+		this.dismissPD();
+		super.onDestroy();
+	}
 
 	public void initButtonAction() {
 		btnHome = (Button) findViewById(R.id.btnHome_TopMenu);
@@ -607,20 +613,7 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 		}
 		return super.onKeyDown(keyCode, event);
 		
-	}
-
-	public void showProgressDialog(){
-		if(pDialog  == null){
-			pDialog = ProgressDialog.show(IndexActivity.appref, appref
-					.getResources().getString(R.string.progress_title), appref
-					.getResources().getString(R.string.progress_content));
-			pDialog.setCancelable(true);
-		}else{
-			pDialog.show();
-		}
-
-	}
-		
+	}		
 	
 	private void getFriends(int page_index)
 			throws org.apache.commons.httpclient.util.TimeoutController.TimeoutException, IOException {
@@ -670,7 +663,7 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 
 		@Override
 		protected void onPreExecute() {
-			initProgressDialog();
+			showProgressDialog();
 			super.onPreExecute();
 		}
 
@@ -686,9 +679,12 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 					} else {
 						htla.notifyDataSetChanged();
 					}
-					dismissPD();
+					
 				}
 			});
+			
+			dismissPD();
+			
 			super.onPostExecute(result);
 		}
 
@@ -708,35 +704,24 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener, 
 							statusesIds.add(statusCache.getId());
 							statusToId.put(statusCache.getId(), statusCache);
 						}
+						
+						
+						File imageCache = new File(Constant.image_cache_dir);
+						if (imageCache.exists() && imageCache.isDirectory()) {
+							for (File image : imageCache.listFiles()) {
+								String imageName = WeiboUtils.decodeImageName(image);
+								
+								FileInputStream imageFis = new FileInputStream(image);
+								Bitmap bmp = BitmapFactory.decodeStream(imageFis);
+								Constant.imageMap.put(imageName, bmp);
+							}
+						}
 					}
 					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
-				File imageCache = new File(Constant.image_cache_dir);
-				if (imageCache.exists() && imageCache.isDirectory()) {
-					for (File image : imageCache.listFiles()) {
-						String imageName = image.getName().replace("http_",
-								"http://").replace("_", "/");
-						if(imageName.endsWith(".jpga")){
-							imageName = imageName.replace(".jpga", ".jpg");
-						}else if(imageName.endsWith(".JPGA")){
-							imageName = imageName.replace(".JPGA", ".JPG");
-						}else if(imageName.endsWith(".pnga")){
-							imageName = imageName.replace(".pnga", ".png");
-						}else if(imageName.endsWith(".PNGA")){
-							imageName = imageName.replace(".PNGA", ".PNG");
-						}else if(imageName.endsWith(".gifa")){
-							imageName = imageName.replace(".gifa", ".gif");
-						}else if(imageName.endsWith(".GIFA")){
-							imageName = imageName.replace(".GIFA", ".GIF");
-						}
-						FileInputStream imageFis = new FileInputStream(image);
-						Bitmap bmp = BitmapFactory.decodeStream(imageFis);
-						Constant.imageMap.put(imageName, bmp);
-					}
-				}
+
 				if(Constant.getMsg){
 					getFriends(page_index);
 				}

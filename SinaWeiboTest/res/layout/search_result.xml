@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:id="@+id/rl_searchresult">
+	<TextView android:id="@+id/tvFromUser" android:layout_width="wrap_content" style="@style/TextView"
+		android:layout_height="wrap_content" android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true" android:paddingLeft="5px" />
+	<TextView android:id="@+id/tvResultText" android:layout_width="fill_parent" style="@style/TextView"
+		android:layout_height="wrap_content" android:layout_below="@+id/tvFromUser"
+		android:paddingLeft="15px" />
+	<TextView android:id="@+id/tvCreateAt" android:layout_width="wrap_content" style="@style/TextView"
+		android:layout_height="wrap_content" android:layout_below="@+id/tvResultText"
+		android:paddingLeft="5px" />
+	<TextView android:id="@+id/tvSource" android:layout_width="wrap_content" style="@style/TextView"
+		android:layout_height="wrap_content" android:layout_alignTop="@+id/tvCreateAt"
+		android:layout_toRightOf="@+id/tvCreateAt" android:paddingLeft="5px" />
+</RelativeLayout>

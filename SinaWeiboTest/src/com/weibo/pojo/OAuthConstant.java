@@ -1,5 +1,7 @@
 package com.weibo.pojo;
 
+import com.weibo.utils.Constant;
+
 import weibo4android.Weibo;
 import weibo4android.http.AccessToken;
 import weibo4android.http.RequestToken;
@@ -21,6 +23,10 @@ public class OAuthConstant {
 	public Weibo getWeibo(){
 		if(weibo==null){
 			weibo= new Weibo();
+			weibo.setOAuthConsumer(Constant.CONSUMER_KEY,
+					Constant.CONSUMER_SECRET);
+			weibo.setToken(Constant._token, Constant._tokenSecret);
+			weibo.setOAuthAccessToken(Constant._access, Constant._accessSecret);
 			
 		}
 			
