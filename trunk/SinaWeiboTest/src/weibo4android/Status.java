@@ -64,6 +64,7 @@ public class Status extends WeiboResponse implements java.io.Serializable {
     private RetweetDetails retweetDetails;
     private Status retweeted_status;
     private String mid;
+    private String strSource;
     private static final long serialVersionUID = 1608000492860584608L;
 
     /*package*/Status(Response res, Weibo weibo) throws WeiboException {
@@ -86,6 +87,7 @@ public class Status extends WeiboResponse implements java.io.Serializable {
     /* modify by Reilost add some field*/
 	private void constructJson(JSONObject json) throws WeiboException {
 		try {
+			strSource=json.toString();
 			id = json.getLong("id");
 			text = json.getString("text");
 			source = json.getString("source");
@@ -197,8 +199,22 @@ public class Status extends WeiboResponse implements java.io.Serializable {
     public String getText() {
         return this.text;
     }
-
+    
     /**
+	 * @return the strSource
+	 */
+	public String getStrSource() {
+		return strSource;
+	}
+
+	/**
+	 * @param strSource the strSource to set
+	 */
+	public void setStrSource(String strSource) {
+		this.strSource = strSource;
+	}
+
+	/**
      * Returns the source
      *
      * @return the source

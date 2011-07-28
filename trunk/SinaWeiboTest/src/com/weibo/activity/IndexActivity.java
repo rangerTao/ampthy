@@ -244,6 +244,17 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener,
 		// lvHomeTimeLine.setOnCreateContextMenuListener(this);
 		lvHomeTimeLine.setOnItemLongClickListener(this);
 	}
+	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+	 */
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+	}
+
+
 
 	private void showBackTopPop() {
 		topPop = layoutInflater.inflate(R.layout.back_top, null);
@@ -292,6 +303,9 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener,
 
 	@Override
 	protected void onDestroy() {
+		SharedPreferences.Editor editor = Constant.spAll.edit();
+		editor.putInt(Constant.ISRUNNING, Constant._ISRUNNING);
+		editor.commit();
 		this.dismissPD();
 		super.onDestroy();
 	}
@@ -531,18 +545,16 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener,
 							.hideSoftInputFromWindow(appref
 									.getCurrentFocus().getWindowToken(),
 									InputMethodManager.HIDE_NOT_ALWAYS);
-							appref.initProgressDialog();
+							appref.showProgressDialog();
 							if (etTwitter.getText().toString().length() > 0) {
-								weibo.update(etTwitter.getText().toString());
+								weibo.updateStatus(etTwitter.getText().toString());
 							}
-							appref.dismissPD();
 						} catch (WeiboException e) {
 							Toast.makeText(appref, "Updating error", 2000)
 									.show();
-							appref.dismissPD();
 						} finally {
 							llEditTwitter.setVisibility(View.GONE);
-
+							appref.dismissPD();
 						}
 
 					}
@@ -639,10 +651,18 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener,
 		btnHome.setBackgroundResource(R.drawable.btn_bg_normal);
 		btnAtMe.setBackgroundResource(R.drawable.btn_bg_normal);
 		btnChat.setBackgroundResource(R.drawable.btn_bg_normal);
-		// btnFavour.setBackgroundResource(R.drawable.btn_bg_normal);
-		// btnComment.setBackgroundResource(R.drawable.btn_bg_normal);
-		// btnMail.setBackgroundResource(R.drawable.btn_bg_normal);
-		// btnFriends.setBackgroundResource(R.drawable.btn_bg_normal);
+		if(null != btnFavour){
+			btnFavour.setBackgroundResource(R.drawable.btn_bg_normal);
+		}
+		if(null != btnComment){
+			btnComment.setBackgroundResource(R.drawable.btn_bg_normal);
+		}
+		if(null != btnMail){
+			btnMail.setBackgroundResource(R.drawable.btn_bg_normal);
+		}
+		if(null != btnFriends){
+			btnFriends.setBackgroundResource(R.drawable.btn_bg_normal);
+		}
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -683,6 +703,7 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener,
 				FileOutputStream file = null;
 				List<Status> temp = weibo
 						.getHomeTimeline(new Paging(page_index));
+				weibo.getFriendsTimeline(new Paging(page_index));
 
 				try {
 					file = appref.openFileOutput(Constant.homeTimeLineCache,

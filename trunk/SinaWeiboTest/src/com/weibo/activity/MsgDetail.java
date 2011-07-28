@@ -1,15 +1,27 @@
 package com.weibo.activity;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import weibo4android.Comment;
+import weibo4android.Paging;
 import weibo4android.Status;
 import weibo4android.User;
 import weibo4android.Weibo;
 import weibo4android.WeiboException;
+import weibo4android.org.json.JSONException;
+import weibo4android.org.json.JSONObject;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -17,16 +29,17 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -37,6 +50,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.weibo.BaseActivity;
 import com.weibo.R;
@@ -96,7 +110,35 @@ public class MsgDetail extends BaseActivity implements OnClickListener, OnItemCl
 		this.setContentView(R.layout.msgdetail);
 		layoutInflater = this.getLayoutInflater();
 		appref = this;
-		status = Constant.tmpStatus;
+		if (null != savedInstanceState) {
+			FileInputStream fis;
+			try {
+				fis = appref
+						.openFileInput(Constant.homeTimeLineCache);
+				BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+				String temp = "";
+
+				while ((temp = br.readLine()) != null) {
+					status = new weibo4android.Status(
+							new JSONObject(temp));
+				}
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (WeiboException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+			status = Constant.tmpStatus;
+		}
+		
 
 		if(status.isRetweet()){
 			rd = status.getRetweeted_status();
@@ -107,6 +149,28 @@ public class MsgDetail extends BaseActivity implements OnClickListener, OnItemCl
 		initCompent();
 
 		initCompentData();
+	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+	 */
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		FileOutputStream file = null;
+		try {
+			file = appref.openFileOutput(Constant.MsgDetailCache,
+					MODE_PRIVATE);
+			
+			file.write(status.getStrSource().getBytes());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		
+
+		super.onSaveInstanceState(outState);
 	}
 
 	private void initCompent() {
@@ -140,17 +204,21 @@ public class MsgDetail extends BaseActivity implements OnClickListener, OnItemCl
 	private void initCompentData() {
 		tvUserScreenName.setText(user.getScreenName().toString());
 		tvLoc.setText(user.getLocation());
+		String regex = "(http|https|ftp)://([^/:]+)(:\\d*)?([^#\\s]*)";
+
 		tvDetail.setText(status.getText());
+		Linkify.addLinks(tvDetail, Linkify.WEB_URLS);
 		tvDetail.setPadding(10, 5, 0, 0);
+		
 		if (Constant.imageMap.get(user.getProfileImageURL().toString()) != null) {
 			ivUserHead.setImageBitmap(Constant.imageMap.get(user
 					.getProfileImageURL().toString()));
 		} else {
 			Constant.imageMap.put(user.getProfileImageURL().toString(), null);
 			ivUserHead.setImageBitmap(BitmapFactory.decodeResource(
-					IndexActivity.appref.getResources(), R.drawable.refresh));
+					this.getResources(), R.drawable.refresh));
 			Bitmap tempBitmap = WeiboUtils.getImage(user.getProfileImageURL());
-			WeiboUtils.setImage(IndexActivity.appref.handler, ivUserHead,
+			WeiboUtils.setImage(this.handler, ivUserHead,
 					tempBitmap);
 			Constant.imageMap.put(user.getProfileImageURL().toString(),
 					tempBitmap);
@@ -164,12 +232,12 @@ public class MsgDetail extends BaseActivity implements OnClickListener, OnItemCl
 				try {
 					Constant.imageMap.put(status.getThumbnail_pic(), null);
 					ivThumb.setImageBitmap(BitmapFactory.decodeResource(
-							IndexActivity.appref.getResources(),
+							this.getResources(),
 							R.drawable.refresh));
 
 					Bitmap tempBitmap = WeiboUtils.getImage(new URL(status
 							.getThumbnail_pic()));
-					WeiboUtils.setImage(IndexActivity.appref.handler,
+					WeiboUtils.setImage(this.handler,
 							ivUserHead, tempBitmap);
 					Constant.imageMap
 							.put(status.getThumbnail_pic(), tempBitmap);
@@ -206,11 +274,13 @@ public class MsgDetail extends BaseActivity implements OnClickListener, OnItemCl
 			rlForward.setVisibility(View.VISIBLE);
 			forward_tvUserName.setText(retweetUser.getScreenName().toString());
 			forward_tvStatus.setText(rd.getText().toString());
+			Linkify.addLinks(forward_tvStatus, Linkify.WEB_URLS);
+			
 			if(rd.getThumbnail_pic() != null && rd.getThumbnail_pic() != ""){
 				forward_ivThumbail.setVisibility(View.VISIBLE);
 				if (Constant.imageMap.containsKey(rd.getThumbnail_pic()) == false) {
 					forward_ivThumbail.setImageBitmap(BitmapFactory
-							.decodeResource(IndexActivity.appref.getResources(),
+							.decodeResource(this.getResources(),
 									R.drawable.refresh));
 					try {
 						Constant.sit.pushImageTask(new URL(rd.getThumbnail_pic()), forward_ivThumbail);

@@ -104,5 +104,6 @@ public class Constant {
 	 * Buffer
 	 */
 	public static String homeTimeLineCache = "HomeTimeLineCache.txt";
+	public static String MsgDetailCache = "MsgDetail.txt";
 	public static String image_cache_dir = "/sdcard/weiboCache/";
 }
