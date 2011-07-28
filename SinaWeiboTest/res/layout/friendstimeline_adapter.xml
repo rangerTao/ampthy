@@ -17,7 +17,7 @@
 			android:layout_width="fill_parent"></TextView>
 		<TextView style="@style/TextView" android:layout_width="wrap_content"
 			android:text="TextView" android:layout_below="@+id/tvUserDesc"
-			android:layout_height="wrap_content" android:layout_alignLeft="@+id/tvUserDesc"
+			android:layout_height="wrap_content" android:layout_alignLeft="@+id/tvUserDesc" android:autoLink="web"
 			android:id="@+id/tvStatus"></TextView>
 		<ImageView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:src="@drawable/icon"
@@ -37,7 +37,7 @@
 			></TextView>
 		<TextView style="@style/TextView" android:layout_width="wrap_content"
 			android:text="TextView" android:layout_below="@+id/forward_tvUserName"
-			android:layout_height="wrap_content" android:layout_alignLeft="@+id/forward_tvUserName"
+			android:layout_height="wrap_content" android:layout_alignLeft="@+id/forward_tvUserName" android:autoLink="web"
 			android:id="@+id/forward_tvStatus"></TextView>
 		<ImageView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:src="@drawable/icon"

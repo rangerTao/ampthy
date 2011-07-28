@@ -34,6 +34,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
 
+import android.util.Log;
+
 /**
  * A JSONObject is an unordered collection of name/value pairs. Its
  * external form is a string wrapped in curly braces with colons between the
@@ -174,7 +176,6 @@ public class JSONObject {
         this();
         char c;
         String key;
-
         if (x.nextClean() != '{') {
             throw x.syntaxError("A JSONObject text must begin with '{'");
         }
@@ -218,8 +219,8 @@ public class JSONObject {
                 break;
             case '}':
                 return;
-            default:
-                throw x.syntaxError("Expected a ',' or '}'");
+//            default:
+//                throw x.syntaxError("Expected a ',' or '}'");
             }
         }
     }
