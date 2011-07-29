@@ -146,9 +146,10 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener,
 		lvHomeTimeLine = (ListView) findViewById(R.id.lvHomeTimeLine);
 		// initData();
 		initHeader();
+		
 		appref = this;
 
-		if (Constant.spAll.getInt(Constant.ISRUNNING, Constant._NOTRUNNING) != Constant._ISRUNNING) {
+		if (null == Constant.spAll || Constant.spAll.getInt(Constant.ISRUNNING, Constant._NOTRUNNING) != Constant._ISRUNNING) {
 			Constant.getMsg = true;
 			ft = new FriendTask();
 			ft.execute();
@@ -677,9 +678,11 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener,
 				Constant._Back_Count++;
 				return true;
 			} else if (Constant._Back_Count == 1) {
-				SharedPreferences.Editor editor = Constant.spAll.edit();
-				editor.putInt(Constant.ISRUNNING, Constant._NOTRUNNING);
-				editor.commit();
+				if(Constant.spAll != null){
+					SharedPreferences.Editor editor = Constant.spAll.edit();
+					editor.putInt(Constant.ISRUNNING, Constant._NOTRUNNING);
+					editor.commit();
+				}
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			}

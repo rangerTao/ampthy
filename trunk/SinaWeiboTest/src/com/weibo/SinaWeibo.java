@@ -29,6 +29,7 @@ import com.weibo.activity.SettingPre;
 import com.weibo.daos.DBAdapter;
 import com.weibo.pojo.DBColumns;
 import com.weibo.pojo.UserImpl;
+import com.weibo.service.BackgroundService;
 import com.weibo.utils.Constant;
 
 public class SinaWeibo extends Activity implements OnClickListener {
@@ -105,6 +106,7 @@ public class SinaWeibo extends Activity implements OnClickListener {
 				editor.putInt(Constant.ISRUNNING, Constant._NOTRUNNING);
 				editor.commit();
 				startActivity(new Intent(this, IndexActivity.class));
+				this.startService(new Intent(this,BackgroundService.class));
 				finish();
 			}
 

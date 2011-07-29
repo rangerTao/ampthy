@@ -161,7 +161,7 @@ public class MsgDetail extends BaseActivity implements OnClickListener, OnItemCl
 			file = appref.openFileOutput(Constant.MsgDetailCache,
 					MODE_PRIVATE);
 			
-			file.write(status.getStrSource().getBytes());
+			file.write(status.toString().getBytes());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
