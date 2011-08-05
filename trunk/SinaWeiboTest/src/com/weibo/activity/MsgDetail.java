@@ -10,12 +10,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import weibo4android.Comment;
-import weibo4android.Paging;
 import weibo4android.Status;
 import weibo4android.User;
 import weibo4android.Weibo;
@@ -29,7 +25,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Html;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Gravity;
@@ -250,7 +245,6 @@ public class MsgDetail extends BaseActivity implements OnClickListener, OnItemCl
 		
 		ivThumb.setOnClickListener(new OnClickListener(){
 
-			@Override
 			public void onClick(View arg0) {
 				getPopup();
 				imageTask it = new imageTask(status.getBmiddle_pic());
@@ -297,7 +291,6 @@ public class MsgDetail extends BaseActivity implements OnClickListener, OnItemCl
 			
 			forward_ivThumbail.setOnClickListener(new OnClickListener(){
 
-				@Override
 				public void onClick(View arg0) {
 					getPopup();
 					imageTask it = new imageTask(rd.getBmiddle_pic());

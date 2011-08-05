@@ -13,7 +13,7 @@
 		android:layout_alignBaseline="@+id/tvUserName" />
 	<TextView android:id="@+id/tvMention" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:paddingTop="2px"
-		android:layout_alignLeft="@+id/tvUserName" android:layout_below="@+id/tvUserName" android:autoLink="web"/>
+		android:layout_alignLeft="@+id/tvUserName" android:layout_below="@+id/tvUserName"/>
 	<ImageView android:id="@+id/ivMentionPic" android:visibility="gone"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_alignLeft="@+id/tvMention" android:paddingTop="2px"

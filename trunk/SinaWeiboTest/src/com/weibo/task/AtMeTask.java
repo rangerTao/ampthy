@@ -28,6 +28,7 @@ public class AtMeTask extends AsyncTask{
 			getAtMe(Constant.atMe_PageIndex);
 		}
 		Constant.getMsg = false;
+
 		return null;
 	}
 
@@ -41,6 +42,7 @@ public class AtMeTask extends AsyncTask{
 			atMeAdapter.notifyDataSetChanged();
 		}
 		IndexActivity.appref.setProgressBarIndeterminate(false);
+		IndexActivity.appref.dismissPD();
 		super.onPostExecute(result);
 	}
 

@@ -138,7 +138,6 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener{
 	}
 
 
-	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		
 		switch(resultType){

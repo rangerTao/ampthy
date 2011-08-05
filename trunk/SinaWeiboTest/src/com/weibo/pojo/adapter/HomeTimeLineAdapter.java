@@ -301,8 +301,11 @@ public class HomeTimeLineAdapter extends BaseAdapter {
 		protected void onPostExecute(Object result) {
 			iView.setImageBitmap(bmp);
 			llImagePopup.setVisibility(View.VISIBLE);
-			mPopup.update();
-			pb.setVisibility(View.GONE);
+			if(mPopup != null){
+				mPopup.update();
+				pb.setVisibility(View.GONE);
+			}
+			
 			super.onPostExecute(result);
 		}
 

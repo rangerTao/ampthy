@@ -12,7 +12,7 @@
 		android:orientation="vertical" android:drawableTop="@drawable/at"
 		android:text="@string/top_menu_atme" android:layout_weight="1" android:layout_gravity="center_vertical">
 	</Button>
-		<Button android:id="@+id/btnChat_TopMenu" android:background="@drawable/buttonpressed" 
+		<Button android:id="@+id/btnChat_TopMenu" android:background="@drawable/btn_bg_normal" 
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:orientation="vertical" android:drawableTop="@drawable/chat"
 		android:text="@string/top_menu_chat" android:layout_weight="1" android:layout_gravity="center_vertical">

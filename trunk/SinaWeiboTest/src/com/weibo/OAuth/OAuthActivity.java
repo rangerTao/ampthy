@@ -8,6 +8,7 @@ import weibo4android.WeiboException;
 import weibo4android.http.AccessToken;
 import weibo4android.http.RequestToken;
 
+import android.R.anim;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -15,8 +16,10 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.weibo.R;
+import com.weibo.SinaWeibo;
 import com.weibo.activity.IndexActivity;
 import com.weibo.daos.DBAdapter;
 import com.weibo.pojo.DBColumns;
@@ -67,6 +70,8 @@ public class OAuthActivity extends Activity {
 					.getQueryParameter("oauth_verifier"));
 			OAuthConstant.getInstance().setAccessToken(accessToken);
 		} catch (WeiboException e) {
+			Toast.makeText(SinaWeibo.appref, "Net Error", 2000).show();
+			android.os.Process.killProcess(android.os.Process.myPid());
 			e.printStackTrace();
 		}
 

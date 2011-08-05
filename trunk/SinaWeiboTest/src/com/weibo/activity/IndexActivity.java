@@ -353,7 +353,7 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener,
 				resetButtonBG();
 				btnAtMe.setBackgroundResource(R.drawable.btn_bg);
 				lvHomeTimeLine.setOnItemClickListener(null);
-				dismissPD();
+
 			}
 		});
 
@@ -363,79 +363,8 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener,
 			public void onClick(View arg0) {
 				Intent intent = new Intent(appref, ChatActivity.class);
 				startActivity(intent);
-				resetButtonBG();
-				btnChat.setBackgroundResource(R.drawable.btn_bg);
 			}
 		});
-
-		// btnFavour = (Button)findViewById(R.id.btnFavourite_TopMenu);
-		// btnFavour.setOnClickListener(new OnClickListener() {
-		//
-		// public void onClick(View arg0) {
-		// initProgressDialog();
-		// lvHomeTimeLine.removeAllViewsInLayout();
-		// if(Constant.favourList.size() < 1 ){
-		// Constant.getMsg = true;
-		// }
-		// FavourTask ftFavourTask = new FavourTask();
-		// ftFavourTask.execute();
-		// Constant.weiboChannel = Constant.favourChannel;
-		// resetButtonBG();
-		// dismissPD();
-		// btnFavour.setBackgroundResource(R.drawable.btn_bg);
-		// }
-		// });
-		//
-		// btnComment = (Button)findViewById(R.id.btnComments_TopMenu);
-		// btnComment.setOnClickListener(new OnClickListener() {
-		//
-		// public void onClick(View arg0) {
-		// initProgressDialog();
-		// if(Constant.commentList.size() < 1){
-		// Constant.getMsg = true;
-		// }
-		// CommentsTask ct = new CommentsTask();
-		// ct.execute();
-		// dismissPD();
-		// Constant.weiboChannel = Constant.commentChannel;
-		// resetButtonBG();
-		// btnComment.setBackgroundResource(R.drawable.btn_bg);
-		// }
-		// });
-		//
-		// btnMail = (Button)findViewById(R.id.btnMail_TopMenu);
-		// btnMail.setOnClickListener(new OnClickListener() {
-		//
-		// public void onClick(View arg0) {
-		// initProgressDialog();
-		// if(Constant.mailList.size() < 1){
-		// Constant.getMsg = true;
-		// }
-		// MailTask mt = new MailTask();
-		// mt.execute();
-		// dismissPD();
-		// Constant.weiboChannel = Constant.mailChannel;
-		// resetButtonBG();
-		// btnMail.setBackgroundResource(R.drawable.btn_bg);
-		// }
-		// });
-		//
-		// btnFriends = (Button)findViewById(R.id.btnFriends_TopMenu);
-		// btnFriends.setOnClickListener(new OnClickListener() {
-		//
-		// public void onClick(View arg0) {
-		// //initProgressDialog();
-		// if(Constant.friendsList.size() < 1){
-		// Constant.getMsg = true;
-		// }
-		// FriendsTask ft = new FriendsTask();
-		// ft.execute();
-		// dismissPD();
-		// Constant.weiboChannel = Constant.friendsChannel;
-		// resetButtonBG();
-		// btnFriends.setBackgroundResource(R.drawable.btn_bg);
-		// }
-		// });
 
 		btnMore = (Button) findViewById(R.id.btnMore_TopMenu);
 		btnMore.setOnClickListener(new OnClickListener() {
@@ -463,7 +392,6 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener,
 				Button btnSetting = (Button) popupView.findViewById(R.id.btnSetting_TopMenu);
 				btnSetting.setOnClickListener(new OnClickListener(){
 
-					@Override
 					public void onClick(View arg0) {
 						Intent intent = new Intent(appref,SettingPre.class);
 						appref.startActivity(intent);
@@ -871,8 +799,10 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener,
 
 		Button btnComment = (Button) popupView.findViewById(R.id.btnComment);
 		Button btnForward = (Button) popupView.findViewById(R.id.btnForward);
+		Button btnFavour = (Button) popupView.findViewById(R.id.btnFavour);
 		Button btnHome = (Button) popupView.findViewById(R.id.btnHome);
 
+		
 		btnComment.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View arg0) {
@@ -952,6 +882,22 @@ public class IndexActivity extends BaseActivity implements OnItemClickListener,
 			}
 		});
 
+		btnFavour.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View arg0) {
+				showProgressDialog();
+				try{
+					weibo.createFavorite(statuses.get(arg2).getId());
+				}catch(Exception e){
+					Toast.makeText(appref, R.string.neterror, 2000).show();
+				}finally{
+					dismissPD();
+					dismissPop();
+					Toast.makeText(appref, R.string.favour_success, 2000).show();
+				}
+			}
+		});
+		
 		btnHome.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View arg0) {

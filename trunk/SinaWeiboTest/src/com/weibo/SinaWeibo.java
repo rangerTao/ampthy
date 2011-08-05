@@ -106,7 +106,7 @@ public class SinaWeibo extends Activity implements OnClickListener {
 				editor.putInt(Constant.ISRUNNING, Constant._NOTRUNNING);
 				editor.commit();
 				startActivity(new Intent(this, IndexActivity.class));
-				this.startService(new Intent(this,BackgroundService.class));
+//				this.startService(new Intent(this,BackgroundService.class));
 				finish();
 			}
 
