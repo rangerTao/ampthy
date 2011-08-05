@@ -63,6 +63,7 @@
 	<!-- Context Menu -->
 	<string name="context_comment">评论</string>
 	<string name="context_forward">转发</string>
+	<string name="context_favour">收藏</string>
 	<string name="context_replay">回复</string>
     <string name="context_home">首页</string>
     
@@ -80,6 +81,7 @@
 	<!-- Chat -->
 	<string name="reply_title">回复...</string>
 	<string name="reply_success">回复成功...</string>
+	<string name="favour_success">收藏成功...</string>
 	<string name="text_hint">回复内容不能长于140个字</string>
 	<string name="toast_cannot_reply_to_self">亲，想说给自己的话，直接说就好了哟！</string>
 	<string name="toast_too_short">亲，不能什么都不说哟！</string>

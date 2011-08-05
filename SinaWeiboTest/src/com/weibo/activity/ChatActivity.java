@@ -16,6 +16,7 @@ import weibo4android.WeiboException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -64,11 +65,13 @@ public class ChatActivity extends BaseActivity implements OnItemClickListener {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		appref = this;
 		super.onCreate(savedInstanceState);
-		
-		initData();
-		Message msg = new Message();
-		msg.what = 1;
-		mHandler.sendMessage(msg);
+		setContentView(R.layout.chat_activity);
+		lvComments = (ListView)findViewById(R.id.lvChat);
+		lvComments.setOnItemClickListener(this);
+		showProgressDialog();
+		chatTask cTask = new chatTask();
+		cTask.execute();
+
 	}
 	
 	private void initVar(){
@@ -80,7 +83,7 @@ public class ChatActivity extends BaseActivity implements OnItemClickListener {
 	
 	private void initData(){
 		try {
-			initProgressDialog();
+
 			initVar();
 			statuses = weibo.getCommentsTimeline(new Paging(page_index));
 			for (int i = 0; i < statuses.size(); i++) {
@@ -89,19 +92,15 @@ public class ChatActivity extends BaseActivity implements OnItemClickListener {
 			}
 			Collections.sort(idList, Collections.reverseOrder());
 
-			setContentView(R.layout.friend_activity);
-			lvComments = (ListView) findViewById(R.id.lvFriendListView);
+//			setContentView(R.layout.friend_activity);
+//			lvComments = (ListView) findViewById(R.id.lvFriendListView);
 			lvComments.removeAllViewsInLayout();
 			for (int i = 0; i < idList.size(); i++) {
 				Constant.comList.add(comMap.get(idList.get(i)));
 			}
 			ctma = new CommentsToMeAdapter();
 			addFootView();
-			lvComments.setAdapter(ctma);
 
-			lvComments.setOnItemClickListener(this);
-			
-			ctma.notifyDataSetChanged();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -193,4 +192,30 @@ public class ChatActivity extends BaseActivity implements OnItemClickListener {
 		});
 	}
 
+	class chatTask extends AsyncTask{
+
+		@Override
+		protected void onPostExecute(Object result) {
+			appref.dismissPD();
+			super.onPostExecute(result);
+		}
+
+		@Override
+		protected Object doInBackground(Object... params) {
+			initData();
+			mHandler.post(new Runnable(){
+
+				public void run() {
+					lvComments.setAdapter(ctma);
+					
+					ctma.notifyDataSetChanged();
+				}
+				
+			});
+			
+			return null;
+		}
+		
+	}
+	
 }

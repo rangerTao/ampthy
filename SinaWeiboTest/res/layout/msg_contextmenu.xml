@@ -7,12 +7,19 @@
 		style="@android:style/ButtonBar" android:layout_centerInParent="true">
 		<Button android:id="@+id/btnComment" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:text="@string/context_comment"
-			android:layout_weight="1" android:background="#9cb0c6" android:layout_gravity="center_vertical"/>
+			android:layout_weight="1" android:background="#9cb0c6"
+			android:layout_gravity="center_vertical" />
 		<Button android:id="@+id/btnForward" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:text="@string/context_forward"
-			android:layout_weight="1" android:background="#9cb0c6" android:layout_gravity="center_vertical" />
+			android:layout_weight="1" android:background="#9cb0c6"
+			android:layout_gravity="center_vertical" />
+		<Button android:id="@+id/btnFavour" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:text="@string/context_favour"
+			android:layout_weight="1" android:background="#9cb0c6"
+			android:layout_gravity="center_vertical" />
 		<Button android:id="@+id/btnHome" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:text="@string/context_home"
-			android:layout_weight="1" android:background="#9cb0c6" android:layout_gravity="center_vertical" />
+			android:layout_weight="1" android:background="#9cb0c6"
+			android:layout_gravity="center_vertical" />
 	</LinearLayout>
 </RelativeLayout>

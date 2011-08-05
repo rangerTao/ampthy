@@ -28,25 +28,21 @@ public class SearchUserResultAdapter extends BaseAdapter {
 		this.lsu = lsu;
 	}
 
-	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
 		return lsu.size();
 	}
 
-	@Override
 	public Object getItem(int arg0) {
 		// TODO Auto-generated method stub
 		return lsu.get(arg0);
 	}
 
-	@Override
 	public long getItemId(int arg0) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public View getView(int pos, View view, ViewGroup arg2) {
 
 		User user = lsu.get(pos);
