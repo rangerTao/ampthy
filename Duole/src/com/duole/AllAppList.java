@@ -1,4 +1,4 @@
-package com.yao_guet;
+package com.duole;
 
 import java.util.List;
 
@@ -18,16 +18,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
-/**
- * GridView分页显示安装的应用程序
- * @author Yao.GUET
- * blog: http://blog.csdn.net/Yao_GUET
- * date: 2011-05-05
- */
 public class AllAppList extends Activity {
-	private static final String TAG = "ScrollLayoutTest";
+	private static final String TAG = "TAG";
 	private ScrollLayout mScrollLayout;
-	private static final float APP_PAGE_SIZE = 16.0f;
+	private static final float APP_PAGE_SIZE = 9.0f;
 	private Context mContext;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +37,6 @@ public class AllAppList extends Activity {
 		initViews();
 	}
 
-	/**
-	 * 获取系统所有的应用程序，并根据APP_PAGE_SIZE生成相应的GridView页面
-	 */
 	public void initViews() {
 		final PackageManager packageManager = getPackageManager();
 
@@ -63,14 +54,15 @@ public class AllAppList extends Activity {
         	// get the "i" page data
         	appPage.setAdapter(new AppAdapter(this, apps, i));
         	
-        	appPage.setNumColumns(4);
+        	appPage.setNumColumns(3);
+        	
         	appPage.setOnItemClickListener(listener);
         	mScrollLayout.addView(appPage);
         }
 	}
 	
 	/**
-	 * gridView 的onItemLick响应事件
+	 * The item click event of gridview
 	 */
 	public OnItemClickListener listener = new OnItemClickListener() {
 

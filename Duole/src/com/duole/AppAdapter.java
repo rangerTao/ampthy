@@ -1,4 +1,4 @@
-package com.yao_guet;
+package com.duole;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import android.widget.TextView;
 public class AppAdapter extends BaseAdapter {
 	private List<ResolveInfo> mList;
 	private Context mContext;
-	public static final int APP_PAGE_SIZE = 16;
+	public static final int APP_PAGE_SIZE = 9;
 	private PackageManager pm;
 	
 	public AppAdapter(Context context, List<ResolveInfo> list, int page) {
@@ -71,8 +71,6 @@ public class AppAdapter extends BaseAdapter {
 	}
 
 	/**
-	 * 每个应用显示的内容，包括图标和名称
-	 * @author Yao.GUET
 	 *
 	 */
 	class AppItem {

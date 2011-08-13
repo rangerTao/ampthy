@@ -1,4 +1,4 @@
-package com.yao_guet;
+package com.duole;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,15 +11,9 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.Scroller;
 
-/**
- * 仿Launcher中的WorkSapce，可以左右滑动切换屏幕的类
- * @author Yao.GUET
- * blog: http://blog.csdn.net/Yao_GUET
- * date: 2011-05-04
- */
 public class ScrollLayout extends ViewGroup {
 
-	private static final String TAG = "ScrollLayout";
+	private static final String TAG = "TAG";
 	private Scroller mScroller;
 	private VelocityTracker mVelocityTracker;
 	
