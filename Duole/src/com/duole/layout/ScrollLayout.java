@@ -1,4 +1,4 @@
-package com.duole;
+package com.duole.layout;
 
 import android.content.Context;
 import android.graphics.Canvas;
