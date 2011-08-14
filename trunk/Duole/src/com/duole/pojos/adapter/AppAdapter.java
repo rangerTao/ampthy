@@ -1,7 +1,12 @@
-package com.duole;
+package com.duole.pojos.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.duole.R;
+import com.duole.R.id;
+import com.duole.R.layout;
+import com.duole.utils.Constants;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -16,7 +21,6 @@ import android.widget.TextView;
 public class AppAdapter extends BaseAdapter {
 	private List<ResolveInfo> mList;
 	private Context mContext;
-	public static final int APP_PAGE_SIZE = 9;
 	private PackageManager pm;
 	
 	public AppAdapter(Context context, List<ResolveInfo> list, int page) {
@@ -24,8 +28,8 @@ public class AppAdapter extends BaseAdapter {
 		pm = context.getPackageManager();
 		
 		mList = new ArrayList<ResolveInfo>();
-		int i = page * APP_PAGE_SIZE;
-		int iEnd = i+APP_PAGE_SIZE;
+		int i = page * Constants.APP_PAGE_SIZE;
+		int iEnd = i+ Constants.APP_PAGE_SIZE;
 		while ((i<list.size()) && (i<iEnd)) {
 			mList.add(list.get(i));
 			i++;

@@ -1,16 +1,17 @@
 package com.duole;
 
-import java.util.List;
+import java.io.IOException;
+
+import javax.xml.transform.TransformerException;
+
+import org.xml.sax.SAXException;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -18,11 +19,19 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.duole.activity.FlashActivity;
+import com.duole.layout.ScrollLayout;
+import com.duole.pojos.adapter.AssetItemAdapter;
+import com.duole.pojos.asset.Asset;
+import com.duole.utils.Constants;
+import com.duole.utils.parseXML;
+
 public class AllAppList extends Activity {
+	
 	private static final String TAG = "TAG";
 	private ScrollLayout mScrollLayout;
-	private static final float APP_PAGE_SIZE = 9.0f;
 	private Context mContext;
+	AllAppList appref;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -33,26 +42,35 @@ public class AllAppList extends Activity {
 		setContentView(R.layout.main);
 		
 		mScrollLayout = (ScrollLayout)findViewById(R.id.ScrollLayoutTest);
-		
-		initViews();
+		appref = this;
+		try {
+			initViews();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	public void initViews() {
-		final PackageManager packageManager = getPackageManager();
-
-        final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-
-        // get all apps 
-        final List<ResolveInfo> apps = packageManager.queryIntentActivities(mainIntent, 0);
-        
+	public void initViews() throws IOException, TransformerException, SAXException {
+		// get all apps 
+        Constants.AssetList = parseXML.readXML(null, Constants.CacheDir + "itemlist.xml");
+        Log.v("TAG",Constants.AssetList.size() +"");
         // the total pages
-        final int PageCount = (int)Math.ceil(apps.size()/APP_PAGE_SIZE);
-        Log.e(TAG, "size:"+apps.size()+" page:"+PageCount);
+        int PageCount = (int)Math.ceil(Constants.AssetList.size()/Constants.APP_PAGE_SIZE);
+        if(PageCount == 0){
+        	PageCount = 1;
+        }
+        Log.v("TAG",PageCount +"");
         for (int i=0; i<PageCount; i++) {
         	GridView appPage = new GridView(this);
         	// get the "i" page data
-        	appPage.setAdapter(new AppAdapter(this, apps, i));
+        	appPage.setAdapter(new AssetItemAdapter(this, Constants.AssetList, i));
         	
         	appPage.setNumColumns(3);
         	
@@ -69,14 +87,15 @@ public class AllAppList extends Activity {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			// TODO Auto-generated method stub
-			ResolveInfo appInfo = (ResolveInfo)parent.getItemAtPosition(position);
-			Intent mainIntent = mContext.getPackageManager()
-				.getLaunchIntentForPackage(appInfo.activityInfo.packageName);
-			mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
+			Asset assItem = (Asset)parent.getItemAtPosition(position);
+			
+			Intent intent = new Intent(appref,FlashActivity.class);
+			
 			try {
 				// launcher the package
-				mContext.startActivity(mainIntent);
+				
+				intent.putExtra("filename", assItem.getName());
+				mContext.startActivity(intent);
 			} catch (ActivityNotFoundException noFound) {
 				Toast.makeText(mContext, "Package not found!", Toast.LENGTH_SHORT).show();
 			}
@@ -91,14 +110,14 @@ public class AllAppList extends Activity {
 		super.onDestroy();
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			finish();
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
+//	@Override
+//	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		// TODO Auto-generated method stub
+//		if (keyCode == KeyEvent.KEYCODE_BACK) {
+//			finish();
+//			return true;
+//		}
+//		return super.onKeyDown(keyCode, event);
+//	}
 	
 }
