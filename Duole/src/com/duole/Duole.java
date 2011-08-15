@@ -1,5 +1,6 @@
 package com.duole;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.xml.transform.TransformerException;
@@ -26,12 +27,12 @@ import com.duole.pojos.asset.Asset;
 import com.duole.utils.Constants;
 import com.duole.utils.parseXML;
 
-public class AllAppList extends Activity {
+public class Duole extends Activity {
 	
 	private static final String TAG = "TAG";
 	private ScrollLayout mScrollLayout;
 	private Context mContext;
-	AllAppList appref;
+	Duole appref;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -40,6 +41,29 @@ public class AllAppList extends Activity {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		mContext = this;
 		setContentView(R.layout.main);
+		
+		File file = new File(Constants.CacheDir);
+		if(!file.exists()){
+			file.mkdir();
+		}
+		file = new File(Constants.CacheDir + "/flash/");
+		if(!file.exists()){
+			file.mkdir();
+		}
+		file = new File(Constants.CacheDir + "/music/");
+		if(!file.exists()){
+			file.mkdir();
+		}
+		file = new File(Constants.CacheDir + "/video/");
+		if(!file.exists()){
+			file.mkdir();
+		}
+		
+		file = new File(Constants.CacheDir + "/itemlist.xml");
+		if(!file.exists()){
+			Toast.makeText(this, "Xml file does not exists.", 2000).show();
+		}
+		
 		
 		mScrollLayout = (ScrollLayout)findViewById(R.id.ScrollLayoutTest);
 		appref = this;
