@@ -2,73 +2,109 @@ package com.duole;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.xml.transform.TransformerException;
 
 import org.xml.sax.SAXException;
+import org.xmlpull.v1.XmlPullParserException;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Chronometer.OnChronometerTickListener;
+import android.widget.Chronometer;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.duole.activity.FlashActivity;
+import com.duole.activity.BaseActivity;
+import com.duole.asynctask.ItemListTask;
 import com.duole.layout.ScrollLayout;
+import com.duole.player.FlashPlayerActivity;
+import com.duole.player.MusicPlayerActivity;
+import com.duole.pojos.DuoleCountDownTimer;
 import com.duole.pojos.adapter.AssetItemAdapter;
 import com.duole.pojos.asset.Asset;
+import com.duole.service.AntiFatigueService;
+import com.duole.service.BackgroundRefreshService;
 import com.duole.utils.Constants;
-import com.duole.utils.parseXML;
+import com.duole.utils.DuoleUtils;
+import com.duole.utils.XmlUtils;
 
-public class Duole extends Activity {
+public class Duole extends BaseActivity {
+
+	public static Duole appref;
+	
+	public static DuoleCountDownTimer gameCountDown;
+	public static DuoleCountDownTimer restCountDown;
 	
 	private static final String TAG = "TAG";
-	private ScrollLayout mScrollLayout;
-	private Context mContext;
-	Duole appref;
+	public ScrollLayout mScrollLayout;
+	private static Context mContext;
+	private static BackgroundRefreshService mBoundService;
+	public static ArrayList<AssetItemAdapter> alAIA;
+	
+	public static ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+
+        	mBoundService = ((BackgroundRefreshService.LocalBinder)service).getService();  
+        }
+
+        public void onServiceDisconnected(ComponentName className) { 
+
+        	mBoundService = null;
+        }
+}; 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		mContext = this;
 		setContentView(R.layout.main);
 		
-		File file = new File(Constants.CacheDir);
-		if(!file.exists()){
-			file.mkdir();
-		}
-		file = new File(Constants.CacheDir + "/flash/");
-		if(!file.exists()){
-			file.mkdir();
-		}
-		file = new File(Constants.CacheDir + "/music/");
-		if(!file.exists()){
-			file.mkdir();
-		}
-		file = new File(Constants.CacheDir + "/video/");
-		if(!file.exists()){
-			file.mkdir();
-		}
+		appref = this;
 		
-		file = new File(Constants.CacheDir + "/itemlist.xml");
-		if(!file.exists()){
-			Toast.makeText(this, "Xml file does not exists.", 2000).show();
-		}
+		mScrollLayout = (ScrollLayout) findViewById(R.id.ScrollLayoutTest);
 		
-		
-		mScrollLayout = (ScrollLayout)findViewById(R.id.ScrollLayoutTest);
 		appref = this;
 		try {
-			initViews();
+			
+			//Check whether tf card exists.
+			if (DuoleUtils.checkTFCard()) {
+				//init the cache folders.
+				if (DuoleUtils.checkCacheFiles()) {
+					//init the main view.
+					initViews();
+					
+					setBackground();
+				} else {
+					Toast.makeText(this, R.string.itemlist_lost, 2000).show();
+					
+					//XmlUtils.createItemList();
+				}
+				
+				new ItemListTask().execute();
+				
+			}else{
+				Toast.makeText(this, "No TF Card", 2000).show();
+//				finish();
+			}
+
+			initCountDownTimer();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -78,31 +114,95 @@ public class Duole extends Activity {
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (XmlPullParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
+	
+	public void initCountDownTimer(){
+		
+		long entime = Integer.parseInt(Constants.entime)  * 1000;
+		long restime = Integer.parseInt(Constants.restime) * 60 * 1000;
+		
+		gameCountDown = new DuoleCountDownTimer(entime, Constants.countInterval){
 
-	public void initViews() throws IOException, TransformerException, SAXException {
-		// get all apps 
-        Constants.AssetList = parseXML.readXML(null, Constants.CacheDir + "itemlist.xml");
-        Log.v("TAG",Constants.AssetList.size() +"");
-        // the total pages
-        int PageCount = (int)Math.ceil(Constants.AssetList.size()/Constants.APP_PAGE_SIZE);
-        if(PageCount == 0){
-        	PageCount = 1;
-        }
-        Log.v("TAG",PageCount +"");
-        for (int i=0; i<PageCount; i++) {
-        	GridView appPage = new GridView(this);
-        	// get the "i" page data
-        	appPage.setAdapter(new AssetItemAdapter(this, Constants.AssetList, i));
-        	
-        	appPage.setNumColumns(3);
-        	
-        	appPage.setOnItemClickListener(listener);
-        	mScrollLayout.addView(appPage);
-        }
+			@Override
+			public void onTick(long millisUntilFinished, int percent) {
+			}
+
+			@Override
+			public void onFinish() {
+				appref.startMusicPlay();
+				Constants.ENTIME_OUT = true;
+				this.seek(0);
+				restCountDown.start();
+				//appref.startMusicPlay();
+			}
+			
+		};
+		
+		restCountDown = new DuoleCountDownTimer(restime,Constants.countInterval){
+
+			@Override
+			public void onTick(long millisUntilFinished, int percent) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onFinish() {
+				Constants.ENTIME_OUT = false;
+				this.seek(0);
+			}
+			
+		};
+	}
+
+	public void setBackground(){
+		
+		if(!Constants.bgurl.equals("")){
+			File bg = new File(Constants.CacheDir + Constants.bgurl.substring(Constants.bgurl.lastIndexOf("/")));
+			if(bg.exists()){
+				mScrollLayout.setBackgroundDrawable(Drawable.createFromPath(bg.getAbsolutePath()));
+			}
+		}
+		
 	}
 	
+	public void initViews() throws IOException, TransformerException,
+			SAXException, XmlPullParserException {
+		
+		// get all apps
+		Constants.AssetList = XmlUtils.readXML(null, Constants.CacheDir
+				+ "itemlist.xml");
+		// the total pages
+		int PageCount = (int) Math.ceil(Constants.AssetList.size()
+				/ Constants.APP_PAGE_SIZE) + 1;
+		
+		alAIA = new ArrayList<AssetItemAdapter>();
+		for (int i = 0; i < PageCount; i++) {
+			GridView appPage = new GridView(Duole.appref);
+			// get the "i" page data
+			appPage.setAdapter(new AssetItemAdapter(Duole.appref, Constants.AssetList,
+					i));
+
+			appPage.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+			
+			appPage.setNumColumns(3);
+			
+			appPage.setPadding(0, 10, 0, 0);
+			
+			appPage.setVerticalSpacing(20);
+
+			appPage.setOnItemClickListener(listener);
+			mScrollLayout.addView(appPage);
+		}
+		
+		DuoleUtils.setChildrenDrawingCacheEnabled(mScrollLayout,true);
+		
+	}
+
 	/**
 	 * The item click event of gridview
 	 */
@@ -111,37 +211,62 @@ public class Duole extends Activity {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			// TODO Auto-generated method stub
-			Asset assItem = (Asset)parent.getItemAtPosition(position);
-			
-			Intent intent = new Intent(appref,FlashActivity.class);
-			
+			Asset assItem = (Asset) parent.getItemAtPosition(position);
+
+			Intent intent;
+
 			try {
 				// launcher the package
 				
-				intent.putExtra("filename", assItem.getName());
+				appref.sendBroadcast(new Intent(Constants.Event_AppStart));
+				
+				if(assItem.getType().equals(Constants.RES_AUDIO)){
+					intent = new Intent(appref, MusicPlayerActivity.class);
+					
+					if(assItem.getUrl().startsWith("http:")){
+						intent.putExtra("filename", assItem.getUrl());
+					}else{
+						intent.putExtra("filename", assItem.getUrl().substring(assItem.getUrl().lastIndexOf("/")));
+					}
+					
+				}else{
+					intent = new Intent(appref, FlashPlayerActivity.class);
+					
+					if(assItem.getUrl().startsWith("http:")){
+						intent.putExtra("filename", assItem.getUrl());
+					}else{
+						intent.putExtra("filename", assItem.getUrl().substring(assItem.getUrl().lastIndexOf("/")));
+					}
+				}
+				
+				
+				
 				mContext.startActivity(intent);
 			} catch (ActivityNotFoundException noFound) {
-				Toast.makeText(mContext, "Package not found!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, "Package not found!",
+						Toast.LENGTH_SHORT).show();
 			}
 		}
-		
+
 	};
-	
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		android.os.Process.killProcess(android.os.Process.myPid());
+		unbindService(mConnection);
+//		android.os.Process.killProcess(android.os.Process.myPid());
 		super.onDestroy();
 	}
 
-//	@Override
-//	public boolean onKeyDown(int keyCode, KeyEvent event) {
-//		// TODO Auto-generated method stub
-//		if (keyCode == KeyEvent.KEYCODE_BACK) {
-//			finish();
-//			return true;
-//		}
-//		return super.onKeyDown(keyCode, event);
-//	}
+	@Override
+	protected void onPause() {
+		
+		super.onPause();
+	}
+	
+	
+
+	
+	
 	
 }
