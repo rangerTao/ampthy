@@ -60,6 +60,8 @@ public class RefreshCompeleteReceiver extends BroadcastReceiver {
 					try {
 						Constants.AssetList = XmlUtils.readXML(null, Constants.CacheDir
 								+ "itemlist.xml");
+						
+						Duole.appref.getMusicList(Constants.AssetList);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -106,7 +108,7 @@ public class RefreshCompeleteReceiver extends BroadcastReceiver {
 					DuoleUtils.setChildrenDrawingCacheEnabled(Duole.appref.mScrollLayout,true);
 					
 					Constants.DOWNLOAD_RUNNING = false;
-
+					
 				}
 
 			});

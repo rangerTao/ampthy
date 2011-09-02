@@ -35,6 +35,7 @@ public class BaseActivity extends Activity {
 
 	public void startMusicPlay(){
 		Intent MusicPlay = new Intent(this,MusicPlayerActivity.class);
+		MusicPlay.putExtra("index", "1");
 		startActivity(MusicPlay);
 	}
 	

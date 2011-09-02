@@ -1,5 +1,7 @@
 package com.duole.player;
 
+import java.io.File;
+
 import com.duole.R;
 import com.duole.activity.PlayerBaseActivity;
 import com.duole.utils.Constants;
@@ -37,20 +39,24 @@ public class FlashPlayerActivity extends PlayerBaseActivity{
 			url = "file://" + Constants.CacheDir + "/game/" + filename;
 		}
 		
-		wvPlay.getSettings().setPluginsEnabled(true);
-		wvPlay.getSettings().setPluginState(PluginState.ON);
+		File file = new File(Constants.CacheDir + "/game/" + filename);
 		
-		wvPlay.loadUrl(url);
+		if(file.exists()){
+			wvPlay.getSettings().setPluginsEnabled(true);
+			wvPlay.getSettings().setPluginState(PluginState.ON);
+			
+			wvPlay.loadUrl(url);
+		}else{
+			wvPlay.setBackgroundResource(R.drawable.bg86);
+		}
+		
+		
 		
 		wvPlay.setWebViewClient(new WebViewClient(){
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				if(url.indexOf("duoleyuan.com") != -1){ 
-            		//wb.setWebViewClient(new WebViewClientDemo());
-	            	view.loadUrl(url);     
-	                return true; 
-            	}else if(url.endsWith("swf") || url.endsWith("flv")){
+				if(url.indexOf("duoleyuan.com") != -1){
             		view.loadUrl(url);
             		return true;
             	}else{
@@ -66,15 +72,5 @@ public class FlashPlayerActivity extends PlayerBaseActivity{
 		wvPlay.destroy();
 		super.onDestroy();
 	}
-	
-	
-	
-	
-
-	
-	
-
-	
-	
 	
 }
