@@ -36,7 +36,12 @@ public class AssetItemAdapter extends BaseAdapter {
 			i++;
 		}
 	}
-
+	
+	public AssetItemAdapter(ArrayList<Asset> list){
+		mContext = Duole.appref;
+		mList = list;
+	}
+ 
 	public int getCount() {
 		return mList.size();
 	}

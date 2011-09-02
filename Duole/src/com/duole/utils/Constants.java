@@ -1,5 +1,6 @@
 package com.duole.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.duole.pojos.asset.Asset;
@@ -14,11 +15,13 @@ public class Constants {
 	public static final String ItemList = CacheDir + "itemlist.xml";
 	
 	public static ArrayList<Asset> AssetList;
+	public static ArrayList<Asset> MusicList;
 	public static ArrayList<Asset> DownLoadTaskList;
 	
 	//Default num of items in one page.
-	public static int APP_PAGE_SIZE = 9;
+	public static int APP_PAGE_SIZE = 12;
 	
+	public static int COLUMNS = 4;
 	//
 	public static final int REST_TIME = 1;
 	
@@ -28,6 +31,7 @@ public class Constants {
 	public static boolean DOWNLOAD_RUNNING = false;
 	//whether entainment time is run out.
 	public static boolean ENTIME_OUT = false;
+	public static boolean SLEEP_TIME = false;
 	
 	//Default type of resources.
 	public static final String RES_GAME = "game";
@@ -74,5 +78,8 @@ public class Constants {
 	public static final String Refresh_Complete = "com.duole.refresh.Complete";
 	public static final String Event_AppStart = "com.duole.player.start";
 	public static final String Event_AppEnd = "com.duole.player.end";
+	
+	//Date formater
+	public static final SimpleDateFormat sdf_hour = new SimpleDateFormat("HH");
 	
 }

@@ -104,7 +104,6 @@ public class XmlUtils {
 					}
 					if (Constants.XML_RESTURL.equals(parser.getName())) {
 						Constants.bgRestUrl = parser.nextText();
-						Log.v("TAG", Constants.bgRestUrl);
 					}
 					if (Constants.XML_ENTIME.equals(parser.getName())) {
 						Constants.entime = parser.nextText();

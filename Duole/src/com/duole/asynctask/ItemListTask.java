@@ -28,10 +28,12 @@ public class ItemListTask extends AsyncTask {
 	protected Object doInBackground(Object... arg0) {
 		try {
 			getSourceList();
+			
+			treatData();
 		} catch (Exception e) {
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	/**
@@ -40,7 +42,7 @@ public class ItemListTask extends AsyncTask {
 	@Override
 	protected void onPostExecute(Object result) {
 		if ((Boolean) result) {
-			treatData();
+			
 		}
 
 		super.onPostExecute(result);
@@ -98,14 +100,11 @@ public class ItemListTask extends AsyncTask {
 		try {
 			int res = 0;
 			URL url = new URL(
-					"http://www.duoleyuan.com/e/member/child/ancJn.php?cc="
-							+ "7c71f33fce7335e4");
-			// "http://www.duoleyuan.com/e/member/child/ancJn.php?cc=" +
-			// DuoleUtils.getAndroidId());
+//					"http://www.duoleyuan.com/e/member/child/ancJn.php?cc="	+ "7c71f33fce7335e4");
+			"http://www.duoleyuan.com/e/member/child/ancJn.php?cc=" + DuoleUtils.getAndroidId());
 
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-			Log.v("TAG", url.getPath());
 			conn.setRequestMethod("GET");
 
 			conn.setConnectTimeout(5 * 1000);

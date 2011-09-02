@@ -18,7 +18,7 @@ public class DownloadFileUtils extends Thread {
 
 		int listsize = Constants.DownLoadTaskList.size();
 		// If there are several task in the list.
-		Log.v("TAG", "there are " + listsize + " files to download");
+
 		if (listsize > 0) {
 			for (int i = 0; i < listsize; i++) {
 				download(i);
@@ -55,8 +55,6 @@ public class DownloadFileUtils extends Thread {
 					DuoleUtils.downloadVideo(asset, asset.getUrl());
 				}
 			}
-			
-			Log.v("TAG",index + "   " +  asset.getFilename() + "   downloaded");
 			
 		} catch (Exception e) {
 			e.printStackTrace();

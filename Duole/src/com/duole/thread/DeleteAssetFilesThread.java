@@ -24,7 +24,7 @@ public class DeleteAssetFilesThread extends Thread {
 
 	@Override
 	public void run() {
-		Log.v("TAG", "Delete list size " + assets.size());
+
 		for (int i = 0; i < assets.size(); i++) {
 			Asset ass = assets.get(i);
 			// Delete thumbnail.

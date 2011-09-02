@@ -268,7 +268,6 @@ public class DuoleUtils {
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.v("TAG", file.getAbsolutePath());
 			file.delete();
 			return false;
 		}
@@ -342,7 +341,6 @@ public class DuoleUtils {
 				return false;
 			}
 			if (!file.exists()) {
-				Log.v("TAG", "check " + asset.getUrl());
 				return true;
 			}
 		}

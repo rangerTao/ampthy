@@ -46,28 +46,29 @@ import com.duole.utils.XmlUtils;
 public class Duole extends BaseActivity {
 
 	public static Duole appref;
-	
+
 	public static DuoleCountDownTimer gameCountDown;
 	public static DuoleCountDownTimer restCountDown;
-	
+
 	private static final String TAG = "TAG";
 	public ScrollLayout mScrollLayout;
 	private static Context mContext;
 	private static BackgroundRefreshService mBoundService;
 	public static ArrayList<AssetItemAdapter> alAIA;
-	
+
 	public static ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
+		public void onServiceConnected(ComponentName className, IBinder service) {
 
-        	mBoundService = ((BackgroundRefreshService.LocalBinder)service).getService();  
-        }
+			mBoundService = ((BackgroundRefreshService.LocalBinder) service)
+					.getService();
+		}
 
-        public void onServiceDisconnected(ComponentName className) { 
+		public void onServiceDisconnected(ComponentName className) {
 
-        	mBoundService = null;
-        }
-}; 
-	
+			mBoundService = null;
+		}
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -75,33 +76,33 @@ public class Duole extends BaseActivity {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		mContext = this;
 		setContentView(R.layout.main);
-		
+
 		appref = this;
-		
+
 		mScrollLayout = (ScrollLayout) findViewById(R.id.ScrollLayoutTest);
-		
+
 		appref = this;
 		try {
-			
-			//Check whether tf card exists.
+
+			// Check whether tf card exists.
 			if (DuoleUtils.checkTFCard()) {
-				//init the cache folders.
+				// init the cache folders.
 				if (DuoleUtils.checkCacheFiles()) {
-					//init the main view.
+					// init the main view.
 					initViews();
-					
+
 					setBackground();
 				} else {
 					Toast.makeText(this, R.string.itemlist_lost, 2000).show();
-					
-					//XmlUtils.createItemList();
+
+					// XmlUtils.createItemList();
 				}
-				
+
 				new ItemListTask().execute();
-				
-			}else{
+
+			} else {
 				Toast.makeText(this, "No TF Card", 2000).show();
-//				finish();
+				// finish();
 			}
 
 			initCountDownTimer();
@@ -119,13 +120,16 @@ public class Duole extends BaseActivity {
 			e.printStackTrace();
 		}
 	}
-	
-	public void initCountDownTimer(){
-		
-		long entime = Integer.parseInt(Constants.entime)  * 1000;
+
+	public void initCountDownTimer() {
+
+		long entime = Integer.parseInt(Constants.entime) * 60 * 1000;
 		long restime = Integer.parseInt(Constants.restime) * 60 * 1000;
-		
-		gameCountDown = new DuoleCountDownTimer(entime, Constants.countInterval){
+//
+//		long entime = 2 * 60 * 1000;
+//		long restime = 1 * 60 * 1000;
+
+		gameCountDown = new DuoleCountDownTimer(entime, Constants.countInterval) {
 
 			@Override
 			public void onTick(long millisUntilFinished, int percent) {
@@ -137,17 +141,18 @@ public class Duole extends BaseActivity {
 				Constants.ENTIME_OUT = true;
 				this.seek(0);
 				restCountDown.start();
-				//appref.startMusicPlay();
+				// appref.startMusicPlay();
 			}
-			
+
 		};
-		
-		restCountDown = new DuoleCountDownTimer(restime,Constants.countInterval){
+
+		restCountDown = new DuoleCountDownTimer(restime,
+				Constants.countInterval) {
 
 			@Override
 			public void onTick(long millisUntilFinished, int percent) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
@@ -155,52 +160,74 @@ public class Duole extends BaseActivity {
 				Constants.ENTIME_OUT = false;
 				this.seek(0);
 			}
-			
+
 		};
 	}
 
-	public void setBackground(){
-		
-		if(!Constants.bgurl.equals("")){
-			File bg = new File(Constants.CacheDir + Constants.bgurl.substring(Constants.bgurl.lastIndexOf("/")));
-			if(bg.exists()){
-				mScrollLayout.setBackgroundDrawable(Drawable.createFromPath(bg.getAbsolutePath()));
+	public void setBackground() {
+
+		if (!Constants.bgurl.equals("")) {
+			File bg = new File(Constants.CacheDir
+					+ Constants.bgurl.substring(Constants.bgurl
+							.lastIndexOf("/")));
+			if (bg.exists()) {
+				mScrollLayout.setBackgroundDrawable(Drawable.createFromPath(bg
+						.getAbsolutePath()));
 			}
 		}
-		
+
 	}
-	
+
 	public void initViews() throws IOException, TransformerException,
 			SAXException, XmlPullParserException {
-		
+
 		// get all apps
 		Constants.AssetList = XmlUtils.readXML(null, Constants.CacheDir
 				+ "itemlist.xml");
+
+		getMusicList(Constants.AssetList);
+
 		// the total pages
 		int PageCount = (int) Math.ceil(Constants.AssetList.size()
 				/ Constants.APP_PAGE_SIZE) + 1;
-		
+
 		alAIA = new ArrayList<AssetItemAdapter>();
 		for (int i = 0; i < PageCount; i++) {
 			GridView appPage = new GridView(Duole.appref);
 			// get the "i" page data
-			appPage.setAdapter(new AssetItemAdapter(Duole.appref, Constants.AssetList,
-					i));
+			appPage.setAdapter(new AssetItemAdapter(Duole.appref,
+					Constants.AssetList, i));
 
-			appPage.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-			
-			appPage.setNumColumns(3);
-			
+			appPage.setLayoutParams(new ViewGroup.LayoutParams(
+					LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+
+			appPage.setNumColumns(Constants.COLUMNS);
+
 			appPage.setPadding(0, 10, 0, 0);
-			
+
 			appPage.setVerticalSpacing(20);
 
 			appPage.setOnItemClickListener(listener);
 			mScrollLayout.addView(appPage);
 		}
+
+		DuoleUtils.setChildrenDrawingCacheEnabled(mScrollLayout, true);
+
+	}
+
+	public void getMusicList(ArrayList<Asset> assets) {
+
+		Constants.MusicList = new ArrayList<Asset>();
+
+		for (Asset asset : assets) {
+			if (asset.getType().equals(Constants.RES_AUDIO)) {
+
+				Constants.MusicList.add(asset);
+
+			}
+		}
 		
-		DuoleUtils.setChildrenDrawingCacheEnabled(mScrollLayout,true);
-		
+		Log.v("TAG", Constants.MusicList.size() + "");
 	}
 
 	/**
@@ -217,30 +244,30 @@ public class Duole extends BaseActivity {
 
 			try {
 				// launcher the package
-				
-				appref.sendBroadcast(new Intent(Constants.Event_AppStart));
-				
-				if(assItem.getType().equals(Constants.RES_AUDIO)){
+
+				if (assItem.getType().equals(Constants.RES_AUDIO)) {
 					intent = new Intent(appref, MusicPlayerActivity.class);
-					
-					if(assItem.getUrl().startsWith("http:")){
-						intent.putExtra("filename", assItem.getUrl());
-					}else{
-						intent.putExtra("filename", assItem.getUrl().substring(assItem.getUrl().lastIndexOf("/")));
-					}
-					
-				}else{
+
+					int index = Constants.MusicList.indexOf(assItem);
+
+					intent.putExtra("index", index + 1 + "");
+
+				} else {
+
+					appref.sendBroadcast(new Intent(Constants.Event_AppStart));
+
 					intent = new Intent(appref, FlashPlayerActivity.class);
-					
-					if(assItem.getUrl().startsWith("http:")){
+
+					if (assItem.getUrl().startsWith("http:")) {
 						intent.putExtra("filename", assItem.getUrl());
-					}else{
-						intent.putExtra("filename", assItem.getUrl().substring(assItem.getUrl().lastIndexOf("/")));
+					} else {
+						intent.putExtra(
+								"filename",
+								assItem.getUrl().substring(
+										assItem.getUrl().lastIndexOf("/")));
 					}
 				}
-				
-				
-				
+
 				mContext.startActivity(intent);
 			} catch (ActivityNotFoundException noFound) {
 				Toast.makeText(mContext, "Package not found!",
@@ -253,20 +280,20 @@ public class Duole extends BaseActivity {
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		unbindService(mConnection);
-//		android.os.Process.killProcess(android.os.Process.myPid());
+		try{
+			unbindService(mConnection);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		// android.os.Process.killProcess(android.os.Process.myPid());
 		super.onDestroy();
 	}
 
 	@Override
 	protected void onPause() {
-		
+
 		super.onPause();
 	}
-	
-	
 
-	
-	
-	
 }
