@@ -8,10 +8,6 @@ import com.duole.utils.Constants;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.WindowManager;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebSettings.PluginState;
 import android.webkit.WebViewClient;
@@ -24,7 +20,7 @@ public class FlashPlayerActivity extends PlayerBaseActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
+		this.SetFullScreen();
 		setContentView(R.layout.flashplayer);
 		
 		wvPlay = (WebView) findViewById(R.id.wvFlash);

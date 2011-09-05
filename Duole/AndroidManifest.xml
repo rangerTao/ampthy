@@ -17,46 +17,47 @@
 
 		<service android:name=".service.BackgroundRefreshService" />
 
-
 		<receiver android:name=".receiver.BootCompleteReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
 			</intent-filter>
 		</receiver>
 
-		<receiver android:name=".receiver.BackgroundRefreshReceiver" >
+		<receiver android:name=".receiver.BackgroundRefreshReceiver">
 			<intent-filter>
-				<action android:name="com.duole.refresh.Start"/>
+				<action android:name="com.duole.refresh.Start" />
 			</intent-filter>
 		</receiver>
-		
-		<receiver android:name=".receiver.RefreshCompeleteReceiver" >
+
+		<receiver android:name=".receiver.RefreshCompeleteReceiver">
 			<intent-filter>
-				<action android:name="com.duole.refresh.Complete"/>
+				<action android:name="com.duole.refresh.Complete" />
 			</intent-filter>
 		</receiver>
-		
-		<receiver android:name=".receiver.AntiFatigueReceiver" >
-			<intent-filter >
-				<action android:name="com.duole.player.start"/>
+
+		<receiver android:name=".receiver.AntiFatigueReceiver">
+			<intent-filter>
+				<action android:name="com.duole.player.start" />
 			</intent-filter>
-			<intent-filter >
-				<action android:name="com.duole.player.end"/>
+			<intent-filter>
+				<action android:name="com.duole.player.end" />
 			</intent-filter>
 		</receiver>
-		
+
 		<service android:name=".service.AntiFatigueService" />
 
 	</application>
 
-
-
+	<supports-screens android:largeScreens="true"
+		android:normalScreens="true" android:smallScreens="true"
+		android:anyDensity="true" />
 
 	<uses-sdk android:minSdkVersion="8" />
 	<!-- Create or delete files -->
 	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 	<!-- output datas. -->
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 </manifest> 

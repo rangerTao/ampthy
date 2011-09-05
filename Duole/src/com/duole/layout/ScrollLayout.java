@@ -15,6 +15,8 @@ public class ScrollLayout extends ViewGroup {
 	private Scroller mScroller;
 	private VelocityTracker mVelocityTracker;
 	
+	private boolean change = true;
+	
 	private int mCurScreen;
 	private int mDefaultScreen = 0;
 	
@@ -44,7 +46,7 @@ public class ScrollLayout extends ViewGroup {
 
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
 		// TODO Auto-generated method stub
-//		if (changed) {
+		if (change) {
 			int childLeft = 0;
 			final int childCount = getChildCount();
 			
@@ -57,7 +59,9 @@ public class ScrollLayout extends ViewGroup {
 					childLeft += childWidth;
 				}
 			}
-//		}
+			
+			change = false;
+		}
 	}
 
 
@@ -221,4 +225,8 @@ public class ScrollLayout extends ViewGroup {
 		return mTouchState != TOUCH_STATE_REST;
 	}
 	
+	//Refresh the view
+	public void refresh(){
+		change = true;
+	}
 }
