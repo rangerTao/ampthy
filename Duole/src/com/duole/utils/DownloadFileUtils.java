@@ -55,6 +55,11 @@ public class DownloadFileUtils extends Thread {
 					DuoleUtils.downloadVideo(asset, asset.getUrl());
 				}
 			}
+			if(asset.getType().equals(Constants.RES_APK)){
+				if (!asset.getUrl().startsWith("http")) {
+					DuoleUtils.downloadApp(asset, asset.getUrl());
+				}
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();

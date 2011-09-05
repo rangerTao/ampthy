@@ -62,6 +62,16 @@ public class FlashPlayerActivity extends PlayerBaseActivity{
 			
 		});
 	}
+	
+	
+
+	@Override
+	protected void onPause() {
+		finish();
+		super.onPause();
+	}
+
+
 
 	@Override
 	protected void onDestroy() {

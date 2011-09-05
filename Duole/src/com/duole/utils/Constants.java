@@ -38,6 +38,8 @@ public class Constants {
 	public static final String RES_AUDIO = "mp3";
 	public static final String RES_VIDEO = "video";
 	public static final String RES_THUMB = "thumbnail";
+	public static final String RES_APK = "apk";
+	public static final String RES_CONFIG = "config";
 	
 	//Configuration
 	public static String bgurl = "";
@@ -55,6 +57,8 @@ public class Constants {
 	public static final String XML_TITLE = "title";
 	public static final String XML_PIC = "pic";
 	public static final String XML_URL = "url";
+	public static final String XML_PACKAGE = "package";
+	public static final String XML_ACTIVITY = "activity";
 	public static final String XML_LASTMODIFIED = "lastmodified";
 	public static final String XML_TYPE = "type";
 	public static final String XML_BG = "bg";

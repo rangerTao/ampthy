@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">Duole</string>
     <string name="itemlist_lost">\u8d44\u6e90\u5217\u8868\u4e0d\u5b58\u5728\uff01</string>
+    <string name="network_config">\u7f51\u7edc\u8bbe\u7f6e</string>
 </resources>

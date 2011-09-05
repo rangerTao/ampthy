@@ -11,16 +11,18 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.duole.Duole;
-import com.duole.layout.ScrollLayout;
-import com.duole.pojos.asset.Asset;
-
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
 import android.provider.Settings.System;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
+import com.duole.Duole;
+import com.duole.R;
+import com.duole.pojos.asset.Asset;
 
 public class DuoleUtils {
 
@@ -55,6 +57,12 @@ public class DuoleUtils {
 
 		// Whether thumbnail folder exists.
 		file = new File(Constants.CacheDir + "/thumbnail/");
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		
+		// Whether app folder exists.
+		file = new File(Constants.CacheDir + Constants.RES_APK);
 		if (!file.exists()) {
 			file.mkdir();
 		}
@@ -128,11 +136,52 @@ public class DuoleUtils {
 				+ "/video"
 				+ "/"
 				+ asset.getUrl().substring(
-						asset.getThumbnail().lastIndexOf("/")));
+						asset.getUrl().lastIndexOf("/")));
 
 		if (downloadSingleFile(url, file))
 			return true;
 
+		return false;
+
+	}
+	
+	/**
+	 * Down load app from server.
+	 * 
+	 * @param asset
+	 * @param video
+	 * @return
+	 */
+	public static boolean downloadApp(Asset asset, String video) {
+
+		// Reorganize the url.
+		URL url = checkUrl(video);
+
+		// the file used to save the video.
+		File file = new File(Constants.CacheDir
+				+ "/apk"
+				+ "/"
+				+ asset.getUrl().substring(
+						asset.getUrl().lastIndexOf("/")));
+
+		if (downloadSingleFile(url, file)){
+			try {
+				Process p = Runtime.getRuntime().exec("pm install " + file.getAbsolutePath());
+				p.waitFor();
+				int result = p.exitValue();
+				if(result == 0 ){
+					return true;
+				}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		}
+			
 		return false;
 
 	}
@@ -386,4 +435,15 @@ public class DuoleUtils {
             view.setDrawingCacheEnabled(false);  
         }  
     }  
+    
+    public static void addNetworkManager(ArrayList<Asset> assets){
+    	
+    	Asset asset = new Asset();
+    	
+    	asset.setType(Constants.RES_CONFIG);
+    	
+    	asset.setFilename(Duole.appref.getString(R.string.network_config));
+    	
+    	assets.add(asset);
+    }
 }

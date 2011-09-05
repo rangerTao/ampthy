@@ -67,7 +67,6 @@ public class MusicPlayerActivity extends PlayerBaseActivity implements OnFocusCh
 			File bg = new File(Constants.CacheDir
 					+ Constants.bgRestUrl.substring(Constants.bgRestUrl
 							.lastIndexOf("/")));
-			Log.v("TAG", bg.getAbsolutePath());
 			if (bg.exists()) {
 				llMain.setBackgroundDrawable(Drawable.createFromPath(bg
 						.getAbsolutePath()));
@@ -152,7 +151,6 @@ public class MusicPlayerActivity extends PlayerBaseActivity implements OnFocusCh
 
 	public void onFocusChange(View view, boolean value) {
 		
-				Log.v("TAG", "Focus changed");
 	}
 
 	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,

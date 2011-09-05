@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.content.pm.ResolveInfo;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import com.duole.Duole;
 import com.duole.R;
-import com.duole.pojos.adapter.AppAdapter.AppItem;
 import com.duole.pojos.asset.Asset;
 import com.duole.utils.Constants;
 
@@ -73,6 +71,16 @@ public class AssetItemAdapter extends BaseAdapter {
 			convertView = v;
 		} else {
 			assItem = (AssetItem) convertView.getTag();
+		}
+		
+		if(asset.getType().equals(Constants.RES_CONFIG)){
+			
+			assItem.ivAssetThumb.setImageResource(R.drawable.network);
+			assItem.tvAssetName.setText(asset.getFilename());
+			
+			assItem.ivKe.setImageBitmap(BitmapFactory.decodeResource(Duole.appref.getResources(), R.drawable.ke));
+			
+			return convertView;
 		}
 		
 		if(!asset.getThumbnail().equals("")){

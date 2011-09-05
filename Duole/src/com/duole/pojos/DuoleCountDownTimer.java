@@ -20,6 +20,13 @@ public abstract class DuoleCountDownTimer {
         }  
     }  
       
+    public void setTotalTime(long total){
+    
+    	this.mTotalTime = total;
+    	
+    }
+    
+    
     public final void cancel() {  
         mHandler.removeMessages(MSG_RUN);  
         mHandler.removeMessages(MSG_PAUSE);  

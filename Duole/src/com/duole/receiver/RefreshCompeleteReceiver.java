@@ -1,39 +1,23 @@
 package com.duole.receiver;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
-import javax.xml.transform.TransformerException;
-
-import org.xml.sax.SAXException;
-import org.xmlpull.v1.XmlPullParserException;
-
 import com.duole.Duole;
-import com.duole.R;
 import com.duole.layout.ScrollLayout;
-import com.duole.player.FlashPlayerActivity;
-import com.duole.player.MusicPlayerActivity;
 import com.duole.pojos.adapter.AssetItemAdapter;
-import com.duole.pojos.asset.Asset;
 import com.duole.service.BackgroundRefreshService;
 import com.duole.utils.Constants;
 import com.duole.utils.DuoleUtils;
 import com.duole.utils.XmlUtils;
 
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class RefreshCompeleteReceiver extends BroadcastReceiver {
 
@@ -60,6 +44,8 @@ public class RefreshCompeleteReceiver extends BroadcastReceiver {
 					try {
 						Constants.AssetList = XmlUtils.readXML(null, Constants.CacheDir
 								+ "itemlist.xml");
+						
+						DuoleUtils.addNetworkManager(Constants.AssetList);
 						
 						Duole.appref.getMusicList(Constants.AssetList);
 					} catch (Exception e) {
@@ -106,7 +92,7 @@ public class RefreshCompeleteReceiver extends BroadcastReceiver {
 					}
 					
 					DuoleUtils.setChildrenDrawingCacheEnabled(Duole.appref.mScrollLayout,true);
-					
+										
 					Duole.appref.mScrollLayout.refresh();
 					
 					Constants.DOWNLOAD_RUNNING = false;
