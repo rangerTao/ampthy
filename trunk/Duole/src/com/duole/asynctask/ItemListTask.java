@@ -18,7 +18,6 @@ import com.duole.utils.JsonUtils;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 
 public class ItemListTask extends AsyncTask {
 
@@ -125,7 +124,7 @@ public class ItemListTask extends AsyncTask {
 			}
 
 			if (error != null) {
-
+				
 			} else {
 				JsonUtils.parserJson(alAsset, jsonObject);
 			}
