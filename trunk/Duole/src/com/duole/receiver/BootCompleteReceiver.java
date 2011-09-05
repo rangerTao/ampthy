@@ -15,6 +15,7 @@ public class BootCompleteReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		
 		if (intent.getAction().equals(ACTION)) {
 			// ¿ª»úÏÔÊ¾
 			Intent LoadurlIntent = new Intent(context, Duole.class);

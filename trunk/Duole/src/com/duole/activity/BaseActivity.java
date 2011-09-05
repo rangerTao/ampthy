@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -46,6 +47,13 @@ public class BaseActivity extends Activity {
 		
 	}	
 	
+	//set the screen on
+	public void setScreenON(){
+		ContentResolver mContentResolver = getContentResolver();
+		
+		android.provider.Settings.System.putInt(mContentResolver, android.provider.Settings.System.LOCK_PATTERN_ENABLED, 0);
+	}
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		
@@ -62,4 +70,10 @@ public class BaseActivity extends Activity {
 		super.onAttachedToWindow();
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+
+	
 }

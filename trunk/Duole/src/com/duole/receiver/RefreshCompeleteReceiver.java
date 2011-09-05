@@ -107,6 +107,8 @@ public class RefreshCompeleteReceiver extends BroadcastReceiver {
 					
 					DuoleUtils.setChildrenDrawingCacheEnabled(Duole.appref.mScrollLayout,true);
 					
+					Duole.appref.mScrollLayout.refresh();
+					
 					Constants.DOWNLOAD_RUNNING = false;
 					
 				}

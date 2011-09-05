@@ -9,10 +9,14 @@ import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.app.KeyguardManager;
+import android.app.KeyguardManager.KeyguardLock;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -21,11 +25,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Chronometer.OnChronometerTickListener;
-import android.widget.Chronometer;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -37,7 +38,6 @@ import com.duole.player.MusicPlayerActivity;
 import com.duole.pojos.DuoleCountDownTimer;
 import com.duole.pojos.adapter.AssetItemAdapter;
 import com.duole.pojos.asset.Asset;
-import com.duole.service.AntiFatigueService;
 import com.duole.service.BackgroundRefreshService;
 import com.duole.utils.Constants;
 import com.duole.utils.DuoleUtils;
@@ -71,10 +71,11 @@ public class Duole extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		mContext = this;
+
 		setContentView(R.layout.main);
 
 		appref = this;
@@ -106,6 +107,8 @@ public class Duole extends BaseActivity {
 			}
 
 			initCountDownTimer();
+
+			registerScreenReceiver();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -121,13 +124,33 @@ public class Duole extends BaseActivity {
 		}
 	}
 
+	public void registerScreenReceiver() {
+
+		IntentFilter intentFilter = new IntentFilter(
+				"android.intent.action.SCREEN_ON");
+		registerReceiver(screenReceiver, intentFilter);
+
+	}
+
+	BroadcastReceiver screenReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context arg0, Intent arg1) {
+
+			KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+			KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("");
+			keyguardLock.disableKeyguard();
+		}
+
+	};
+
 	public void initCountDownTimer() {
 
 		long entime = Integer.parseInt(Constants.entime) * 60 * 1000;
 		long restime = Integer.parseInt(Constants.restime) * 60 * 1000;
-//
-//		long entime = 2 * 60 * 1000;
-//		long restime = 1 * 60 * 1000;
+		//
+		// long entime = 2 * 60 * 1000;
+		// long restime = 1 * 60 * 1000;
 
 		gameCountDown = new DuoleCountDownTimer(entime, Constants.countInterval) {
 
@@ -175,7 +198,6 @@ public class Duole extends BaseActivity {
 						.getAbsolutePath()));
 			}
 		}
-
 	}
 
 	public void initViews() throws IOException, TransformerException,
@@ -226,7 +248,7 @@ public class Duole extends BaseActivity {
 
 			}
 		}
-		
+
 		Log.v("TAG", Constants.MusicList.size() + "");
 	}
 
@@ -280,20 +302,14 @@ public class Duole extends BaseActivity {
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		try{
+		try {
 			unbindService(mConnection);
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		// android.os.Process.killProcess(android.os.Process.myPid());
 		super.onDestroy();
-	}
-
-	@Override
-	protected void onPause() {
-
-		super.onPause();
 	}
 
 }

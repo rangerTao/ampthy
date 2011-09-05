@@ -2,6 +2,8 @@ package com.duole.player;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -21,16 +23,22 @@ import com.duole.R;
 import com.duole.activity.PlayerBaseActivity;
 import com.duole.pojos.adapter.AssetItemAdapter;
 import com.duole.utils.Constants;
+import com.duole.utils.DuoleUtils;
 
 public class MusicPlayerActivity extends PlayerBaseActivity implements OnFocusChangeListener, OnItemSelectedListener {
 
 	MediaPlayer mp;
+	LinearLayout llMain;
 	String url = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);		
+		this.SetFullScreen();
 		setContentView(R.layout.musicplayer);
+		
+		setBackground();
+		
 		Intent intent = getIntent();
 
 		Gallery gallery = (Gallery)findViewById(R.id.musicGallery);
@@ -50,8 +58,32 @@ public class MusicPlayerActivity extends PlayerBaseActivity implements OnFocusCh
 		setMusicData(index -1 );
 
 	}
+	
+	public void setBackground(){
+		
+		llMain = (LinearLayout)findViewById(R.id.llMusicPlayer);
+		
+		if (!Constants.bgRestUrl.equals("")) {
+			File bg = new File(Constants.CacheDir
+					+ Constants.bgRestUrl.substring(Constants.bgRestUrl
+							.lastIndexOf("/")));
+			Log.v("TAG", bg.getAbsolutePath());
+			if (bg.exists()) {
+				llMain.setBackgroundDrawable(Drawable.createFromPath(bg
+						.getAbsolutePath()));
+			}else{
+				try {
+					DuoleUtils.downloadSingleFile(new URL(Constants.Duole + Constants.bgRestUrl), bg);
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}	
+}
 
 	public void setMusicData(int index) {
+		
 		String filename = Constants.MusicList.get(index).getUrl();
 
 		if (filename.startsWith("http:")) {
