@@ -16,8 +16,10 @@ import com.duole.utils.DownloadFileUtils;
 import com.duole.utils.DuoleUtils;
 import com.duole.utils.JsonUtils;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class ItemListTask extends AsyncTask {
 
@@ -69,19 +71,12 @@ public class ItemListTask extends AsyncTask {
 						Constants.DownLoadTaskList.add(ass);
 					}
 				}
-				// else {
-				// Constants.DownLoadTaskList.add(ass);
-				// }
 			}
 		} else {
 			for (Asset asset : alAsset) {
 				Constants.DownLoadTaskList.add(asset);
 			}
 		}
-
-		// if(Constants.DownLoadTaskList.size() > 0){
-		DuoleUtils.updateAssetListFile(alAsset);
-		// }
 
 		if (alAssetDeleteList.size() > 0) {
 			new DeleteAssetFilesThread(alAssetDeleteList).start();
@@ -90,6 +85,9 @@ public class ItemListTask extends AsyncTask {
 		if (DownloadFileUtils.downloadAll()) {
 			Duole.appref.sendBroadcast(new Intent(Constants.Refresh_Complete));
 		}
+		
+		DuoleUtils.updateAssetListFile(alAsset);
+		
 	}
 
 	/**

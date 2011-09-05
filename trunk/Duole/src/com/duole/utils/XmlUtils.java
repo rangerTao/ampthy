@@ -25,9 +25,12 @@ import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.util.Log;
 import android.util.Xml;
 
+import com.duole.Duole;
 import com.duole.pojos.asset.Asset;
 
 public class XmlUtils {
@@ -90,6 +93,12 @@ public class XmlUtils {
 						}
 						if(Constants.XML_URL.equals(parser.getName())){
 							asset.setUrl(parser.nextText());
+						}
+						if(Constants.XML_PACKAGE.equals(parser.getName())){
+							asset.setPackag(parser.nextText());
+						}
+						if(Constants.XML_ACTIVITY.equals(parser.getName())){
+							asset.setActivity(parser.nextText());
 						}
 						if(Constants.XML_LASTMODIFIED.equals(parser.getName())){
 							asset.setLastmodified(parser.nextText());
@@ -195,12 +204,7 @@ public class XmlUtils {
 				sbresult = new StringBuffer();
 				Node node = nList.item(i);
 				node.getParentNode().removeChild(node);
-//				NodeList nodeList = node.getChildNodes();
-//				for (int j = 0; j < nodeList.getLength(); j++) {
-//					Node node2 = nodeList.item(j);
-//					node2.getParentNode().getParentNode()
-//							.removeChild(node2.getParentNode());
-//				}
+
 				result[i] = sbresult.toString();
 			}
 
@@ -272,6 +276,29 @@ public class XmlUtils {
 				newElement.appendChild(newUrlElement);
 				newElement.appendChild(newLastModifiedElement);
 				newElement.appendChild(newTypeElement);
+				
+				if(asset.getType().equals(Constants.RES_APK)){
+					
+					PackageManager pm = Duole.appref.getPackageManager();
+					File file = new File(Constants.CacheDir + Constants.RES_APK + asset.getUrl().substring(asset.getUrl().lastIndexOf("/")));
+
+					PackageInfo info;
+					info = pm.getPackageArchiveInfo(file.getAbsolutePath(), PackageManager.GET_ACTIVITIES);
+					if(info != null){
+						Text packag = document.createTextNode(info.packageName);
+						Element newPackage = document.createElement("package");
+						newPackage.appendChild(packag);
+						newElement.appendChild(newPackage);
+						
+						Text mainActivity = document.createTextNode(info.activities[0].name);
+						Element newActivity = document.createElement("activity");
+						newActivity.appendChild(mainActivity);
+						newElement.appendChild(newActivity);
+						
+					}
+					
+				}
+				
 				document.getDocumentElement().appendChild(newElement);
 
 			}
@@ -381,7 +408,7 @@ public class XmlUtils {
 		}
 
 	}
-
+	
 	/**
 	 * Create a new xml node.
 	 * @param document

@@ -30,7 +30,9 @@ public class DeleteAssetFilesThread extends Thread {
 			// Delete thumbnail.
 			File file;
 			
-			if(!ass.getThumbnail().equals("")){
+			Log.v("TAG", i + "");
+			
+			if(!ass.getType().equals(Constants.RES_CONFIG) && !ass.getThumbnail().equals("")){
 				file = new File(Constants.CacheDir
 						+ Constants.RES_THUMB
 						+ ass.getThumbnail().substring(

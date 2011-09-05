@@ -1,20 +1,15 @@
 package com.duole.activity;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.duole.player.MusicPlayerActivity;
-import com.duole.pojos.DuoleCountDownTimer;
 import com.duole.utils.Constants;
 
 public class BaseActivity extends Activity {
@@ -44,7 +39,6 @@ public class BaseActivity extends Activity {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		
 	}	
 	
 	//set the screen on

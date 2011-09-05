@@ -12,6 +12,8 @@ public class Asset {
 	private String id;
 	private String lastmodified;
 	private String filename;
+	private String packag;
+	private String activity;
 
 	public Asset(JSONObject json) {
 		try {
@@ -102,6 +104,22 @@ public class Asset {
 		this.filename = filename;
 	}
 	
+	public String getPackag() {
+		return packag;
+	}
+
+	public void setPackag(String packag) {
+		this.packag = packag;
+	}
+	
+	public String getActivity() {
+		return activity;
+	}
+
+	public void setActivity(String activity) {
+		this.activity = activity;
+	}
+
 	public String toString(){
 		return "name: " + this.getName() +" "
 	+ "thumbnail: " + this.getThumbnail() + " "

@@ -21,10 +21,12 @@ import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
@@ -75,7 +77,7 @@ public class Duole extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		mContext = this;
-
+		SetFullScreen();
 		setContentView(R.layout.main);
 
 		appref = this;
@@ -93,6 +95,8 @@ public class Duole extends BaseActivity {
 					initViews();
 
 					setBackground();
+					
+					initCountDownTimer();
 				} else {
 					Toast.makeText(this, R.string.itemlist_lost, 2000).show();
 
@@ -105,8 +109,6 @@ public class Duole extends BaseActivity {
 				Toast.makeText(this, "No TF Card", 2000).show();
 				// finish();
 			}
-
-			initCountDownTimer();
 
 			registerScreenReceiver();
 		} catch (IOException e) {
@@ -146,10 +148,14 @@ public class Duole extends BaseActivity {
 
 	public void initCountDownTimer() {
 
-		long entime = Integer.parseInt(Constants.entime) * 60 * 1000;
-		long restime = Integer.parseInt(Constants.restime) * 60 * 1000;
+		long entime = Integer.parseInt(Constants.entime == "" ? "30" : Constants.entime) * 60 * 1000;
+		long restime = Integer.parseInt(Constants.restime == "" ? "5" : Constants.restime) * 60 * 1000;
+		
+		//long entime = 1 * 60 * 1000;
+		//Log.v("TAG", entime + "   " + restime);
+		
 		//
-		// long entime = 2 * 60 * 1000;
+		
 		// long restime = 1 * 60 * 1000;
 
 		gameCountDown = new DuoleCountDownTimer(entime, Constants.countInterval) {
@@ -162,6 +168,7 @@ public class Duole extends BaseActivity {
 			public void onFinish() {
 				appref.startMusicPlay();
 				Constants.ENTIME_OUT = true;
+				this.setTotalTime(Integer.parseInt(Constants.entime == "" ? "30" : Constants.entime) * 60 * 1000);
 				this.seek(0);
 				restCountDown.start();
 				// appref.startMusicPlay();
@@ -181,6 +188,7 @@ public class Duole extends BaseActivity {
 			@Override
 			public void onFinish() {
 				Constants.ENTIME_OUT = false;
+				this.setTotalTime(Integer.parseInt(Constants.restime == "" ? "5" : Constants.restime) * 60 * 1000);
 				this.seek(0);
 			}
 
@@ -206,6 +214,8 @@ public class Duole extends BaseActivity {
 		// get all apps
 		Constants.AssetList = XmlUtils.readXML(null, Constants.CacheDir
 				+ "itemlist.xml");
+		
+		DuoleUtils.addNetworkManager(Constants.AssetList);
 
 		getMusicList(Constants.AssetList);
 
@@ -249,7 +259,6 @@ public class Duole extends BaseActivity {
 			}
 		}
 
-		Log.v("TAG", Constants.MusicList.size() + "");
 	}
 
 	/**
@@ -266,6 +275,8 @@ public class Duole extends BaseActivity {
 
 			try {
 				// launcher the package
+				
+				
 
 				if (assItem.getType().equals(Constants.RES_AUDIO)) {
 					intent = new Intent(appref, MusicPlayerActivity.class);
@@ -274,7 +285,14 @@ public class Duole extends BaseActivity {
 
 					intent.putExtra("index", index + 1 + "");
 
-				} else {
+				} else if(assItem.getType().equals(Constants.RES_APK)){
+					
+					intent = new Intent();
+					intent.setComponent(new ComponentName(assItem.getPackag(),assItem.getActivity()));
+					
+				}else if(assItem.getType().equals(Constants.RES_CONFIG)){
+					intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+				}else{
 
 					appref.sendBroadcast(new Intent(Constants.Event_AppStart));
 
@@ -311,5 +329,18 @@ public class Duole extends BaseActivity {
 		// android.os.Process.killProcess(android.os.Process.myPid());
 		super.onDestroy();
 	}
+
+	@Override
+	protected void onResume() {
+		
+		Log.v("TAG", "resume");
+	    WindowManager.LayoutParams attrs = getWindow().getAttributes();  
+	    attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;  
+	    getWindow().setAttributes(attrs);  
+	    getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);    
+		super.onResume();
+	}
+	
+	
 
 }
