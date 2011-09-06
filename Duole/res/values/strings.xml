@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Duole</string>
-    <string name="itemlist_lost">\u8d44\u6e90\u5217\u8868\u4e0d\u5b58\u5728\uff01</string>
-    <string name="network_config">\u7f51\u7edc\u8bbe\u7f6e</string>
+	<string name="app_name">Duole</string>
+	<string name="itemlist_lost">\u8d44\u6e90\u5217\u8868\u4e0d\u5b58\u5728\uff01</string>
+	<string name="network_config">\u7f51\u7edc\u8bbe\u7f6e</string>
+	<string name="config">\u8bbe\u7f6e</string>
+	<string name="bindDeviceTitle">\u8bbe\u5907\u7ed1\u5b9a</string>
+	<string name="volume_tweak">\u97f3\u91cf\u8c03\u8282</string>
+	<string name="bright_tweak">\u4eae\u5ea6\u8c03\u8282</string>
+	<string name="about">\u5173\u4e8e</string>
+	<string name="btnPositive">\u786e\u5b9a</string>
+	<string name="btnNegative">\u53d6\u6d88</string>
+
+
+
+
+	<string name="strDeviceId">\u8bbe\u5907\u7f16\u7801</string>
+	<string name="strUserName">\u7528\u6237\u540d\u0020\u003a\u0020\u0020</string>
+	<string name="strPassword">\u5bc6\u7801\u0020\u0020\u0020\u003a\u0020\u0020</string>
 </resources>
