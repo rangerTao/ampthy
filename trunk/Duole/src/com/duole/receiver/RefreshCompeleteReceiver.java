@@ -57,9 +57,11 @@ public class RefreshCompeleteReceiver extends BroadcastReceiver {
 					int PageCount = (int) Math.ceil(Constants.AssetList.size()
 							/ Constants.APP_PAGE_SIZE) + 1;
 					
-					
+					Log.v("TAG", Constants.AssetList.size() + "  " + Constants.APP_PAGE_SIZE);
 					ScrollLayout sl = Duole.appref.mScrollLayout;
 
+					sl.removeAllViews();
+					
 					for (int i = 0; i < PageCount; i++) {
 						if(i > sl.getChildCount() - 1 ){
 							GridView appPage = new GridView(Duole.appref);
@@ -70,7 +72,7 @@ public class RefreshCompeleteReceiver extends BroadcastReceiver {
 
 							appPage.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
 							
-							appPage.setNumColumns(3);
+							appPage.setNumColumns(Constants.COLUMNS);
 							
 							appPage.setPadding(0, 10, 0, 0);
 							

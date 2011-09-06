@@ -1,29 +1,41 @@
 package com.duole.asynctask;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import com.duole.Duole;
+import com.duole.R;
 import com.duole.pojos.asset.Asset;
 import com.duole.thread.DeleteAssetFilesThread;
 import com.duole.utils.Constants;
 import com.duole.utils.DownloadFileUtils;
+import com.duole.utils.DuoleNetUtils;
 import com.duole.utils.DuoleUtils;
 import com.duole.utils.JsonUtils;
-
-import android.app.AlertDialog;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.util.Log;
 
 public class ItemListTask extends AsyncTask {
 
 	ArrayList<Asset> alAsset;
+	
+	static TextView tvDeviceId;
+	static TextView tvUserName;
+	static TextView tvPassword;
+	static EditText etUserName;
+	static EditText etPassword;
+
 
 	@Override
 	protected Object doInBackground(Object... arg0) {
@@ -95,24 +107,12 @@ public class ItemListTask extends AsyncTask {
 	 */
 	public void getSourceList() {
 		try {
-			int res = 0;
-			URL url = new URL(
-//					"http://www.duoleyuan.com/e/member/child/ancJn.php?cc="	+ "7c71f33fce7335e4");
-			"http://www.duoleyuan.com/e/member/child/ancJn.php?cc=" + DuoleUtils.getAndroidId());
+			String url = //					"http://www.duoleyuan.com/e/member/child/ancJn.php?cc="	+ "7c71f33fce7335e4");
+			"http://www.duoleyuan.com/e/member/child/ancJn.php?cc=" + DuoleUtils.getAndroidId();
 
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-			conn.setRequestMethod("GET");
-
-			conn.setConnectTimeout(5 * 1000);
-
-			InputStream inStream = conn.getInputStream();
-			byte[] data = DuoleUtils.readFromInput(inStream);
-
-			String html = new String(data, "gbk");
-
+			Log.v("TAG",DuoleUtils.getAndroidId());
 			alAsset = new ArrayList<Asset>();
-			JSONObject jsonObject = new JSONObject(html);
+			JSONObject jsonObject = new JSONObject(DuoleNetUtils.connect(url));
 
 			String error = null;
 			try {
@@ -121,8 +121,10 @@ public class ItemListTask extends AsyncTask {
 				e.printStackTrace();
 			}
 
+			
 			if (error != null) {
-				
+				bindDevice();
+				getSourceList();
 			} else {
 				JsonUtils.parserJson(alAsset, jsonObject);
 			}
@@ -132,5 +134,82 @@ public class ItemListTask extends AsyncTask {
 		}
 
 	}
+	
+	public static boolean bindDevice(){
+		
+		LayoutInflater inflater = LayoutInflater.from(Duole.appref);
+		View inputView = inflater.inflate(R.layout.registerdevice, null);
+		
+		initBindDeviceView(inputView);
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(Duole.appref);
+		builder.setView(inputView);
+		builder.setTitle(R.string.bindDeviceTitle);
+		builder.setPositiveButton(R.string.btnPositive, new OnClickListener(){
 
+			public void onClick(DialogInterface arg0, int arg1) {
+				try {
+					
+					if(checkUserName()){
+						String url = "http://www.duoleyuan.com/e/enews/?enews=BindCmcode&username=" +
+								etUserName.getText().toString() +
+								"&password=" +
+								etPassword.getText().toString() +
+								"&cmcode=" + DuoleUtils.getAndroidId();
+						JSONObject jsonObject = new JSONObject(DuoleNetUtils.connect(url));
+						
+						String error = null;
+						try{
+							error = jsonObject.getString("errstr");
+							Log.v("TAG", error);
+						}catch(Exception e){
+							e.printStackTrace();
+						}
+						
+					}
+
+
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				
+			}
+			
+		});
+		
+		builder.setNegativeButton(R.string.btnNegative, new OnClickListener(){
+
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
+		builder.show();
+		
+		return true;
+	}
+
+	private static boolean checkUserName(){
+		
+		
+		
+		return true;
+	}
+	
+	private static void initBindDeviceView(View view){
+		
+		tvDeviceId = (TextView) view.findViewById(R.id.tvDeviceID);
+		tvUserName = (TextView) view.findViewById(R.id.tvUserName);
+		tvPassword = (TextView) view.findViewById(R.id.tvPassword);
+		etUserName = (EditText) view.findViewById(R.id.etUserName);
+		etPassword = (EditText) view.findViewById(R.id.etPassword);
+		
+		tvDeviceId.setText(Duole.appref.getString(R.string.strDeviceId) + " £º" + DuoleUtils.getAndroidId());
+		tvUserName.setText(R.string.strUserName);
+		tvPassword.setText(R.string.strPassword);
+		
+	}
+	
 }

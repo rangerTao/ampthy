@@ -11,12 +11,8 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
 import android.provider.Settings.System;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -436,6 +432,7 @@ public class DuoleUtils {
         }  
     }  
     
+    //Add a netword manager icon in the list.
     public static void addNetworkManager(ArrayList<Asset> assets){
     	
     	Asset asset = new Asset();
@@ -446,4 +443,20 @@ public class DuoleUtils {
     	
     	assets.add(asset);
     }
+    
+    //Add a about me activity link in the list.
+    public static void addAboutMeActivity(ArrayList<Asset> assets){
+    	
+    	Asset asset = new Asset();
+    	
+    	asset.setType(Constants.RES_ABOUT);
+    	
+    	asset.setFilename(Duole.appref.getString(R.string.config));
+    	
+    	assets.add(asset);
+    }
+    
+    
+    
+    
 }
