@@ -26,12 +26,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.duole.activity.SystemConfigActivity;
 import com.duole.activity.BaseActivity;
 import com.duole.asynctask.ItemListTask;
 import com.duole.layout.ScrollLayout;
@@ -81,7 +81,7 @@ public class Duole extends BaseActivity {
 		setContentView(R.layout.main);
 
 		appref = this;
-
+		
 		mScrollLayout = (ScrollLayout) findViewById(R.id.ScrollLayoutTest);
 
 		appref = this;
@@ -100,7 +100,6 @@ public class Duole extends BaseActivity {
 				} else {
 					Toast.makeText(this, R.string.itemlist_lost, 2000).show();
 
-					// XmlUtils.createItemList();
 				}
 
 				new ItemListTask().execute();
@@ -291,7 +290,7 @@ public class Duole extends BaseActivity {
 					intent.setComponent(new ComponentName(assItem.getPackag(),assItem.getActivity()));
 					
 				}else if(assItem.getType().equals(Constants.RES_CONFIG)){
-					intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+					intent = new Intent(appref,SystemConfigActivity.class);
 				}else{
 
 					appref.sendBroadcast(new Intent(Constants.Event_AppStart));
@@ -334,10 +333,8 @@ public class Duole extends BaseActivity {
 	protected void onResume() {
 		
 		Log.v("TAG", "resume");
-	    WindowManager.LayoutParams attrs = getWindow().getAttributes();  
-	    attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;  
-	    getWindow().setAttributes(attrs);  
-	    getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);    
+	    this.setTheme(android.R.style.Theme_NoTitleBar_Fullscreen);
+	    
 		super.onResume();
 	}
 	
