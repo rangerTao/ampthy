@@ -72,6 +72,7 @@ public class Constants {
 	public static final String XML_SLEEPEND = "sleepend";
 	public static final String XML_THUMBNAIL = "thumbnail";
 	public static final String XML_KE = "ke";
+	public static final String XML_PASSWORD = "password";
 	
 	//refresh frequences.
 	public static final int frequence = 300000;
@@ -87,4 +88,21 @@ public class Constants {
 	//Date formater
 	public static final SimpleDateFormat sdf_hour = new SimpleDateFormat("HH");
 	
+	//System config preference.
+	public static final String Pre_network = "preNetwork";
+	public static final String Pre_volume = "preVolume";
+	public static final String Pre_bright = "preBright";
+	public static final String Pre_deviceid = "preDeviceId";
+	public static final String Pre_UserName = "preUsername";
+	public static final String Pre_BabyName = "preBabyname";
+	public static final String Pre_Birthday = "preBirthday";
+	public static final String Pre_Sex = "preSex";
+	public static final String Pre_GettingUserInfo = "preGettingUserInfo";
+	public static final String Pre_Pc_UserInfo = "pcUserInfo";
+	public static final String Pre_Register = "preRegister";
+	
+	//System security
+	public static final String Pre_Security_ChangePasswd = "preSecurityChangePasswd";
+	public static final String Pre_Security_Exit = "preSecurityExit";
+	public static String System_Password = "";
 }

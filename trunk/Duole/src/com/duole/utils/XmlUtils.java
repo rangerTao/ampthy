@@ -129,6 +129,9 @@ public class XmlUtils {
 					if (Constants.XML_KE.equals(parser.getName())){
 						Constants.ke = parser.nextText();
 					}
+					if(Constants.XML_PASSWORD.equals(parser.getName())){
+						Constants.System_Password = parser.nextText();
+					}
 					break;
 				case XmlPullParser.END_TAG:
 					if(Constants.XML_ITEM.equals(parser.getName())){
@@ -327,6 +330,50 @@ public class XmlUtils {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void addSingleNode(String name,String value) throws IOException {
+
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		try {
+			DocumentBuilder dBuilder = dbf.newDocumentBuilder();
+			FileInputStream iStream = new FileInputStream(new File(
+					Constants.ItemList));
+			Document document = dBuilder.parse(iStream);
+
+			// the values
+			Text newText = document.createTextNode(value);
+
+			// new elements
+			Element newElement = document.createElement(name);
+			
+			newElement.appendChild(newText);
+			
+			document.getDocumentElement().appendChild(newElement);
+
+			updateNode(document);
+
+			TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource domSource = new DOMSource(document);
+
+			StreamResult streamResult = new StreamResult(new File(filePath));
+			transformer.transform(domSource, streamResult);
+			iStream.close();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Update the confiration.
@@ -406,7 +453,50 @@ public class XmlUtils {
 				createNode(document,"ke",Constants.ke);
 			}
 		}
+		
+		if (!Constants.System_Password.equals("")){
+			nl = document.getElementsByTagName(Constants.XML_PASSWORD);
+			if(nl.getLength() > 0){
+				nl.item(0).getFirstChild().setNodeValue(Constants.System_Password);
+			}else{
+				createNode(document,Constants.XML_PASSWORD,Constants.System_Password);
+			}
+		}
 
+	}
+	
+	public static boolean updateSingleNode(String name,String value){
+		
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		try {
+			DocumentBuilder dBuilder = dbf.newDocumentBuilder();
+			FileInputStream iStream = new FileInputStream(new File(
+					Constants.ItemList));
+			Document document = dBuilder.parse(iStream);
+			
+			NodeList nl;
+			if (!value.equals("")){
+				nl = document.getElementsByTagName(name);
+				if(nl.getLength() > 0){
+					nl.item(0).getFirstChild().setNodeValue(value);
+				}else{
+					createNode(document,name,value);
+				}
+			}
+
+			TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource domSource = new DOMSource(document);
+
+			StreamResult streamResult = new StreamResult(new File(filePath));
+			transformer.transform(domSource, streamResult);
+			iStream.close();
+		}catch(Exception e){
+			return false;
+		}
+		
+		return true;
 	}
 	
 	/**

@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import android.os.Environment;
 import android.provider.Settings.System;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -134,7 +135,7 @@ public class DuoleUtils {
 				+ asset.getUrl().substring(
 						asset.getUrl().lastIndexOf("/")));
 
-		if (downloadSingleFile(url, file))
+		if (downloadSingleFile(asset, url, file))
 			return true;
 
 		return false;
@@ -160,7 +161,7 @@ public class DuoleUtils {
 				+ asset.getUrl().substring(
 						asset.getUrl().lastIndexOf("/")));
 
-		if (downloadSingleFile(url, file)){
+		if (downloadSingleFile(asset, url, file)){
 			try {
 				Process p = Runtime.getRuntime().exec("pm install " + file.getAbsolutePath());
 				p.waitFor();
@@ -201,7 +202,7 @@ public class DuoleUtils {
 				+ asset.getUrl().substring(
 						asset.getUrl().lastIndexOf("/")));
 
-		if (downloadSingleFile(url, file))
+		if (downloadSingleFile(asset,url, file))
 			return true;
 
 		return false;
@@ -225,7 +226,7 @@ public class DuoleUtils {
 				+ asset.getUrl().substring(
 						asset.getUrl().lastIndexOf("/")));
 
-		if (downloadSingleFile(url, file))
+		if (downloadSingleFile(asset, url, file))
 			return true;
 
 		return false;
@@ -250,7 +251,7 @@ public class DuoleUtils {
 					+ asset.getThumbnail().substring(
 							asset.getThumbnail().lastIndexOf("/")));
 
-			if (downloadSingleFile(url, file))
+			if (downloadSingleFile(asset, url, file))
 				return true;
 		}
 		
@@ -280,6 +281,46 @@ public class DuoleUtils {
 		return null;
 	}
 
+	/**
+	 * Download a file from server.
+	 * 
+	 * @param url
+	 * @param file
+	 * @return
+	 */
+	public static boolean downloadSingleFile(Asset asset ,URL url, File file) {
+		try {
+			// Open a connection.
+			URLConnection conn = url.openConnection();
+			// get the size of file.
+			int fileSize = conn.getContentLength();
+
+			byte[] buffer = new byte[8 * 1024];
+
+			InputStream bis = null;
+			FileOutputStream fos = null;
+
+			// Create a file.
+			file.createNewFile();
+
+			bis = conn.getInputStream();
+			fos = new FileOutputStream(file);
+			int len = 0;
+			while ((len = bis.read(buffer)) != -1) {
+				fos.write(buffer, 0, len);
+			}
+			fos.close();
+			bis.close();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			Constants.AssetList.remove(asset);
+			Log.v("TAG", asset.getFilename());
+			file.delete();
+			return false;
+		}
+	}
+	
 	/**
 	 * Download a file from server.
 	 * 
@@ -439,24 +480,9 @@ public class DuoleUtils {
     	
     	asset.setType(Constants.RES_CONFIG);
     	
-    	asset.setFilename(Duole.appref.getString(R.string.network_config));
+    	asset.setFilename(Duole.appref.getString(R.string.system_tweak));
     	
     	assets.add(asset);
     }
-    
-    //Add a about me activity link in the list.
-    public static void addAboutMeActivity(ArrayList<Asset> assets){
-    	
-    	Asset asset = new Asset();
-    	
-    	asset.setType(Constants.RES_ABOUT);
-    	
-    	asset.setFilename(Duole.appref.getString(R.string.config));
-    	
-    	assets.add(asset);
-    }
-    
-    
-    
     
 }

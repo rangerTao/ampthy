@@ -4,8 +4,18 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 public class DuoleNetUtils {
 
+	/**
+	 * down load content.
+	 * @param url
+	 * @return
+	 */
 	public static String connect(String url) {
 
 		try {
@@ -25,8 +35,31 @@ public class DuoleNetUtils {
 
 			return html;
 		} catch (Exception e) {
-			e.printStackTrace();
+			return "";
 		}
-		return "";
 	}
+	
+	/** 
+     * check whether network is aviable.
+     */  
+    public static boolean isNetworkAvailable(Activity mActivity){  
+    	
+        Context context = mActivity.getApplicationContext();  
+        ConnectivityManager connectivity =(ConnectivityManager)  
+        context.getSystemService(Context.CONNECTIVITY_SERVICE);  
+        if(connectivity == null){  
+            return false;  
+        }else {  
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();  
+            if(info != null){  
+                for(int i= 0;i<info.length;i++){  
+                    if(info[i].getState() == NetworkInfo.State.CONNECTED){  
+                        return true;  
+                    }  
+                }  
+            }  
+        }  
+        return false;  
+    }  
+    
 }
