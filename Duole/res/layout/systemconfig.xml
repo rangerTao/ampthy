@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="match_parent"
+	android:layout_height="match_parent">
+	<TextView android:id="@+id/tvNetworkConfig" style="@style/DuoleText"
+		android:text="@string/network_config" />
+	<Button android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:text="@string/network_config" />
+	<ListView android:layout_height="wrap_content" android:id="@+id/lvConfig"
+		android:layout_width="match_parent" android:divider="#50FFFFFF"
+		android:dividerHeight="2px">
+	</ListView>
+</LinearLayout>
