@@ -40,9 +40,12 @@ public class ItemListTask extends AsyncTask {
 	@Override
 	protected Object doInBackground(Object... arg0) {
 		try {
-			getSourceList();
+//			if(getSourceList()){
+				treatData();
+//			}else{
+//				Log.v("TAG", "getting list error");
+//			}
 			
-			treatData();
 		} catch (Exception e) {
 			return false;
 		}
@@ -63,33 +66,55 @@ public class ItemListTask extends AsyncTask {
 
 	public void treatData() {
 		HashMap<String, Asset> hmSource = new HashMap<String, Asset>();
-		for (int i = 0; i < alAsset.size(); i++) {
-			Asset ass = alAsset.get(i);
-			if (ass != null) {
-				hmSource.put(ass.getId(), ass);
-			}
-		}
-
-		ArrayList<Asset> alAssetDeleteList = DuoleUtils.getAssetDeleteList(
-				hmSource, Constants.AssetList);
-
-		Constants.DownLoadTaskList = new ArrayList<Asset>();
-		if (Constants.AssetList != null && Constants.AssetList.size() > 0) {
-			for (int i = 0; i < Constants.AssetList.size(); i++) {
-				Asset ass = Constants.AssetList.get(i);
-				if (hmSource.containsKey(ass.getId())) {
-					if (DuoleUtils.checkDownloadNecessary(ass,
-							hmSource.get(ass.getId()))) {
-						Constants.DownLoadTaskList.add(ass);
-					}
+		ArrayList<Asset> alAssetDeleteList = new ArrayList<Asset>();
+		
+		boolean gettedSourceList = getSourceList();
+		
+		if(gettedSourceList){
+			hmSource = new HashMap<String, Asset>();
+			for (int i = 0; i < alAsset.size(); i++) {
+				Asset ass = alAsset.get(i);
+				if (ass != null) {
+					hmSource.put(ass.getId(), ass);
 				}
 			}
+
+			alAssetDeleteList = DuoleUtils.getAssetDeleteList(
+					hmSource, Constants.AssetList);
+			
+			Constants.DownLoadTaskList = new ArrayList<Asset>();
+			if (Constants.AssetList != null && Constants.AssetList.size() > 0) {
+				for (int i = 0; i < Constants.AssetList.size(); i++) {
+					Asset ass = Constants.AssetList.get(i);
+					if (hmSource.containsKey(ass.getId())) {
+						if (DuoleUtils.checkDownloadNecessary(ass,
+								hmSource.get(ass.getId()))) {
+							Constants.DownLoadTaskList.add(ass);
+						}
+					}
+				}
+			} else {
+				for (Asset asset : alAsset) {
+					Constants.DownLoadTaskList.add(asset);
+				}
+			}
+
 		} else {
-			for (Asset asset : alAsset) {
-				Constants.DownLoadTaskList.add(asset);
+			for (int i = 0; i < Constants.AssetList.size(); i++) {
+				Asset ass = Constants.AssetList.get(i);
+
+				if (DuoleUtils.checkDownloadNecessary(ass,
+						hmSource.get(ass.getId()))) {
+					Constants.DownLoadTaskList.add(ass);
+				}
+
 			}
 		}
 
+		
+
+		Log.v("TAG", Constants.DownLoadTaskList.size() + " downloads");
+		Log.v("TAG", alAssetDeleteList.size()  + " deletes");
 		if (alAssetDeleteList.size() > 0) {
 			new DeleteAssetFilesThread(alAssetDeleteList).start();
 		}
@@ -98,22 +123,25 @@ public class ItemListTask extends AsyncTask {
 			Duole.appref.sendBroadcast(new Intent(Constants.Refresh_Complete));
 		}
 		
-		DuoleUtils.updateAssetListFile(alAsset);
+		if(gettedSourceList){
+			DuoleUtils.updateAssetListFile(alAsset);
+		}
+		
 		
 	}
 
 	/**
 	 * Get resource list from server.
 	 */
-	public void getSourceList() {
+	public boolean getSourceList() {
 		try {
 			String url = //					"http://www.duoleyuan.com/e/member/child/ancJn.php?cc="	+ "7c71f33fce7335e4");
 			"http://www.duoleyuan.com/e/member/child/ancJn.php?cc=" + DuoleUtils.getAndroidId();
 
-			Log.v("TAG",DuoleUtils.getAndroidId());
 			alAsset = new ArrayList<Asset>();
-			JSONObject jsonObject = new JSONObject(DuoleNetUtils.connect(url));
-
+			String result = DuoleNetUtils.connect(url);
+			JSONObject jsonObject = new JSONObject(result);
+			Log.v("TAG", result);
 			String error = null;
 			try {
 				error = jsonObject.getString("errstr");
@@ -126,11 +154,18 @@ public class ItemListTask extends AsyncTask {
 				bindDevice();
 				getSourceList();
 			} else {
-				JsonUtils.parserJson(alAsset, jsonObject);
+				try{
+					JsonUtils.parserJson(alAsset, jsonObject);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				
 			}
 
+			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.v("TAG", e.getMessage());
+			return false;
 		}
 
 	}
@@ -161,7 +196,6 @@ public class ItemListTask extends AsyncTask {
 						String error = null;
 						try{
 							error = jsonObject.getString("errstr");
-							Log.v("TAG", error);
 						}catch(Exception e){
 							e.printStackTrace();
 						}

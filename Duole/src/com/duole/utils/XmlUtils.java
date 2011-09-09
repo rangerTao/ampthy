@@ -132,6 +132,9 @@ public class XmlUtils {
 					if(Constants.XML_PASSWORD.equals(parser.getName())){
 						Constants.System_Password = parser.nextText();
 					}
+					if(Constants.XML_VER.equals(parser.getName())){
+						Constants.System_ver = parser.nextText();
+					}
 					break;
 				case XmlPullParser.END_TAG:
 					if(Constants.XML_ITEM.equals(parser.getName())){

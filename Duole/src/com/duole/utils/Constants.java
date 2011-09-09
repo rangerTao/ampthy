@@ -73,9 +73,10 @@ public class Constants {
 	public static final String XML_THUMBNAIL = "thumbnail";
 	public static final String XML_KE = "ke";
 	public static final String XML_PASSWORD = "password";
+	public static final String XML_VER = "ver";
 	
 	//refresh frequences.
-	public static final int frequence = 300000;
+	public static final int frequence = 60000;
 	
 	public static final long countInterval = 1000;
 	
@@ -100,9 +101,11 @@ public class Constants {
 	public static final String Pre_GettingUserInfo = "preGettingUserInfo";
 	public static final String Pre_Pc_UserInfo = "pcUserInfo";
 	public static final String Pre_Register = "preRegister";
+	public static final String Pre_CheckUpdate = "preCheckUpdate";
 	
 	//System security
 	public static final String Pre_Security_ChangePasswd = "preSecurityChangePasswd";
 	public static final String Pre_Security_Exit = "preSecurityExit";
 	public static String System_Password = "";
+	public static String System_ver = "";
 }

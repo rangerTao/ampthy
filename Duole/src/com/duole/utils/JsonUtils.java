@@ -14,6 +14,12 @@ public class JsonUtils {
 
 	public static void parserJson(ArrayList<Asset> alAsset ,JSONObject jsonObject) throws MalformedURLException, JSONException{
 		
+		String version = jsonObject.getString("ver");
+		if(!version.equals(Constants.System_ver)){
+			String path = jsonObject.getString("vpath");
+			
+			DuoleUtils.updateClient(path);
+		}
 		for (int i = 0;i< jsonObject.length(); i++) {
 			try{
 				JSONObject jsonItem = jsonObject.getJSONObject("item" + i);
@@ -70,5 +76,6 @@ public class JsonUtils {
 		Constants.restime = jsonObject.getString("restime");
 		Constants.sleepstart = jsonObject.getString("sleepstart");
 		Constants.sleepend = jsonObject.getString("sleepend");
+		
 	}
 }

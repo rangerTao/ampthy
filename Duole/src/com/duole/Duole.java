@@ -9,6 +9,7 @@ import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.app.AlertDialog;
 import android.app.KeyguardManager;
 import android.app.KeyguardManager.KeyguardLock;
 import android.content.ActivityNotFoundException;
@@ -21,18 +22,16 @@ import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.duole.activity.PasswordActivity;
 import com.duole.activity.BaseActivity;
+import com.duole.activity.PasswordActivity;
 import com.duole.asynctask.ItemListTask;
 import com.duole.layout.ScrollLayout;
 import com.duole.player.FlashPlayerActivity;
@@ -79,7 +78,7 @@ public class Duole extends BaseActivity {
 		mContext = this;
 //		SetFullScreen();
 		setContentView(R.layout.main);
-
+		
 		appref = this;
 		
 		mScrollLayout = (ScrollLayout) findViewById(R.id.ScrollLayoutTest);
@@ -151,7 +150,6 @@ public class Duole extends BaseActivity {
 		long restime = Integer.parseInt(Constants.restime == "" ? "5" : Constants.restime) * 60 * 1000;
 		
 		//long entime = 1 * 60 * 1000;
-		//Log.v("TAG", entime + "   " + restime);
 		
 		//
 		
@@ -165,7 +163,7 @@ public class Duole extends BaseActivity {
 
 			@Override
 			public void onFinish() {
-				appref.startMusicPlay();
+//				appref.startMusicPlay();
 				Constants.ENTIME_OUT = true;
 				this.setTotalTime(Integer.parseInt(Constants.entime == "" ? "30" : Constants.entime) * 60 * 1000);
 				this.seek(0);
@@ -217,13 +215,14 @@ public class Duole extends BaseActivity {
 		// get all apps
 		Constants.AssetList = XmlUtils.readXML(null, Constants.CacheDir
 				+ "itemlist.xml");
-		
-		DuoleUtils.addNetworkManager(Constants.AssetList);
-
-		getMusicList(Constants.AssetList);
+		ArrayList<Asset> temp = new ArrayList<Asset>();
+		temp.addAll(Constants.AssetList);
+		DuoleUtils.checkFilesExists(temp);		
+		DuoleUtils.addNetworkManager(temp);
+		getMusicList(temp);
 
 		// the total pages
-		int PageCount = (int) Math.ceil(Constants.AssetList.size()
+		int PageCount = (int) Math.ceil(temp.size()
 				/ Constants.APP_PAGE_SIZE) + 1;
 
 		alAIA = new ArrayList<AssetItemAdapter>();
@@ -231,7 +230,7 @@ public class Duole extends BaseActivity {
 			GridView appPage = new GridView(Duole.appref);
 			// get the "i" page data
 			appPage.setAdapter(new AssetItemAdapter(Duole.appref,
-					Constants.AssetList, i));
+					temp, i));
 
 			appPage.setLayoutParams(new ViewGroup.LayoutParams(
 					LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
@@ -336,7 +335,10 @@ public class Duole extends BaseActivity {
 	
 	@Override
 	protected void onResume(){
+		        
+		new ItemListTask().execute();
 		
+        this.mScrollLayout.refresh();
 		super.onResume();
 	}
 
