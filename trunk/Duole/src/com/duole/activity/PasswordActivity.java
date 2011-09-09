@@ -4,8 +4,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -68,7 +69,6 @@ public class PasswordActivity extends BaseActivity {
 
 			public void onClick(View arg0) {
 				String pass = etOldPass.getText().toString();
-				Log.v("TAG", Constants.System_Password);
 				if (pass.equals(Constants.System_Password)) {
 					Intent intent = new Intent(appref,
 							SystemConfigActivity.class);
@@ -193,5 +193,23 @@ public class PasswordActivity extends BaseActivity {
 
 		});
 	}
+
+	@Override
+	public void onAttachedToWindow() {
+		this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
+		super.onAttachedToWindow();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		
+		switch(keyCode){
+		case KeyEvent.KEYCODE_HOME:
+			finish();
+			break;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
 
 }

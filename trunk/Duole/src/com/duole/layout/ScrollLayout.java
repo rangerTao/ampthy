@@ -2,6 +2,7 @@ package com.duole.layout;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -84,7 +85,6 @@ public class ScrollLayout extends ViewGroup {
         for (int i = 0; i < count; i++) {   
             getChildAt(i).measure(widthMeasureSpec, heightMeasureSpec);   
         }   
-        // Log.e(TAG, "moving to screen "+mCurScreen);   
         scrollTo(mCurScreen * width, 0);         
     }  
     

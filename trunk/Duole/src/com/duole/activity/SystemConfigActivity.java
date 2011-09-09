@@ -11,7 +11,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
@@ -84,7 +83,7 @@ public class SystemConfigActivity extends PreferenceActivity{
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		Log.v("TAG", "home pressed" + keyCode);
+
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_HOME:
 			
@@ -121,7 +120,11 @@ public class SystemConfigActivity extends PreferenceActivity{
 		}
 		
 		if(preference.getKey().equals(Constants.Pre_Security_Exit)){
-			android.os.Process.killProcess(android.os.Process.myPid());
+			android.os.Process.killProcess(android.os.Process.myUid());
+		}
+		
+		if(preference.getKey().equals(Constants.Pre_CheckUpdate)){
+			intent = new Intent(appref,CheckUpdateActivity.class);
 		}
 		
 		if(intent != null){
@@ -146,63 +149,76 @@ public class SystemConfigActivity extends PreferenceActivity{
 					String babyname = json.getString("truename");
 					String birthday = json.getString("birthd");
 					String sex = json.getString("sex");
+					String userid = json.getString("userid");
 					
-					Preference preUserName = new Preference(appref);
-					Preference preBabyName = new Preference(appref);
-					Preference preBirthday = new Preference(appref);
-					Preference preSex = new Preference(appref);
-					preUserName.setEnabled(false);
-					preBabyName.setEnabled(false);
-					preBirthday.setEnabled(false);
-					preSex.setEnabled(false);
-					preUserName.setSelectable(false);
-					preBabyName.setSelectable(false);
-					preBirthday.setSelectable(false);
-					preSex.setSelectable(false);
-					preUserName.setTitle(R.string.username);
-					preUserName.setSummary(username);
-					preBabyName.setTitle(R.string.babyname);
-					preBabyName.setSummary(babyname);
-					preBirthday.setTitle(R.string.birthday);
-					preBirthday.setSummary(birthday);
-					preSex.setTitle(R.string.sex);
-					if(sex.equals("0")){
-						sex = appref.getString(R.string.sex_male);
-					}else if(sex.equals("1")){
-						sex = appref.getString(R.string.sex_female);
-					}else{
-						sex = appref.getString(R.string.sex_unborn);
+					if(!userid.equals("null")){
+						Preference preUserName = new Preference(appref);
+						Preference preBabyName = new Preference(appref);
+						Preference preBirthday = new Preference(appref);
+						Preference preSex = new Preference(appref);
+						preUserName.setEnabled(false);
+						preBabyName.setEnabled(false);
+						preBirthday.setEnabled(false);
+						preSex.setEnabled(false);
+						preUserName.setSelectable(false);
+						preBabyName.setSelectable(false);
+						preBirthday.setSelectable(false);
+						preSex.setSelectable(false);
+						preUserName.setTitle(R.string.username);
+						preUserName.setSummary(username);
+						preBabyName.setTitle(R.string.babyname);
+						preBabyName.setSummary(babyname);
+						preBirthday.setTitle(R.string.birthday);
+						preBirthday.setSummary(birthday);
+						preSex.setTitle(R.string.sex);
+						if(sex.equals("0")){
+							sex = appref.getString(R.string.sex_male);
+						}else if(sex.equals("1")){
+							sex = appref.getString(R.string.sex_female);
+						}else{
+							sex = appref.getString(R.string.sex_unborn);
+						}
+						preSex.setSummary(sex);
+						
+						pcUserInfo.removeAll();
+						
+						if(appref.findPreference(Constants.Pre_GettingUserInfo) != null){
+							pcUserInfo.removePreference(appref.findPreference(Constants.Pre_GettingUserInfo));
+						}
+						pcUserInfo.addPreference(preID);
+						pcUserInfo.addPreference(preUserName);
+						pcUserInfo.addPreference(preBabyName);
+						pcUserInfo.addPreference(preBirthday);
+						pcUserInfo.addPreference(preSex);
+						
+						appref.isGetted = true;
 					}
-					preSex.setSummary(sex);
 					
-					pcUserInfo.removeAll();
-					
-					if(appref.findPreference(Constants.Pre_GettingUserInfo) != null){
-						pcUserInfo.removePreference(appref.findPreference(Constants.Pre_GettingUserInfo));
-					}
-					pcUserInfo.addPreference(preID);
-					pcUserInfo.addPreference(preUserName);
-					pcUserInfo.addPreference(preBabyName);
-					pcUserInfo.addPreference(preBirthday);
-					pcUserInfo.addPreference(preSex);
-					
-					appref.isGetted = true;
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
 			}else{
-				pcUserInfo.removePreference(appref.findPreference(Constants.Pre_GettingUserInfo));
+				if(pcUserInfo != null){
+					Preference getuserinfo = appref.findPreference(Constants.Pre_GettingUserInfo);
+					if(getuserinfo != null){
+						pcUserInfo.removePreference(getuserinfo);
+					}
+					
+					
+					Preference preRegister = new Preference(appref);
+					preRegister.setKey(Constants.Pre_Register);
+					preRegister.setTitle(appref.getString(R.string.device_active));
+					preRegister.setSummary(appref.getString(R.string.register_device));
+				}
 				
-				Preference preRegister = new Preference(appref);
-				preRegister.setKey(Constants.Pre_Register);
-				preRegister.setTitle(appref.getString(R.string.device_active));
-				preRegister.setSummary(appref.getString(R.string.register_device));
 			}
 			return null;
 		}
 		
 	}
+	
+	
 	
 }

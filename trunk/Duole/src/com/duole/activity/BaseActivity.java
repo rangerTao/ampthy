@@ -36,9 +36,10 @@ public class BaseActivity extends Activity {
 	}
 	
 	public void SetFullScreen() {
-//		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
 	}	
 	
@@ -52,23 +53,10 @@ public class BaseActivity extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		
-		switch(keyCode){
-		case KeyEvent.KEYCODE_HOME:
-			break;
-		}
+//		switch(keyCode){
+//		case KeyEvent.KEYCODE_HOME:
+//			break;
+//		}
 		return super.onKeyDown(keyCode, event);
 	}
-
-	@Override
-	public void onAttachedToWindow() {
-		this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
-		super.onAttachedToWindow();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-
-	
 }

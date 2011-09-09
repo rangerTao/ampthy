@@ -11,9 +11,10 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.content.Context;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
 import android.provider.Settings.System;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -315,7 +316,6 @@ public class DuoleUtils {
 		} catch (Exception e) {
 			e.printStackTrace();
 			Constants.AssetList.remove(asset);
-			Log.v("TAG", asset.getFilename());
 			file.delete();
 			return false;
 		}
@@ -390,7 +390,7 @@ public class DuoleUtils {
 	 * @return
 	 */
 	public static boolean checkDownloadNecessary(Asset asset, Asset refer) {
-
+		
 		// If id is different.true.
 		if (!asset.getId().equals(refer.getId())) {
 			return true;
@@ -400,6 +400,8 @@ public class DuoleUtils {
 		if (!asset.getUrl().equals(refer.getUrl())) {
 			return true;
 		}
+		
+
 
 		// if lastmodified is different,true.
 		if (!asset.getLastmodified().equals(refer.getLastmodified())) {
@@ -485,4 +487,63 @@ public class DuoleUtils {
     	assets.add(asset);
     }
     
+    /**
+     * Update the client.
+     */
+    public static void updateClient(String path){
+    	
+    	File newClient = new File(Constants.CacheDir + path.substring(path.lastIndexOf("/")));
+    	try {
+			if(downloadSingleFile(new URL(Constants.Duole + path ), newClient)){
+				
+			}
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    }
+    
+    /**
+     * Get app version
+     */
+    public static String getVersion(Context context){
+    	try {
+			return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+		} catch (NameNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "";
+    }
+    
+    /**
+     * To check whether file is complete
+     */
+    public static void checkFilesExists(ArrayList<Asset> assets){
+    	
+    	for(int i =0;i<assets.size();i++){
+    		Asset asset = assets.get(i);
+    		
+    		String type = asset.getType();
+    		String thumb = asset.getThumbnail();
+    		String path = asset.getUrl();
+    		File file = null;
+    		if(!thumb.equals("")){
+    			file = new File(Constants.CacheDir + Constants.RES_THUMB + thumb.substring(thumb.lastIndexOf("/")));
+        		if(!file.exists()){
+        			assets.remove(i);
+        			continue;
+        		}
+    		}
+    		
+    		file = new File(Constants.CacheDir + type + path.substring(path.lastIndexOf("/")));
+    		if(!file.exists()){
+    			assets.remove(i);
+    			continue;
+    		}
+    	}
+    	
+    }
 }

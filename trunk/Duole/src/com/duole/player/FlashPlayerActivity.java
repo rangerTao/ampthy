@@ -8,6 +8,7 @@ import com.duole.utils.Constants;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebSettings.PluginState;
 import android.webkit.WebViewClient;
@@ -58,6 +59,16 @@ public class FlashPlayerActivity extends PlayerBaseActivity{
             	}else{
             		return false;
             	}
+			}
+			
+		});
+		
+		wvPlay.setLongClickable(false);
+		wvPlay.setOnLongClickListener(new View.OnLongClickListener(){
+
+			public boolean onLongClick(View arg0) {
+				// TODO Auto-generated method stub
+				return false;
 			}
 			
 		});

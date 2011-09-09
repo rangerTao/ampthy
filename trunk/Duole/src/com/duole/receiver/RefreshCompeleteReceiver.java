@@ -1,11 +1,13 @@
 package com.duole.receiver;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.duole.Duole;
 import com.duole.layout.ScrollLayout;
 import com.duole.pojos.adapter.AssetItemAdapter;
+import com.duole.pojos.asset.Asset;
 import com.duole.service.BackgroundRefreshService;
 import com.duole.utils.Constants;
 import com.duole.utils.DuoleUtils;
@@ -39,25 +41,28 @@ public class RefreshCompeleteReceiver extends BroadcastReceiver {
 
 					Duole.appref.bindService(intent, Duole.appref.mConnection,
 							Context.BIND_AUTO_CREATE);
-
+					ArrayList<Asset> temp = null;
 					// get all apps
 					try {
 						Constants.AssetList = XmlUtils.readXML(null, Constants.CacheDir
 								+ "itemlist.xml");
 						
-						DuoleUtils.addNetworkManager(Constants.AssetList);
+						temp = new ArrayList<Asset>();
+						temp.addAll(Constants.AssetList);
+						DuoleUtils.checkFilesExists(temp);
 						
-						Duole.appref.getMusicList(Constants.AssetList);
+						DuoleUtils.addNetworkManager(temp);
+						
+						Duole.appref.getMusicList(temp);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					
 					// the total pages
-					int PageCount = (int) Math.ceil(Constants.AssetList.size()
+					int PageCount = (int) Math.ceil(temp.size()
 							/ Constants.APP_PAGE_SIZE) + 1;
 					
-					Log.v("TAG", Constants.AssetList.size() + "  " + Constants.APP_PAGE_SIZE);
 					ScrollLayout sl = Duole.appref.mScrollLayout;
 
 					sl.removeAllViews();
@@ -66,7 +71,7 @@ public class RefreshCompeleteReceiver extends BroadcastReceiver {
 						if(i > sl.getChildCount() - 1 ){
 							GridView appPage = new GridView(Duole.appref);
 							// get the "i" page data
-							AssetItemAdapter aia = new AssetItemAdapter(Duole.appref, Constants.AssetList,
+							AssetItemAdapter aia = new AssetItemAdapter(Duole.appref, temp,
 									i);
 							appPage.setAdapter(aia);
 
@@ -84,7 +89,7 @@ public class RefreshCompeleteReceiver extends BroadcastReceiver {
 						}else{
 							GridView appPage = (GridView) sl.getChildAt(i);
 							// get the "i" page data
-							AssetItemAdapter aia = new AssetItemAdapter(Duole.appref, Constants.AssetList,
+							AssetItemAdapter aia = new AssetItemAdapter(Duole.appref, temp,
 									i);
 							appPage.setAdapter(aia);
 
@@ -99,6 +104,7 @@ public class RefreshCompeleteReceiver extends BroadcastReceiver {
 					
 					Constants.DOWNLOAD_RUNNING = false;
 					
+					temp = null;
 				}
 
 			});

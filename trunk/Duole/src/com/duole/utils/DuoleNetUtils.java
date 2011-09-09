@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 public class DuoleNetUtils {
 
@@ -35,6 +36,7 @@ public class DuoleNetUtils {
 
 			return html;
 		} catch (Exception e) {
+			Log.v("TAG", "Connect " + e.getMessage());
 			return "";
 		}
 	}
