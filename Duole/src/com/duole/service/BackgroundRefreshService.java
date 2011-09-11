@@ -1,31 +1,58 @@
 package com.duole.service;
 
-import com.duole.utils.Constants;
-
 import android.app.AlarmManager;
+import android.app.KeyguardManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.KeyguardManager.KeyguardLock;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
+import android.util.Log;
+
+import com.duole.Duole;
+import com.duole.utils.Constants;
 
 public class BackgroundRefreshService extends Service{
 
+	WakeLock mWakeLock;
 	BackgroundRefreshService brs;
 	AlarmManager am;
 	PendingIntent pii;
 	@Override
 	public IBinder onBind(Intent arg0) {
 
+		acquireWakeLock();
 		am = (AlarmManager) this.getSystemService(ALARM_SERVICE);
-
+		
+		IntentFilter intentFilter = new IntentFilter(
+				"android.intent.action.SCREEN_ON");
+		Duole.appref.registerReceiver(brScreenOn, intentFilter);
 		Intent ii = new Intent(Constants.Refresh_Start);
 		pii = PendingIntent.getBroadcast(this, 0, ii, 0);
 
-		am.setRepeating(AlarmManager.RTC, Constants.frequence, Constants.frequence, pii);
+		am.setRepeating(AlarmManager.RTC, Constants.frequence,
+				Constants.frequence, pii);
 
 		return null;
 	}
+	
+	BroadcastReceiver brScreenOn = new BroadcastReceiver(){
+
+		@Override
+		public void onReceive(Context arg0, Intent arg1) {
+			Log.v("TAG", "button clicked");
+			KeyguardManager keyguardManager = (KeyguardManager) Duole.appref.getSystemService(Context.KEYGUARD_SERVICE);
+			KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("");
+			keyguardLock.disableKeyguard();
+		}
+		
+	};
 	
 	public class LocalBinder extends Binder {
 		public BackgroundRefreshService getService() {
@@ -58,11 +85,28 @@ public class BackgroundRefreshService extends Service{
 	@Override
 	public boolean onUnbind(Intent intent) {
 		am.cancel(pii);
+		releaseWakeLock();
 		return super.onUnbind(intent);
 	}
 	
+	private void acquireWakeLock(){
+		
+		if(null == mWakeLock){
+			PowerManager pm = (PowerManager)this.getSystemService(Context.POWER_SERVICE);
+			mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE, "TAG");
+			
+			if(null != mWakeLock){
+				mWakeLock.acquire();
+			}
+		}
+	}
 	
-	
+	private void releaseWakeLock(){
+		if(null != mWakeLock){
+			mWakeLock.release();
+			mWakeLock = null;
+		}
+	}
 	
 
 }

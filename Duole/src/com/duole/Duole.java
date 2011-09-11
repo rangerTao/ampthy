@@ -22,6 +22,7 @@ import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -86,64 +87,66 @@ public class Duole extends BaseActivity {
 		appref = this;
 		try {
 
-			// Check whether tf card exists.
-			if (DuoleUtils.checkTFCard()) {
-				// init the cache folders.
-				if (DuoleUtils.checkCacheFiles()) {
-					// init the main view.
-					initViews();
+			initContents();
 
-					setBackground();
-					
-					initCountDownTimer();
-				} else {
-					Toast.makeText(this, R.string.itemlist_lost, 2000).show();
-
-				}
-
-				new ItemListTask().execute();
-
-			} else {
-				Toast.makeText(this, "No TF Card", 2000).show();
-				// finish();
-			}
-
-			registerScreenReceiver();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (XmlPullParserException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	public void initContents()  throws Exception{
+		
+		// Check whether tf card exists.
+		if (DuoleUtils.checkTFCard()) {
+			// init the cache folders.
+			if (DuoleUtils.checkCacheFiles()) {
+				// init the main view.
+				initViews();
 
-	public void registerScreenReceiver() {
+				setBackground();
+				
+				initCountDownTimer();
+			} else {
+				Toast.makeText(this, R.string.itemlist_lost, 2000).show();
 
-		IntentFilter intentFilter = new IntentFilter(
-				"android.intent.action.SCREEN_ON");
-		registerReceiver(screenReceiver, intentFilter);
+			}
 
+			new ItemListTask().execute();
+
+		} else {
+			Toast.makeText(this, "No TF Card", 2000).show();
+			
+			IntentFilter intentFilter = new IntentFilter(
+			"android.intent.action.MEDIA_MOUNTED");
+			try{
+				registerReceiver(mountedReceiver, intentFilter);
+			}catch(Exception e ){
+				Log.v("TAG", e.getMessage());
+			}
+	
+		}
+		
 	}
-
-	BroadcastReceiver screenReceiver = new BroadcastReceiver() {
+	
+	BroadcastReceiver mountedReceiver = new BroadcastReceiver() {
 
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
-
-			KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-			KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("");
-			keyguardLock.disableKeyguard();
+			
+			try {
+				if(appref.mScrollLayout.getChildCount() == 0){
+					initContents();
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
-
+		
 	};
-
+	
 	public void initCountDownTimer() {
 
 		long entime = Integer.parseInt(Constants.entime == "" ? "30" : Constants.entime) * 60 * 1000;
@@ -217,7 +220,7 @@ public class Duole extends BaseActivity {
 				+ "itemlist.xml");
 		ArrayList<Asset> temp = new ArrayList<Asset>();
 		temp.addAll(Constants.AssetList);
-		DuoleUtils.checkFilesExists(temp);		
+		DuoleUtils.checkFilesExists(temp);
 		DuoleUtils.addNetworkManager(temp);
 		getMusicList(temp);
 
@@ -336,8 +339,18 @@ public class Duole extends BaseActivity {
 	@Override
 	protected void onResume(){
 		        
-		new ItemListTask().execute();
+//		new ItemListTask().execute();
 		
+		Log.v("TAG", appref.mScrollLayout.getChildCount() + "child counts");
+		
+		if(this.mScrollLayout.getChildCount() <= 0){
+			try {
+				appref.initContents();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
         this.mScrollLayout.refresh();
 		super.onResume();
 	}
