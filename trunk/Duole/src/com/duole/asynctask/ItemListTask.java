@@ -123,7 +123,7 @@ public class ItemListTask extends AsyncTask {
 			Duole.appref.sendBroadcast(new Intent(Constants.Refresh_Complete));
 		}
 		
-		if(gettedSourceList){
+		if(gettedSourceList && alAsset.size() > 0){
 			DuoleUtils.updateAssetListFile(alAsset);
 		}
 		
