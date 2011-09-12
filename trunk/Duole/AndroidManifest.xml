@@ -7,7 +7,7 @@
 			android:screenOrientation="landscape">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.HOME" />
+ 				<category android:name="android.intent.category.HOME" />
 				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 		</activity>
@@ -24,6 +24,7 @@
 		<activity android:name=".activity.CheckUpdateActivity"
 			android:screenOrientation="landscape" android:theme="@android:style/Theme.Dialog" />
 		<service android:name=".service.BackgroundRefreshService" />
+		<service android:name=".service.UnLockScreenService" />
 
 		<receiver android:name=".receiver.BootCompleteReceiver">
 			<intent-filter>

@@ -30,9 +30,6 @@ public class BackgroundRefreshService extends Service{
 		acquireWakeLock();
 		am = (AlarmManager) this.getSystemService(ALARM_SERVICE);
 		
-		IntentFilter intentFilter = new IntentFilter(
-				"android.intent.action.SCREEN_ON");
-		Duole.appref.registerReceiver(brScreenOn, intentFilter);
 		Intent ii = new Intent(Constants.Refresh_Start);
 		pii = PendingIntent.getBroadcast(this, 0, ii, 0);
 
@@ -41,18 +38,6 @@ public class BackgroundRefreshService extends Service{
 
 		return null;
 	}
-	
-	BroadcastReceiver brScreenOn = new BroadcastReceiver(){
-
-		@Override
-		public void onReceive(Context arg0, Intent arg1) {
-			Log.v("TAG", "button clicked");
-			KeyguardManager keyguardManager = (KeyguardManager) Duole.appref.getSystemService(Context.KEYGUARD_SERVICE);
-			KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("");
-			keyguardLock.disableKeyguard();
-		}
-		
-	};
 	
 	public class LocalBinder extends Binder {
 		public BackgroundRefreshService getService() {
