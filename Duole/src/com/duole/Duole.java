@@ -9,9 +9,6 @@ import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.app.AlertDialog;
-import android.app.KeyguardManager;
-import android.app.KeyguardManager.KeyguardLock;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -41,6 +38,7 @@ import com.duole.pojos.DuoleCountDownTimer;
 import com.duole.pojos.adapter.AssetItemAdapter;
 import com.duole.pojos.asset.Asset;
 import com.duole.service.BackgroundRefreshService;
+import com.duole.service.UnLockScreenService;
 import com.duole.utils.Constants;
 import com.duole.utils.DuoleUtils;
 import com.duole.utils.XmlUtils;
@@ -79,6 +77,9 @@ public class Duole extends BaseActivity {
 		mContext = this;
 //		SetFullScreen();
 		setContentView(R.layout.main);
+		
+		Intent screenLock = new Intent(this,UnLockScreenService.class);
+		startService(screenLock);
 		
 		appref = this;
 		

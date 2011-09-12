@@ -52,18 +52,6 @@ public class ItemListTask extends AsyncTask {
 		return true;
 	}
 
-	/**
-	 * Put all items into a map.To see which is already exists on sdcard.
-	 */
-	@Override
-	protected void onPostExecute(Object result) {
-		if ((Boolean) result) {
-			
-		}
-
-		super.onPostExecute(result);
-	}
-
 	public void treatData() {
 		HashMap<String, Asset> hmSource = new HashMap<String, Asset>();
 		ArrayList<Asset> alAssetDeleteList = new ArrayList<Asset>();
