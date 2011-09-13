@@ -34,6 +34,7 @@ import com.duole.asynctask.ItemListTask;
 import com.duole.layout.ScrollLayout;
 import com.duole.player.FlashPlayerActivity;
 import com.duole.player.MusicPlayerActivity;
+import com.duole.player.SingleMusicPlayerActivity;
 import com.duole.pojos.DuoleCountDownTimer;
 import com.duole.pojos.adapter.AssetItemAdapter;
 import com.duole.pojos.asset.Asset;
@@ -285,11 +286,11 @@ public class Duole extends BaseActivity {
 				
 
 				if (assItem.getType().equals(Constants.RES_AUDIO)) {
-					intent = new Intent(appref, MusicPlayerActivity.class);
-
+					//intent = new Intent(appref, SingleMusicPlayerActivity.class);
+					intent = new Intent(appref , SingleMusicPlayerActivity.class);
 					int index = Constants.MusicList.indexOf(assItem);
 
-					intent.putExtra("index", index + 1 + "");
+					intent.putExtra("index", index + "");
 
 				} else if(assItem.getType().equals(Constants.RES_APK)){
 					

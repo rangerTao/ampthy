@@ -1,28 +1,41 @@
 package com.duole.activity;
 
+import java.io.File;
+import java.math.BigDecimal;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StatFs;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.provider.Settings;
+import android.provider.Settings.SettingNotFoundException;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import com.duole.R;
 import com.duole.utils.Constants;
 import com.duole.utils.DuoleNetUtils;
 import com.duole.utils.DuoleUtils;
 
-public class SystemConfigActivity extends PreferenceActivity{
+public class SystemConfigActivity extends PreferenceActivity {
 
 	boolean isGetted = false;
-	
+
 	Preference preID;
 	Preference preUserName;
 	Preference preBabyName;
@@ -30,49 +43,75 @@ public class SystemConfigActivity extends PreferenceActivity{
 	Preference preSex;
 	Preference preGettingUserInfo;
 	PreferenceCategory pcUserInfo;
-	
+	Preference preStorage;
+	AudioManager am;
+
 	static SystemConfigActivity appref;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
+
 		super.onCreate(savedInstanceState);
-		
+
 		appref = this;
-		
+
 		this.addPreferencesFromResource(R.xml.systemconfig);
-		
+
 		pcUserInfo = (PreferenceCategory) findPreference(Constants.Pre_Pc_UserInfo);
 		preGettingUserInfo = this.findPreference(Constants.Pre_GettingUserInfo);
 		preID = this.findPreference(Constants.Pre_deviceid);
 		preID.setSummary(DuoleUtils.getAndroidId());
-		
+
+		preStorage = this.findPreference(Constants.Pre_Storage);
+
+		if (!DuoleUtils.checkTFCard()) {
+			preStorage.setTitle(getString(R.string.tf_unmounted));
+		} else {
+			File sdcard = Environment.getExternalStorageDirectory();
+			StatFs statfs = new StatFs(sdcard.getAbsolutePath());
+			long totalSize = statfs.getBlockCount() * statfs.getBlockSize()
+					/ 1024 / 1024;
+			long usedSize = totalSize
+					- (statfs.getFreeBlocks() * statfs.getBlockSize() / 1024 / 1024);
+			if (totalSize > 1024) {
+				float total = totalSize / (float) 1024;
+				float used = usedSize / (float) 1024;
+				preStorage.setTitle(getString(R.string.tf_total)
+						+ DuoleUtils.round(total, 2, BigDecimal.ROUND_DOWN)
+						+ "GB     " + getString(R.string.tf_used)
+						+ DuoleUtils.round(used, 2, BigDecimal.ROUND_DOWN)
+						+ "GB");
+			} else {
+				preStorage.setTitle(getString(R.string.tf_total) + totalSize
+						+ "MB     " + getString(R.string.tf_used) + usedSize
+						+ "MB");
+			}
+		}
+
 		getUserInfo();
 	}
-	
-	
-	
+
 	@Override
 	protected void onResume() {
 		getUserInfo();
 		super.onResume();
 	}
 
-
-
-	public void getUserInfo(){
-		if(!isGetted){
-			if(DuoleNetUtils.isNetworkAvailable(appref)){
+	public void getUserInfo() {
+		if (!isGetted) {
+			if (DuoleNetUtils.isNetworkAvailable(appref)) {
 				preGettingUserInfo.setKey(Constants.Pre_GettingUserInfo);
-				preGettingUserInfo.setTitle(appref.getString(R.string.getting_user_info));
+				preGettingUserInfo.setTitle(appref
+						.getString(R.string.getting_user_info));
 				GetUserInfoTask guit = new GetUserInfoTask();
 				guit.execute();
-			}else{
-				preGettingUserInfo.setTitle(getString(R.string.network_unavailable));
+			} else {
+				preGettingUserInfo
+						.setTitle(getString(R.string.network_unavailable));
 				preGettingUserInfo.setKey(Constants.Pre_network);
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -80,78 +119,198 @@ public class SystemConfigActivity extends PreferenceActivity{
 		this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
 		super.onAttachedToWindow();
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_HOME:
-			
+
 			finish();
 			break;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
 
-
-
 	@Override
 	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
 			Preference preference) {
-		
+
 		Intent intent = null;
-		if(preference.getKey().equals(Constants.Pre_network)){
-			intent = new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS);
+		if (preference.getKey().equals(Constants.Pre_network)) {
+			intent = new Intent(
+					android.provider.Settings.ACTION_WIRELESS_SETTINGS);
 		}
-		if(preference.getKey().equals(Constants.Pre_volume)){
-			intent = new Intent(android.provider.Settings.ACTION_SOUND_SETTINGS);
+		if (preference.getKey().equals(Constants.Pre_volume)) {
+			volumeTweak();
 		}
-		if(preference.getKey().equals(Constants.Pre_bright)){
-			intent = new Intent(android.provider.Settings.ACTION_DISPLAY_SETTINGS);
+		if (preference.getKey().equals(Constants.Pre_bright)) {
+			try {
+				brightnessTweak();
+			} catch (SettingNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		
-		if(preference.getKey().equals(Constants.Pre_Register)){
-			
+
+		if (preference.getKey().equals(Constants.Pre_Register)) {
+
 		}
-		
-		if(preference.getKey().equals(Constants.Pre_Security_ChangePasswd)){
-			intent = new Intent(appref,PasswordActivity.class);
-			intent.putExtra("type","1");
+
+		if (preference.getKey().equals(Constants.Pre_Security_ChangePasswd)) {
+			intent = new Intent(appref, PasswordActivity.class);
+			intent.putExtra("type", "1");
 		}
-		
-		if(preference.getKey().equals(Constants.Pre_Security_Exit)){
-			android.os.Process.killProcess(android.os.Process.myUid());
+
+		if (preference.getKey().equals(Constants.Pre_Security_Exit)) {
+			android.os.Process.killProcess(android.os.Process.myPid());
 		}
-		
-		if(preference.getKey().equals(Constants.Pre_CheckUpdate)){
-			intent = new Intent(appref,CheckUpdateActivity.class);
+
+		if (preference.getKey().equals(Constants.Pre_CheckUpdate)) {
+			intent = new Intent(appref, CheckUpdateActivity.class);
 		}
-		
-		if(intent != null){
+
+		if (intent != null) {
 			startActivity(intent);
 		}
-		
+
 		return super.onPreferenceTreeClick(preferenceScreen, preference);
 	}
-	
-	class GetUserInfoTask extends AsyncTask{
+
+	public void volumeTweak() {
+
+		try {
+			am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+			int progress = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+			final int orgProgress = progress;
+			final SeekBar sb = new SeekBar(this);
+			
+			sb.setMax(am.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+			Log.v("TAG", am.getStreamMaxVolume(AudioManager.STREAM_MUSIC) + "");
+			sb.setProgress(progress);
+
+			new AlertDialog.Builder(this)
+					.setTitle(R.string.volume_tweak)
+					.setView(sb)
+					.setNegativeButton(getString(R.string.btnNegative),
+							new AlertDialog.OnClickListener() {
+
+								public void onClick(DialogInterface arg0,
+										int arg1) {
+									am.setStreamVolume(am.STREAM_MUSIC, orgProgress, 0);
+								}
+
+							})
+					.setPositiveButton(getString(R.string.btnPositive),
+							new AlertDialog.OnClickListener() {
+
+								public void onClick(DialogInterface arg0,
+										int arg1) {
+									am.setStreamVolume(am.STREAM_MUSIC, sb.getProgress(), 0);
+								}
+
+							}).show();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void brightnessTweak() throws SettingNotFoundException {
+
+		int progress = android.provider.Settings.System.getInt(
+				getContentResolver(),
+				android.provider.Settings.System.SCREEN_BRIGHTNESS);
+		final int orgProgress = progress;
+		final SeekBar sb = new SeekBar(this);
+
+		sb.setMax(255);
+		sb.setProgress(progress);
+
+		new AlertDialog.Builder(this)
+				.setTitle(R.string.bright_tweak)
+				.setView(sb)
+				.setNegativeButton(getString(R.string.btnNegative),
+						new AlertDialog.OnClickListener() {
+
+							public void onClick(DialogInterface arg0, int arg1) {
+								android.provider.Settings.System.putInt(
+										getContentResolver(),
+										Settings.System.SCREEN_BRIGHTNESS,
+										orgProgress);
+
+								WindowManager.LayoutParams lp = getWindow()
+										.getAttributes();
+
+								if (0 < orgProgress && orgProgress <= 255) {
+									lp.screenBrightness = orgProgress
+											/ (float) 255;
+								}
+
+								getWindow().setAttributes(lp);
+							}
+
+						})
+				.setPositiveButton(getString(R.string.btnPositive),
+						new AlertDialog.OnClickListener() {
+
+							public void onClick(DialogInterface arg0, int arg1) {
+
+								int progress = sb.getProgress();
+								android.provider.Settings.System
+										.putInt(getContentResolver(),
+												android.provider.Settings.System.SCREEN_BRIGHTNESS,
+												progress);
+							}
+
+						}).show();
+
+		sb.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+			public void onProgressChanged(SeekBar sb, int arg1, boolean arg2) {
+
+				Integer progress = sb.getProgress();
+				WindowManager.LayoutParams lp = getWindow().getAttributes();
+
+				if (0 < progress && progress <= 255) {
+					lp.screenBrightness = progress / (float) 255;
+				}
+
+				getWindow().setAttributes(lp);
+			}
+
+			public void onStartTrackingTouch(SeekBar arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public void onStopTrackingTouch(SeekBar sb) {
+
+			}
+
+		});
+	}
+
+	class GetUserInfoTask extends AsyncTask {
 
 		@Override
 		protected Object doInBackground(Object... arg0) {
-			String url = "http://www.duoleyuan.com/e/member/child/ancJinfo.php?cc=" + DuoleUtils.getAndroidId();
-			
+			String url = "http://www.duoleyuan.com/e/member/child/ancJinfo.php?cc="
+					+ DuoleUtils.getAndroidId();
+
 			String result = DuoleNetUtils.connect(url);
-			if(!result.equals("")){
+			if (!result.equals("")) {
 				try {
 					JSONObject json = new JSONObject(result);
-					
+
 					String username = json.getString("username");
 					String babyname = json.getString("truename");
 					String birthday = json.getString("birthd");
 					String sex = json.getString("sex");
 					String userid = json.getString("userid");
-					
-					if(!userid.equals("null")){
+
+					if (!userid.equals("null")) {
 						Preference preUserName = new Preference(appref);
 						Preference preBabyName = new Preference(appref);
 						Preference preBirthday = new Preference(appref);
@@ -171,54 +330,57 @@ public class SystemConfigActivity extends PreferenceActivity{
 						preBirthday.setTitle(R.string.birthday);
 						preBirthday.setSummary(birthday);
 						preSex.setTitle(R.string.sex);
-						if(sex.equals("0")){
+						if (sex.equals("0")) {
 							sex = appref.getString(R.string.sex_male);
-						}else if(sex.equals("1")){
+						} else if (sex.equals("1")) {
 							sex = appref.getString(R.string.sex_female);
-						}else{
+						} else {
 							sex = appref.getString(R.string.sex_unborn);
 						}
 						preSex.setSummary(sex);
-						
+
 						pcUserInfo.removeAll();
-						
-						if(appref.findPreference(Constants.Pre_GettingUserInfo) != null){
-							pcUserInfo.removePreference(appref.findPreference(Constants.Pre_GettingUserInfo));
+
+						if (appref
+								.findPreference(Constants.Pre_GettingUserInfo) != null) {
+							pcUserInfo
+									.removePreference(appref
+											.findPreference(Constants.Pre_GettingUserInfo));
 						}
 						pcUserInfo.addPreference(preID);
 						pcUserInfo.addPreference(preUserName);
 						pcUserInfo.addPreference(preBabyName);
 						pcUserInfo.addPreference(preBirthday);
 						pcUserInfo.addPreference(preSex);
-						
+
 						appref.isGetted = true;
 					}
-					
+
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-			}else{
-				if(pcUserInfo != null){
-					Preference getuserinfo = appref.findPreference(Constants.Pre_GettingUserInfo);
-					if(getuserinfo != null){
+
+			} else {
+				if (pcUserInfo != null) {
+					Preference getuserinfo = appref
+							.findPreference(Constants.Pre_GettingUserInfo);
+					if (getuserinfo != null) {
 						pcUserInfo.removePreference(getuserinfo);
 					}
-					
-					
+
 					Preference preRegister = new Preference(appref);
 					preRegister.setKey(Constants.Pre_Register);
-					preRegister.setTitle(appref.getString(R.string.device_active));
-					preRegister.setSummary(appref.getString(R.string.register_device));
+					preRegister.setTitle(appref
+							.getString(R.string.device_active));
+					preRegister.setSummary(appref
+							.getString(R.string.register_device));
 				}
-				
+
 			}
 			return null;
 		}
-		
+
 	}
-	
-	
-	
+
 }

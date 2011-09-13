@@ -8,63 +8,57 @@ import java.net.URL;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnFocusChangeListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.Gallery;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.duole.R;
 import com.duole.activity.PlayerBaseActivity;
-import com.duole.pojos.adapter.AssetItemAdapter;
+import com.duole.pojos.asset.Asset;
 import com.duole.utils.Constants;
 import com.duole.utils.DuoleUtils;
 
-public class MusicPlayerActivity extends PlayerBaseActivity implements OnFocusChangeListener, OnItemSelectedListener, OnCompletionListener {
+public class SingleMusicPlayerActivity extends PlayerBaseActivity{
 
+	
 	MediaPlayer mp;
 	LinearLayout llMain;
 	String url = "";
-	int index;
-	Gallery gallery;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);		
-		this.SetFullScreen();
-		setContentView(R.layout.musicplayer);
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
 		
-		setBackground();
+		this.setContentView(R.layout.singlemusicplayer);
 		
 		Intent intent = getIntent();
-
-		gallery = (Gallery)findViewById(R.id.musicGallery);
 		
-		gallery.setOnFocusChangeListener(this);
-
-		gallery.setOnItemSelectedListener(this);
+		int index = Integer.parseInt(intent.getStringExtra("index"));
 		
-		gallery.setAdapter(new AssetItemAdapter(Constants.MusicList));
+		setBackground(index);
 		
 		mp = new MediaPlayer();
 		
-		index = Integer.parseInt(intent.getStringExtra("index"))  - 1;
-		gallery.setSelection(index);
-		
 		setMusicData(index);
-
-		mp.setOnCompletionListener(this);
 	}
 	
-	public void setBackground() {
+	
+	public void setBackground(int index) {
 
 		llMain = (LinearLayout) findViewById(R.id.llMusicPlayer);
-
+		ImageView ivMusicThumb = (ImageView)findViewById(R.id.ivMusicThumb);
+		TextView tvMusicTitle = (TextView)findViewById(R.id.tvMusicTitle);
+		Asset asset = Constants.MusicList.get(index);
+		
+		String ivUrl = asset.getThumbnail();
+		String ivThumb = Constants.CacheDir + Constants.RES_THUMB + ivUrl.substring(ivUrl.lastIndexOf("/"));
+		ivMusicThumb.setImageDrawable(Drawable.createFromPath(ivThumb));
+		tvMusicTitle.setText(asset.getFilename());
+		
 		if (!Constants.bgRestUrl.equals("")) {
 			File bg = new File(Constants.CacheDir
 					+ Constants.bgRestUrl.substring(Constants.bgRestUrl
@@ -83,7 +77,7 @@ public class MusicPlayerActivity extends PlayerBaseActivity implements OnFocusCh
 			}
 		}
 	}
-
+	
 	public void setMusicData(int index) {
 		
 		String filename = Constants.MusicList.get(index).getUrl();
@@ -150,42 +144,6 @@ public class MusicPlayerActivity extends PlayerBaseActivity implements OnFocusCh
 	protected void onDestroy() {
 		mp.stop();
 		super.onDestroy();
-	}
-
-	public void onFocusChange(View view, boolean value) {
-		
-	}
-
-	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
-			long arg3) {
-
-		mp.stop();
-		mp.release();
-		mp = new MediaPlayer();
-
-		setMusicData(arg2);
-
-	}
-
-	public void onNothingSelected(AdapterView<?> arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void onCompletion(MediaPlayer mp) {
-
-		mp.stop();
-		mp.release();
-		mp = new MediaPlayer();
-		
-		if(index < Constants.MusicList.size()){
-			setMusicData(index + 1);
-			gallery.setSelection(index + 1);
-		}else{
-			setMusicData(0);
-			gallery.setSelection(0);
-		}
-		
 	}
 
 }
