@@ -102,6 +102,7 @@ public class Constants {
 	public static final String Pre_Pc_UserInfo = "pcUserInfo";
 	public static final String Pre_Register = "preRegister";
 	public static final String Pre_CheckUpdate = "preCheckUpdate";
+	public static final String Pre_Storage = "preStorage";
 	
 	//System security
 	public static final String Pre_Security_ChangePasswd = "preSecurityChangePasswd";

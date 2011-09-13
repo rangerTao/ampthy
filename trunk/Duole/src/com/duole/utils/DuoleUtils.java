@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -15,7 +16,6 @@ import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
 import android.provider.Settings.System;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -546,5 +546,13 @@ public class DuoleUtils {
     		}
     	}
     	
+    }
+    
+    public static double round(double value, int scale, int roundingMode) {  
+        BigDecimal bd = new BigDecimal(value);  
+        bd = bd.setScale(scale, roundingMode);  
+        double d = bd.doubleValue();  
+        bd = null;  
+        return d;  
     }
 }
