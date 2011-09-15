@@ -227,7 +227,11 @@ public class Duole extends BaseActivity {
 
 		// the total pages
 		int PageCount = (int) Math.ceil(temp.size()
-				/ Constants.APP_PAGE_SIZE) + 1;
+				/ Constants.APP_PAGE_SIZE);
+		
+		if(PageCount == 0 || (temp.size() % Constants.APP_PAGE_SIZE) > 0){
+			PageCount += 1;
+		}
 
 		alAIA = new ArrayList<AssetItemAdapter>();
 		for (int i = 0; i < PageCount; i++) {

@@ -38,6 +38,7 @@ public class DuoleNetUtils {
 			return html;
 		} catch (Exception e) {
 			Log.v("TAG", "Connect " + e.getMessage());
+			Constants.DOWNLOAD_RUNNING = false;
 			return "";
 		}
 	}

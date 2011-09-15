@@ -36,16 +36,10 @@ public class ItemListTask extends AsyncTask {
 	static EditText etUserName;
 	static EditText etPassword;
 
-
 	@Override
 	protected Object doInBackground(Object... arg0) {
 		try {
-//			if(getSourceList()){
-				treatData();
-//			}else{
-//				Log.v("TAG", "getting list error");
-//			}
-			
+			treatData();
 		} catch (Exception e) {
 			return false;
 		}
@@ -71,6 +65,7 @@ public class ItemListTask extends AsyncTask {
 					hmSource, Constants.AssetList);
 			
 			Constants.DownLoadTaskList = new ArrayList<Asset>();
+			Log.v("TAG", "start to get download list");
 			if (Constants.AssetList != null && Constants.AssetList.size() > 0) {
 				for (int i = 0; i < Constants.AssetList.size(); i++) {
 					Asset ass = Constants.AssetList.get(i);
@@ -83,7 +78,10 @@ public class ItemListTask extends AsyncTask {
 				}
 			} else {
 				for (Asset asset : alAsset) {
-					Constants.DownLoadTaskList.add(asset);
+					if (DuoleUtils.checkDownloadNecessary(asset,
+							hmSource.get(asset.getId()))) {
+						Constants.DownLoadTaskList.add(asset);
+					}
 				}
 			}
 
