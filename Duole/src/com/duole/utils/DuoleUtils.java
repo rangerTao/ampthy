@@ -539,11 +539,16 @@ public class DuoleUtils {
         		}
     		}
     		
-    		file = new File(Constants.CacheDir + type + path.substring(path.lastIndexOf("/")));
-    		if(!file.exists()){
-    			assets.remove(i);
+    		if(!path.startsWith("http")){
+    			file = new File(Constants.CacheDir + type + path.substring(path.lastIndexOf("/")));
+        		if(!file.exists()){
+        			assets.remove(i);
+        			continue;
+        		}
+    		}else{
     			continue;
     		}
+    		
     	}
     	
     }

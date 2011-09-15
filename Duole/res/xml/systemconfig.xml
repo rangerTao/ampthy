@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceCategory android:title="@string/storage">
-		<Preference	android:selectable="false" android:enabled="true"
+		<Preference android:selectable="false" android:enabled="true"
 			android:key="preStorage"></Preference>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/network">
-		<Preference android:defaultValue="@string/network_config"
-			android:selectable="true" android:enabled="true"
-			android:summary="@string/network_config_summary" android:title="@string/network_config"
-			android:key="preNetwork"></Preference>
+		<CheckBoxPreference android:title="Wi-Fi"
+			android:selectable="true" android:enabled="true" android:key="preWIFI" />
+		<Preference android:title="@string/wifi_connection"
+			android:enabled="false" android:selectable="true" android:key="preListWifi" />
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="@string/system_tweak">

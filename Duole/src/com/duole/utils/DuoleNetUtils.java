@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiConfiguration;
 import android.util.Log;
 
 public class DuoleNetUtils {
@@ -49,6 +50,7 @@ public class DuoleNetUtils {
         Context context = mActivity.getApplicationContext();  
         ConnectivityManager connectivity =(ConnectivityManager)  
         context.getSystemService(Context.CONNECTIVITY_SERVICE);  
+
         if(connectivity == null){  
             return false;  
         }else {  
@@ -64,4 +66,27 @@ public class DuoleNetUtils {
         return false;  
     }  
     
+    /**
+     * Set WifiConfiguration
+     */
+    public static void setWifiConfigurationSettings(WifiConfiguration wc,String capa){
+    	
+    	if(capa.contains("WEP")){
+    		wc.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
+    		wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+    	}else{
+			wc.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+			wc.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+			wc.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+		
+			wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+			wc.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+			wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+			wc.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+			wc.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+			wc.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_EAP);
+		
+    	}
+    	
+    }
 }

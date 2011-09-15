@@ -103,10 +103,13 @@ public class Constants {
 	public static final String Pre_Register = "preRegister";
 	public static final String Pre_CheckUpdate = "preCheckUpdate";
 	public static final String Pre_Storage = "preStorage";
+	public static final String Pre_Wifi = "preWIFI";
+	public static final String Pre_Screen_network = "preScreenNetwork";
 	
 	//System security
 	public static final String Pre_Security_ChangePasswd = "preSecurityChangePasswd";
 	public static final String Pre_Security_Exit = "preSecurityExit";
 	public static String System_Password = "";
 	public static String System_ver = "";
+	
 }
