@@ -33,7 +33,6 @@ import com.duole.activity.PasswordActivity;
 import com.duole.asynctask.ItemListTask;
 import com.duole.layout.ScrollLayout;
 import com.duole.player.FlashPlayerActivity;
-import com.duole.player.MusicPlayerActivity;
 import com.duole.player.SingleMusicPlayerActivity;
 import com.duole.pojos.DuoleCountDownTimer;
 import com.duole.pojos.adapter.AssetItemAdapter;
