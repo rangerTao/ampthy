@@ -61,7 +61,10 @@ public class RefreshCompeleteReceiver extends BroadcastReceiver {
 					
 					// the total pages
 					int PageCount = (int) Math.ceil(temp.size()
-							/ Constants.APP_PAGE_SIZE) + 1;
+							/ Constants.APP_PAGE_SIZE);
+					if(PageCount == 0){
+						PageCount += 1;
+					}
 					
 					ScrollLayout sl = Duole.appref.mScrollLayout;
 

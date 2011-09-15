@@ -12,10 +12,13 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
 import android.provider.Settings.System;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -65,13 +68,19 @@ public class DuoleUtils {
 		if (!file.exists()) {
 			file.mkdir();
 		}
+		
+		//Create the temp 
+		file = new File(Constants.CacheDir + "/temp/");
+		if(!file.exists()){
+			file.mkdir();
+		}
 
 		// Whether itemlist.xml exists.
 		file = new File(Constants.CacheDir + "/itemlist.xml");
 		if (!file.exists()) {
 			// return false;
 		}
-
+		
 		return true;
 	}
 
@@ -560,4 +569,42 @@ public class DuoleUtils {
         bd = null;  
         return d;  
     }
+    
+	/**
+	 * Get resource list from server.
+	 */
+	public static boolean getSourceList(ArrayList<Asset> alAsset) {
+		try {
+			String url = //					"http://www.duoleyuan.com/e/member/child/ancJn.php?cc="	+ "7c71f33fce7335e4");
+			"http://www.duoleyuan.com/e/member/child/ancJn.php?cc=" + DuoleUtils.getAndroidId();
+
+			alAsset = new ArrayList<Asset>();
+			String result = DuoleNetUtils.connect(url);
+			JSONObject jsonObject = new JSONObject(result);
+			Log.v("TAG", result);
+			String error = null;
+			try {
+				error = jsonObject.getString("errstr");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			
+			if (error != null) {
+			} else {
+				try{
+					JsonUtils.parserJson(alAsset, jsonObject);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				
+			}
+
+			return true;
+		} catch (Exception e) {
+			Log.v("TAG", e.getMessage());
+			return false;
+		}
+
+	}
 }

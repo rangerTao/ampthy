@@ -1,21 +1,14 @@
 package com.duole.service;
 
 import android.app.AlarmManager;
-import android.app.KeyguardManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.app.KeyguardManager.KeyguardLock;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.util.Log;
-
-import com.duole.Duole;
 import com.duole.utils.Constants;
 
 public class BackgroundRefreshService extends Service{

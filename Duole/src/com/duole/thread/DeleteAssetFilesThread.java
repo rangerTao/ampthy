@@ -1,10 +1,12 @@
 package com.duole.thread;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
-import android.util.Log;
+import android.content.pm.PackageManager;
 
+import com.duole.Duole;
 import com.duole.pojos.asset.Asset;
 import com.duole.utils.Constants;
 
@@ -57,6 +59,22 @@ public class DeleteAssetFilesThread extends Thread {
 						+ ass.getUrl().substring(ass.getUrl().lastIndexOf("/")));
 				if (file.exists()) {
 					file.delete();
+				}
+			}
+			
+			// if is a asset of apk.
+			if (ass.getType().equals(Constants.RES_APK)) {
+				file = new File(Constants.CacheDir + Constants.RES_APK + ass.getUrl().substring(ass.getUrl().lastIndexOf("/")));
+				if (file.exists()) {
+					file.delete();
+				}
+				try {
+					Process p = Runtime.getRuntime().exec("pm uninstall " + ass.getPackag());
+					p.waitFor();
+					int result = p.exitValue();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 
