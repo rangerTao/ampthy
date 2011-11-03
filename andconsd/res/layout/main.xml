@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/rlController"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/tvIpAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:text=""
+            android:textSize="30dp" />
+
+        <TextView
+            android:id="@+id/tvHelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tvIpAddress" android:layout_centerVertical="true"
+            android:paddingLeft="100dp"
+            android:textSize="20dp" android:gravity="center"
+            android:text="@string/howtouse"/>
+
+        <ImageView
+            android:id="@+id/ivHelp"
+            android:layout_width="25dp"
+            android:layout_height="25dp" android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/tvHelp"
+            android:background="@drawable/help"
+            android:gravity="center_vertical"/>
+
+        <ToggleButton
+            android:id="@+id/btnService"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/tvIpAddress"
+            android:textOff="@string/uploadpic"
+            android:textOn="@string/closeservice" />
+    </RelativeLayout>
+	<RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
+	    
+	     <GridView
+        android:id="@+id/gl"
+        android:layout_width="fill_parent" android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content" />
+	    
+	</RelativeLayout>
+   
+</LinearLayout>

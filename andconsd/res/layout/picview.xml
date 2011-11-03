@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/picview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.andconsd.widget.DuoleVideoView
+        android:id="@+id/vv"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone" />
+    
+<!--     <com.andconsd.widget.ScrollLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/slPic"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" /> -->
+	<com.andconsd.widget.FlingGallery
+		android:layout_width="fill_parent" android:layout_centerVertical="true"
+		android:id="@+id/horizontalview" android:layout_height="fill_parent">
+		
+	</com.andconsd.widget.FlingGallery>
+
+    <RelativeLayout
+        android:id="@+id/rlController"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/slPic"
+        android:background="@drawable/popupcontrollerbg" >
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btnback"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/tvIndex"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_alignTop="@+id/btnBack"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical"
+            android:textSize="22dp" />
+        <ProgressBar
+            android:id="@+id/progress_circular"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dip"
+            android:paddingRight="20dp"
+            android:max="10000" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlSlidShow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/ivSlidShow"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+</RelativeLayout>
