@@ -17,7 +17,7 @@ public class Constants {
 	
 	public static boolean service_running = true;
 	
-	public static HashMap<String,SoftReference<Bitmap>> ImgCache = new HashMap<String, SoftReference<Bitmap>>();
+	public static HashMap<String,Bitmap> ImgCache = new HashMap<String,Bitmap>();
 	
 	public static ArrayList<File> files = new ArrayList<File>();
 }

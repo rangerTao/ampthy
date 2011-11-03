@@ -1,7 +1,11 @@
 /*****************Copyright (C), 2010-2015, FORYOU Tech. Co., Ltd.********************/
 package com.andconsd;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -135,6 +140,13 @@ public class PicViewer extends Activity implements OnTouchListener{
 		mFlingGallery.setAdapter(pva, mIndex);
 		
 		mFlingGallery.setClickable(true);
+		mFlingGallery.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				showHideController();
+			}
+		});
 		initPopupController();
 		
 		initAutoPlayCountDown();
@@ -264,6 +276,8 @@ public class PicViewer extends Activity implements OnTouchListener{
 			vv.setVideoPath(pathString);
 			vv.setVisibility(View.VISIBLE);
 			
+			rlController.setVisibility(View.VISIBLE);
+			
 			vv.setMediaController(new MediaController(appref));
 		}
 	}
@@ -362,19 +376,30 @@ public class PicViewer extends Activity implements OnTouchListener{
 		Log.v("TAG", "file length " + file.length());
 		Bitmap resizeBmp = null;
 		BitmapFactory.Options opts = new BitmapFactory.Options();
-		// 数字越大读出的图片占用的heap越小 不然总是溢出
-		if (file.length() < 1048576) { // 0-1m
+
+		if (file.length() < 131072) { // 0-1m
 			opts.inSampleSize = 1;
-		} else if (file.length() < 2097152) { // 1-2m
+		} else if (file.length() < 262144) { // 1-2m
 			opts.inSampleSize = 2;
-		} else if (file.length() < 4194304) { // 2-4m
+		} else if (file.length() < 524288) { // 2-4m
 			opts.inSampleSize = 4;
-		} else if (file.length() < 8388608) { // 4-8m
+		} else if (file.length() < 1048576) { // 4-8m
 			opts.inSampleSize = 6;
 		} else {
 			opts.inSampleSize = 10;
 		}
-		resizeBmp = BitmapFactory.decodeFile(file.getPath(), opts);
+		
+		try {
+			InputStream is = new DataInputStream(new FileInputStream(file));
+			
+//			resizeBmp = BitmapFactory.decodeFile(file.getPath(), opts);
+			resizeBmp = BitmapFactory.decodeStream(is,null, opts);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 		return resizeBmp;
 	}
 	

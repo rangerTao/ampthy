@@ -8,11 +8,12 @@ import java.util.Iterator;
 import com.andconsd.Androsd;
 import com.andconsd.R;
 import com.andconsd.constants.Constants;
+import com.andconsd.control.ThumbnailAsyncTaskController;
+import com.andconsd.control.asyncLoadImage;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
-import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -84,9 +85,9 @@ public class ImageThumbAdapter extends BaseAdapter {
 			ti.ivPlay.setVisibility(View.VISIBLE);
 
 			if (Constants.ImgCache.containsKey(file.getAbsolutePath())) {
-				SoftReference<Bitmap> softReference = Constants.ImgCache.get(file
+//				SoftReference<Bitmap> softReference = 
+				bmp = Constants.ImgCache.get(file
 						.getAbsolutePath());
-				bmp = softReference.get();
 				if(bmp != null){
 					ti.iv.setImageBitmap(bmp);
 				}
@@ -94,8 +95,9 @@ public class ImageThumbAdapter extends BaseAdapter {
 			} else {
 				ti.iv.setImageResource(R.drawable.loading);
 				ti.iv.setTag(file.getAbsolutePath());
-				new asyncLoadImage().execute(new Object[] { gv,
-						file.getAbsolutePath() });
+//				new asyncLoadImage().execute(new Object[] { gv,
+//						file.getAbsolutePath() });
+				ThumbnailAsyncTaskController.doTask(new Object[]{gv,file.getAbsolutePath()});
 			}
 
 		} else {
@@ -103,17 +105,19 @@ public class ImageThumbAdapter extends BaseAdapter {
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inSampleSize = 12;
 			if (Constants.ImgCache.containsKey(file.getAbsolutePath())) {
-				SoftReference<Bitmap> softReference = Constants.ImgCache.get(file
+//				SoftReference<Bitmap> softReference = 
+				bmp = Constants.ImgCache.get(file
 						.getAbsolutePath());
-				bmp = softReference.get();
+//				bmp = softReference.get();
 				if(bmp != null){
 					ti.iv.setImageBitmap(bmp);
 				}
 			} else {
 				ti.iv.setImageResource(R.drawable.loading);
 				ti.iv.setTag(file.getAbsolutePath());
-				new asyncLoadImage().execute(new Object[] { gv,
-						file.getAbsolutePath() });
+//				new asyncLoadImage().execute(new Object[] { gv,
+//						file.getAbsolutePath() });
+				ThumbnailAsyncTaskController.doTask(new Object[]{gv,file.getAbsolutePath()});
 			}
 
 		}
@@ -124,75 +128,6 @@ public class ImageThumbAdapter extends BaseAdapter {
 	class ThumbItem {
 		ImageView iv;
 		ImageView ivPlay;
-	}
-
-}
-
-class asyncLoadImage extends AsyncTask {
-	
-	Bitmap bmp = null;
-	ImageView iv;
-	SoftReference<Bitmap> bmpSoftReference;
-	@Override
-	protected Object doInBackground(Object... params) {
-		try{
-			GridView gv = (GridView) params[0];
-			iv = (ImageView) gv.findViewWithTag(params[1]);
-		}catch(Exception e){
-			e.printStackTrace();
-			return null;
-		}
-		
-
-		if(iv == null){
-			return null;
-		}
-		String filename = (String) params[1];
-		
-
-		if (Constants.ImgCache.containsKey(filename)) {
-
-			publishProgress(iv, Constants.ImgCache.get(filename));
-
-			return null;
-		}
-
-		if (filename.endsWith(".mp4") || filename.endsWith(".3gp")) {
-			bmp = ThumbnailUtils.extractThumbnail(ThumbnailUtils
-					.createVideoThumbnail(filename,
-							MediaStore.Video.Thumbnails.MINI_KIND), 130, 130);
-		} else {
-			try {
-				BitmapFactory.Options options = new BitmapFactory.Options();
-				options.inSampleSize = 12;
-				bmp = ThumbnailUtils.extractThumbnail(
-						BitmapFactory.decodeFile(filename, options), 130, 130);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		}
-
-		Constants.ImgCache.put(filename, new SoftReference<Bitmap>(bmp));
-		
-		Androsd.appref.handler.post(new Runnable() {
-			
-			@Override
-			public void run() {
-				if(iv!=null){
-					iv.setImageBitmap(bmp);
-				}
-				
-			}
-		});
-
-		return null;
-	}
-
-	@Override
-	protected void onProgressUpdate(Object... values) {
-
-		super.onProgressUpdate(values);
 	}
 
 }

@@ -6,10 +6,12 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
@@ -295,7 +297,7 @@ public class FlingGallery extends FrameLayout
 	 
 	 @Override
 	public boolean onTouchEvent(MotionEvent event) {
-//		super.onTouchEvent(event);
+		// super.onTouchEvent(event);
 		return onGalleryTouchEvent(event);
 	}
 
@@ -310,6 +312,7 @@ public class FlingGallery extends FrameLayout
 				{
 					processScrollSnap();
 					processGesture();
+					performClick();
 				}
 			}
 			

@@ -1,6 +1,10 @@
 package com.andconsd.adapter;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.crypto.spec.IvParameterSpec;
@@ -89,6 +93,14 @@ public class PicViewAdapter extends BaseAdapter implements OnClickListener{
 			pvi.ivPlay.setOnClickListener(this);
 		}
 		
+//		pvi.ivThumb.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				PicViewer.appref.showHideController();
+//			}
+//		});
+		
 		return convertView;
 	}
 	
@@ -102,21 +114,33 @@ public class PicViewAdapter extends BaseAdapter implements OnClickListener{
 		if (path == null || path.length() < 1)
 			return null;
 		File file = new File(path);
+		Log.v("TAG", "file length " + file.length());
 		Bitmap resizeBmp = null;
 		BitmapFactory.Options opts = new BitmapFactory.Options();
-		// 数字越大读出的图片占用的heap越小 不然总是溢出
-		if (file.length() < 51200) { // 0-20k
+
+		if (file.length() < 131072) { // 0-1m
 			opts.inSampleSize = 1;
-		} else if (file.length() < 307200) { // 20-50k
+		} else if (file.length() < 262144) { // 1-2m
 			opts.inSampleSize = 2;
-		} else if (file.length() < 819200) { // 50-300k
+		} else if (file.length() < 524288) { // 2-4m
 			opts.inSampleSize = 4;
-		} else if (file.length() < 1048576) { // 300-800k
+		} else if (file.length() < 1048576) { // 4-8m
 			opts.inSampleSize = 6;
 		} else {
 			opts.inSampleSize = 10;
 		}
-		resizeBmp = BitmapFactory.decodeFile(file.getPath(), opts);
+		
+		try {
+			InputStream is = new DataInputStream(new FileInputStream(file));
+			
+//			resizeBmp = BitmapFactory.decodeFile(file.getPath(), opts);
+			resizeBmp = BitmapFactory.decodeStream(is,null, opts);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 		return resizeBmp;
 	}
 	@Override
