@@ -246,8 +246,8 @@ public class Androsd extends Activity{
 		for(File temp : filess){
 			Constants.files.add(temp);
 		}
-		Log.v("TAG", "date set chaged" + Constants.files.size());
 		fa.notifyDataSetChanged();
+		
 	}
 	
 	private void stopServerSafty(){

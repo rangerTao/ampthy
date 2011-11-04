@@ -58,11 +58,11 @@ public class WelcomeActivity extends Activity{
 				}
 				
 				for(int i = 0; i< end;i++){
-					String filename = Constants.files.get(i).getAbsolutePath();
-					
-					Constants.ImgCache.put(filename,ThumbnailUtils.extractThumbnail(ThumbnailUtils
-							.createVideoThumbnail(filename,
-									MediaStore.Video.Thumbnails.MINI_KIND), 130, 130));
+//					String filename = Constants.files.get(i).getAbsolutePath();
+//					
+//					Constants.ImgCache.put(filename,ThumbnailUtils.extractThumbnail(ThumbnailUtils
+//							.createVideoThumbnail(filename,
+//									MediaStore.Video.Thumbnails.MINI_KIND), 130, 130));
 				}
 				
 				handler.post(new Runnable() {

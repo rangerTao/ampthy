@@ -8,6 +8,7 @@ import java.util.Iterator;
 import com.andconsd.Androsd;
 import com.andconsd.R;
 import com.andconsd.constants.Constants;
+import com.andconsd.control.BitmapManager;
 import com.andconsd.control.ThumbnailAsyncTaskController;
 import com.andconsd.control.asyncLoadImage;
 
@@ -56,13 +57,12 @@ public class ImageThumbAdapter extends BaseAdapter {
 
 		Bitmap bmp;
 		File file = files.get(position);
-		
-		if(Constants.ImgCache.size() > 70){
-			Iterator iterator = Constants.ImgCache.keySet().iterator();
-			Log.v("TAG", "clear more");
-			Constants.ImgCache.remove(iterator.next());
-//			System.gc();
-		}
+//		
+//		if(Constants.ImgCache.size() > 70){
+//			Iterator iterator = Constants.ImgCache.keySet().iterator();
+//			Constants.ImgCache.remove(iterator.next());
+////			System.gc();
+//		}
 		
 		ThumbItem ti;
 		if (convertView == null) {
@@ -79,48 +79,27 @@ public class ImageThumbAdapter extends BaseAdapter {
 		} else {
 			ti = (ThumbItem) convertView.getTag();
 		}
-
+		
 		if (file.getName().endsWith(".mp4") || file.getName().endsWith(".3gp")) {
 			ti.ivPlay.setImageResource(R.drawable.videoplay);
 			ti.ivPlay.setVisibility(View.VISIBLE);
-
-			if (Constants.ImgCache.containsKey(file.getAbsolutePath())) {
-//				SoftReference<Bitmap> softReference = 
-				bmp = Constants.ImgCache.get(file
-						.getAbsolutePath());
-				if(bmp != null){
-					ti.iv.setImageBitmap(bmp);
-				}
-				
-			} else {
-				ti.iv.setImageResource(R.drawable.loading);
-				ti.iv.setTag(file.getAbsolutePath());
-//				new asyncLoadImage().execute(new Object[] { gv,
-//						file.getAbsolutePath() });
-				ThumbnailAsyncTaskController.doTask(new Object[]{gv,file.getAbsolutePath()});
-			}
-
-		} else {
+		}else{
 			ti.ivPlay.setVisibility(View.INVISIBLE);
-			BitmapFactory.Options options = new BitmapFactory.Options();
-			options.inSampleSize = 12;
-			if (Constants.ImgCache.containsKey(file.getAbsolutePath())) {
-//				SoftReference<Bitmap> softReference = 
-				bmp = Constants.ImgCache.get(file
-						.getAbsolutePath());
-//				bmp = softReference.get();
-				if(bmp != null){
-					ti.iv.setImageBitmap(bmp);
-				}
-			} else {
-				ti.iv.setImageResource(R.drawable.loading);
-				ti.iv.setTag(file.getAbsolutePath());
-//				new asyncLoadImage().execute(new Object[] { gv,
-//						file.getAbsolutePath() });
-				ThumbnailAsyncTaskController.doTask(new Object[]{gv,file.getAbsolutePath()});
-			}
-
 		}
+		
+		BitmapManager.INSTANCE.loadBitmap(file.getAbsolutePath(), ti.iv, 130, 130);
+//		if(Constants.ImgCache.containsKey(file.getAbsolutePath())){
+//			bmp = Constants.ImgCache.get(file
+//					.getAbsolutePath());
+//			if(bmp != null){
+//				ti.iv.setImageBitmap(bmp);
+//			}
+//		} else {
+//			ti.iv.setImageResource(R.drawable.loading);
+//			ti.iv.setTag(file.getAbsolutePath());
+//			ThumbnailAsyncTaskController.doTask(new Object[] { gv,
+//					file.getAbsolutePath() });
+//		}
 
 		return convertView;
 	}
