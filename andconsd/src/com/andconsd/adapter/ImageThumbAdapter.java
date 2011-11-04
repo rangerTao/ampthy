@@ -9,8 +9,6 @@ import com.andconsd.Androsd;
 import com.andconsd.R;
 import com.andconsd.constants.Constants;
 import com.andconsd.control.BitmapManager;
-import com.andconsd.control.ThumbnailAsyncTaskController;
-import com.andconsd.control.asyncLoadImage;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

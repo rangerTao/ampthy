@@ -178,7 +178,7 @@ public class HttpFileHandler implements HttpRequestHandler {
 		
 	}
 	
-	private void storeFile(HttpEntityEnclosingRequest request)
+	private boolean storeFile(HttpEntityEnclosingRequest request)
 			throws IllegalStateException, IOException {
 		long start = System.currentTimeMillis();
 		int data = 0;
@@ -202,6 +202,9 @@ public class HttpFileHandler implements HttpRequestHandler {
 		String path = Constants.ROOT_DIR ;
 		String filename = headerBuffer.substring(headerBuffer
 				.indexOf("filename=\"") + 10, headerBuffer.lastIndexOf("\""));
+		if(filename.equals("")){
+			return false;
+		}
 		if (filename.contains("\\")) {
 			filename = filename.substring(filename.lastIndexOf("\\") + 1);
 		}
@@ -234,10 +237,8 @@ public class HttpFileHandler implements HttpRequestHandler {
 			}
 		}
 		outputStream.close();
-		System.out.println("speed: "
-				+ (fileByteCount / (System.currentTimeMillis() - start))
-				+ " byte/ms");
 		notifyDatasetChanged();
+		return true;
 	}
 
 	private long getBoundaryLength(String string) {
