@@ -11,6 +11,7 @@
         <activity
             android:label="@string/app_name"
             android:name=".WelcomeActivity"
+            android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden|adjustResize" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
@@ -20,8 +21,13 @@
         </activity>
         <activity
             android:label="@string/app_name"
-            android:name=".PicViewer" />
-        <activity android:label="@string/app_name" android:name=".Androsd"></activity>
+            android:name=".PicViewer"
+            android:screenOrientation="landscape" />
+        <activity
+            android:label="@string/app_name"
+            android:name=".Androsd"
+            android:screenOrientation="landscape" >
+        </activity>
 
         <service android:name=".WebService" >
             <intent-filter >
@@ -37,6 +43,6 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
-    	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
 </manifest>

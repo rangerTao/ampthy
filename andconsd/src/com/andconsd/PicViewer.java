@@ -191,9 +191,6 @@ public class PicViewer extends Activity implements OnTouchListener{
 									rlSlidShow.setVisibility(View.VISIBLE);
 									
 									try{
-//										ivSlidShow.setImageURI(Uri
-//												.parse(Androsd.appref.files.get(getNextIndex())
-//														.getAbsolutePath()));
 										ivSlidShow.setImageBitmap(getDrawable(Constants.files.get(getNextIndex())
 												.getAbsolutePath()));
 									}catch(Exception e){
@@ -373,7 +370,6 @@ public class PicViewer extends Activity implements OnTouchListener{
 		if (path == null || path.length() < 1)
 			return null;
 		File file = new File(path);
-		Log.v("TAG", "file length " + file.length());
 		Bitmap resizeBmp = null;
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 
@@ -394,7 +390,7 @@ public class PicViewer extends Activity implements OnTouchListener{
 			
 //			resizeBmp = BitmapFactory.decodeFile(file.getPath(), opts);
 			resizeBmp = BitmapFactory.decodeStream(is,null, opts);
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

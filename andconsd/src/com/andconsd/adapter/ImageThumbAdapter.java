@@ -1,20 +1,13 @@
 package com.andconsd.adapter;
 
 import java.io.File;
-import java.lang.ref.SoftReference;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.andconsd.Androsd;
 import com.andconsd.R;
-import com.andconsd.constants.Constants;
 import com.andconsd.control.BitmapManager;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +34,7 @@ public class ImageThumbAdapter extends BaseAdapter {
 	@Override
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		return null;
+		return files.get(position);
 	}
 
 	@Override
@@ -55,12 +48,6 @@ public class ImageThumbAdapter extends BaseAdapter {
 
 		Bitmap bmp;
 		File file = files.get(position);
-//		
-//		if(Constants.ImgCache.size() > 70){
-//			Iterator iterator = Constants.ImgCache.keySet().iterator();
-//			Constants.ImgCache.remove(iterator.next());
-////			System.gc();
-//		}
 		
 		ThumbItem ti;
 		if (convertView == null) {
@@ -86,18 +73,6 @@ public class ImageThumbAdapter extends BaseAdapter {
 		}
 		
 		BitmapManager.INSTANCE.loadBitmap(file.getAbsolutePath(), ti.iv, 130, 130);
-//		if(Constants.ImgCache.containsKey(file.getAbsolutePath())){
-//			bmp = Constants.ImgCache.get(file
-//					.getAbsolutePath());
-//			if(bmp != null){
-//				ti.iv.setImageBitmap(bmp);
-//			}
-//		} else {
-//			ti.iv.setImageResource(R.drawable.loading);
-//			ti.iv.setTag(file.getAbsolutePath());
-//			ThumbnailAsyncTaskController.doTask(new Object[] { gv,
-//					file.getAbsolutePath() });
-//		}
 
 		return convertView;
 	}

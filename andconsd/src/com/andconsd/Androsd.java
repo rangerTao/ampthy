@@ -7,13 +7,13 @@ import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 
 import com.andconsd.adapter.ImageThumbAdapter;
 import com.andconsd.constants.Constants;
 import com.andconsd.http.RequestListenerThread;
 import com.andconsd.template.UiTemplate;
+import com.andconsd.utils.AndconsdUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,7 +24,6 @@ import android.graphics.Color;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -33,14 +32,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,6 +78,8 @@ public class Androsd extends Activity{
 
 	Thread t;
 	
+	PopupWindow popupDelete;
+	
 	public Handler handler = new Handler();
 
 	/** Called when the activity is first created. */
@@ -83,16 +89,24 @@ public class Androsd extends Activity{
 		init();
 	}
 
+	/**
+	 * Init the all apk.
+	 */
 	private void init() {
 		new UiTemplate(this);
 		appref = this;
 		setContentView(R.layout.main);
 		
+		//Init the gridview.
 		initPicGrid();
 
+		//Init the service controller.
 		initController();
 	}
 
+	/**
+	 * Init the service controller.
+	 */
 	private void initController() {
 
 		btnService = (ToggleButton) findViewById(R.id.btnService);
@@ -101,6 +115,8 @@ public class Androsd extends Activity{
 		tvHelp = (TextView)findViewById(R.id.tvHelp);
 		tvHelp.setTextColor(Color.BLUE);
 		
+		
+		//Set the service button.
 		btnService.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
@@ -150,6 +166,7 @@ public class Androsd extends Activity{
 	
 	}
 	
+	//the on click listener.
 	OnClickListener helpOnClickListener = new OnClickListener() {
 		
 		@Override
@@ -166,8 +183,13 @@ public class Androsd extends Activity{
 		}
 	};
 
+	/**
+	 * Get the local IP address
+	 * @return IP address
+	 */
 	public String getLocalIpAddress() {
 		try {
+			
 			for (Enumeration<NetworkInterface> en = NetworkInterface
 					.getNetworkInterfaces(); en.hasMoreElements();) {
 				NetworkInterface intf = en.nextElement();
@@ -208,6 +230,63 @@ public class Androsd extends Activity{
 				Intent intent = new Intent(appref, PicViewer.class);
 				intent.putExtra("index", position);
 				startActivity(intent);
+			}
+		});
+		
+		gl.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				if(popupDelete!= null && popupDelete.isShowing()){
+					popupDelete.dismiss();
+				}
+			}
+		});
+		
+		gl.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(final AdapterView<?> parent, View view, final int position, long id) {
+				
+				if(popupDelete != null && popupDelete.isShowing()){
+					popupDelete.dismiss();
+				}
+				
+				View deleteView = LayoutInflater.from(appref).inflate(R.layout.popupdelete, null);
+				
+				popupDelete = new PopupWindow(deleteView,LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+
+				ImageView ivDelete = (ImageView) deleteView.findViewById(R.id.ivDelete);
+				
+				ivDelete.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						File file = (File)parent.getAdapter().getItem(position);
+						if(AndconsdUtils.deleteFileByName(file.getName())){
+
+							appref.handler.post(new Runnable(){
+
+								@Override
+								public void run() {
+									appref.notifyDatasetChanged();
+								}
+								
+							});
+							Toast.makeText(appref, file.getName() + "  " + appref.getString(R.string.deletesuccess), 2000).show();
+						}
+					}
+				});
+				
+				popupDelete.showAsDropDown(view, (view.getWidth() / 4) * 3, -view.getHeight());
+				return true;
 			}
 		});
 	}
