@@ -1,0 +1,8 @@
+com.duole.priorityres.ContactJavaScript
+com.duole.priorityres.R$string
+com.duole.priorityres.R$drawable
+com.duole.priorityres.R$attr
+com.duole.priorityres.R$id
+com.duole.priorityres.R
+com.duole.priorityres.R$layout
+com.duole.priorityres.PriorityResActivity

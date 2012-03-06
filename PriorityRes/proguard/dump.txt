@@ -1,0 +1,792 @@
+_____________________________________________________________________
++ Program class: com/duole/priorityres/ContactJavaScript
+  Superclass:    java/lang/Object
+  Major version: 0x32
+  Minor version: 0x0
+  Access flags:  0x21
+    = public class com.duole.priorityres.ContactJavaScript extends java.lang.Object
+
+Interfaces (count = 0):
+
+Constant Pool (count = 19):
+  - Class [com/duole/priorityres/ContactJavaScript]
+  - Class [java/lang/Object]
+  - Fieldref [com/duole/priorityres/ContactJavaScript.a Landroid/os/Handler;]
+  - Fieldref [com/duole/priorityres/ContactJavaScript.b Ljava/lang/String;]
+  - Methodref [java/lang/Object.<init> ()V]
+  + NameAndType [<init> ()V]
+  + NameAndType [a Landroid/os/Handler;]
+  + NameAndType [b Ljava/lang/String;]
+  + Utf8 [()V]
+  + Utf8 [(Landroid/os/Handler;Ljava/lang/String;)V]
+  + Utf8 [<init>]
+  + Utf8 [Code]
+  + Utf8 [Landroid/os/Handler;]
+  + Utf8 [Ljava/lang/String;]
+  + Utf8 [a]
+  + Utf8 [b]
+  + Utf8 [com/duole/priorityres/ContactJavaScript]
+  + Utf8 [java/lang/Object]
+
+Fields (count = 2):
+  + Field:        a Landroid/os/Handler;
+    Access flags: 0x2
+      = private android.os.Handler a
+  + Field:        b Ljava/lang/String;
+    Access flags: 0x2
+      = private java.lang.String b
+
+Methods (count = 1):
+  - Method:       <init>(Landroid/os/Handler;Ljava/lang/String;)V
+    Access flags: 0x1
+      = public ContactJavaScript(android.os.Handler,java.lang.String)
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 15, locals = 3, stack = 2):
+      [0] aload_0 v0
+      [1] invokespecial #5
+        - Methodref [java/lang/Object.<init> ()V]
+      [4] aload_0 v0
+      [5] aload_1 v1
+      [6] putfield #3
+        - Fieldref [com/duole/priorityres/ContactJavaScript.a Landroid/os/Handler;]
+      [9] aload_0 v0
+      [10] aload_2 v2
+      [11] putfield #4
+        - Fieldref [com/duole/priorityres/ContactJavaScript.b Ljava/lang/String;]
+      [14] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+
+Class file attributes (count = 0):
+
+_____________________________________________________________________
++ Program class: com/duole/priorityres/R$string
+  Superclass:    java/lang/Object
+  Major version: 0x32
+  Minor version: 0x0
+  Access flags:  0x31
+    = public final class com.duole.priorityres.R$string extends java.lang.Object
+
+Interfaces (count = 0):
+
+Constant Pool (count = 12):
+  - Class [com/duole/priorityres/R]
+  - Class [com/duole/priorityres/R$string]
+  - Class [java/lang/Object]
+  - Methodref [java/lang/Object.<init> ()V]
+  + NameAndType [<init> ()V]
+  + Utf8 [()V]
+  + Utf8 [<init>]
+  + Utf8 [Code]
+  + Utf8 [com/duole/priorityres/R]
+  + Utf8 [com/duole/priorityres/R$string]
+  + Utf8 [java/lang/Object]
+
+Fields (count = 0):
+
+Methods (count = 1):
+  - Method:       <init>()V
+    Access flags: 0x1
+      = public R$string()
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 5, locals = 1, stack = 1):
+      [0] aload_0 v0
+      [1] invokespecial #4
+        - Methodref [java/lang/Object.<init> ()V]
+      [4] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+
+Class file attributes (count = 0):
+
+_____________________________________________________________________
++ Program class: com/duole/priorityres/R$drawable
+  Superclass:    java/lang/Object
+  Major version: 0x32
+  Minor version: 0x0
+  Access flags:  0x31
+    = public final class com.duole.priorityres.R$drawable extends java.lang.Object
+
+Interfaces (count = 0):
+
+Constant Pool (count = 12):
+  - Class [com/duole/priorityres/R]
+  - Class [com/duole/priorityres/R$drawable]
+  - Class [java/lang/Object]
+  - Methodref [java/lang/Object.<init> ()V]
+  + NameAndType [<init> ()V]
+  + Utf8 [()V]
+  + Utf8 [<init>]
+  + Utf8 [Code]
+  + Utf8 [com/duole/priorityres/R]
+  + Utf8 [com/duole/priorityres/R$drawable]
+  + Utf8 [java/lang/Object]
+
+Fields (count = 0):
+
+Methods (count = 1):
+  - Method:       <init>()V
+    Access flags: 0x1
+      = public R$drawable()
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 5, locals = 1, stack = 1):
+      [0] aload_0 v0
+      [1] invokespecial #4
+        - Methodref [java/lang/Object.<init> ()V]
+      [4] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+
+Class file attributes (count = 0):
+
+_____________________________________________________________________
++ Program class: com/duole/priorityres/R$attr
+  Superclass:    java/lang/Object
+  Major version: 0x32
+  Minor version: 0x0
+  Access flags:  0x31
+    = public final class com.duole.priorityres.R$attr extends java.lang.Object
+
+Interfaces (count = 0):
+
+Constant Pool (count = 12):
+  - Class [com/duole/priorityres/R]
+  - Class [com/duole/priorityres/R$attr]
+  - Class [java/lang/Object]
+  - Methodref [java/lang/Object.<init> ()V]
+  + NameAndType [<init> ()V]
+  + Utf8 [()V]
+  + Utf8 [<init>]
+  + Utf8 [Code]
+  + Utf8 [com/duole/priorityres/R]
+  + Utf8 [com/duole/priorityres/R$attr]
+  + Utf8 [java/lang/Object]
+
+Fields (count = 0):
+
+Methods (count = 1):
+  - Method:       <init>()V
+    Access flags: 0x1
+      = public R$attr()
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 5, locals = 1, stack = 1):
+      [0] aload_0 v0
+      [1] invokespecial #4
+        - Methodref [java/lang/Object.<init> ()V]
+      [4] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+
+Class file attributes (count = 0):
+
+_____________________________________________________________________
++ Program class: com/duole/priorityres/R$id
+  Superclass:    java/lang/Object
+  Major version: 0x32
+  Minor version: 0x0
+  Access flags:  0x31
+    = public final class com.duole.priorityres.R$id extends java.lang.Object
+
+Interfaces (count = 0):
+
+Constant Pool (count = 12):
+  - Class [com/duole/priorityres/R]
+  - Class [com/duole/priorityres/R$id]
+  - Class [java/lang/Object]
+  - Methodref [java/lang/Object.<init> ()V]
+  + NameAndType [<init> ()V]
+  + Utf8 [()V]
+  + Utf8 [<init>]
+  + Utf8 [Code]
+  + Utf8 [com/duole/priorityres/R]
+  + Utf8 [com/duole/priorityres/R$id]
+  + Utf8 [java/lang/Object]
+
+Fields (count = 0):
+
+Methods (count = 1):
+  - Method:       <init>()V
+    Access flags: 0x1
+      = public R$id()
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 5, locals = 1, stack = 1):
+      [0] aload_0 v0
+      [1] invokespecial #4
+        - Methodref [java/lang/Object.<init> ()V]
+      [4] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+
+Class file attributes (count = 0):
+
+_____________________________________________________________________
++ Program class: com/duole/priorityres/R
+  Superclass:    java/lang/Object
+  Major version: 0x32
+  Minor version: 0x0
+  Access flags:  0x31
+    = public final class com.duole.priorityres.R extends java.lang.Object
+
+Interfaces (count = 0):
+
+Constant Pool (count = 20):
+  - Class [com/duole/priorityres/R]
+  - Class [com/duole/priorityres/R$attr]
+  - Class [com/duole/priorityres/R$drawable]
+  - Class [com/duole/priorityres/R$id]
+  - Class [com/duole/priorityres/R$layout]
+  - Class [com/duole/priorityres/R$string]
+  - Class [java/lang/Object]
+  - Methodref [java/lang/Object.<init> ()V]
+  + NameAndType [<init> ()V]
+  + Utf8 [()V]
+  + Utf8 [<init>]
+  + Utf8 [Code]
+  + Utf8 [com/duole/priorityres/R]
+  + Utf8 [com/duole/priorityres/R$attr]
+  + Utf8 [com/duole/priorityres/R$drawable]
+  + Utf8 [com/duole/priorityres/R$id]
+  + Utf8 [com/duole/priorityres/R$layout]
+  + Utf8 [com/duole/priorityres/R$string]
+  + Utf8 [java/lang/Object]
+
+Fields (count = 0):
+
+Methods (count = 1):
+  - Method:       <init>()V
+    Access flags: 0x1
+      = public R()
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 5, locals = 1, stack = 1):
+      [0] aload_0 v0
+      [1] invokespecial #8
+        - Methodref [java/lang/Object.<init> ()V]
+      [4] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+
+Class file attributes (count = 0):
+
+_____________________________________________________________________
++ Program class: com/duole/priorityres/R$layout
+  Superclass:    java/lang/Object
+  Major version: 0x32
+  Minor version: 0x0
+  Access flags:  0x31
+    = public final class com.duole.priorityres.R$layout extends java.lang.Object
+
+Interfaces (count = 0):
+
+Constant Pool (count = 12):
+  - Class [com/duole/priorityres/R]
+  - Class [com/duole/priorityres/R$layout]
+  - Class [java/lang/Object]
+  - Methodref [java/lang/Object.<init> ()V]
+  + NameAndType [<init> ()V]
+  + Utf8 [()V]
+  + Utf8 [<init>]
+  + Utf8 [Code]
+  + Utf8 [com/duole/priorityres/R]
+  + Utf8 [com/duole/priorityres/R$layout]
+  + Utf8 [java/lang/Object]
+
+Fields (count = 0):
+
+Methods (count = 1):
+  - Method:       <init>()V
+    Access flags: 0x1
+      = public R$layout()
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 5, locals = 1, stack = 1):
+      [0] aload_0 v0
+      [1] invokespecial #4
+        - Methodref [java/lang/Object.<init> ()V]
+      [4] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+
+Class file attributes (count = 0):
+
+_____________________________________________________________________
++ Program class: com/duole/priorityres/PriorityResActivity
+  Superclass:    android/app/Activity
+  Major version: 0x32
+  Minor version: 0x0
+  Access flags:  0x21
+    = public class com.duole.priorityres.PriorityResActivity extends android.app.Activity
+
+Interfaces (count = 0):
+
+Constant Pool (count = 186):
+  - Integer [2130903040]
+  - Integer [2131034112]
+  - String []
+  - String [/index.html]
+  - String [TAG]
+  - String [base]
+  - String [com.duole]
+  - String [duole]
+  - String [file://]
+  - String [file:///mnt/sdcard/test/]
+  - String [id]
+  - String [text/html]
+  - String [utf-8]
+  - Class [android/app/Activity]
+  - Class [android/content/Context]
+  - Class [android/content/SharedPreferences]
+  - Class [android/content/pm/PackageManager]
+  - Class [android/content/pm/PackageManager$NameNotFoundException]
+  - Class [android/os/Bundle]
+  - Class [android/os/Handler]
+  - Class [android/util/Log]
+  - Class [android/webkit/WebSettings]
+  - Class [android/webkit/WebSettings$PluginState]
+  - Class [android/webkit/WebView]
+  - Class [com/duole/priorityres/ContactJavaScript]
+  - Class [com/duole/priorityres/PriorityResActivity]
+  - Class [java/io/File]
+  - Class [java/lang/String]
+  - Class [java/lang/StringBuilder]
+  - Fieldref [android/webkit/WebSettings$PluginState.ON Landroid/webkit/WebSettings$PluginState;]
+  - Fieldref [com/duole/priorityres/PriorityResActivity.a Lcom/duole/priorityres/PriorityResActivity;]
+  - Fieldref [com/duole/priorityres/PriorityResActivity.b Landroid/webkit/WebView;]
+  - Fieldref [com/duole/priorityres/PriorityResActivity.c Landroid/os/Handler;]
+  - Fieldref [com/duole/priorityres/PriorityResActivity.d Ljava/lang/String;]
+  - Methodref [android/app/Activity.<init> ()V]
+  - Methodref [android/app/Activity.onCreate (Landroid/os/Bundle;)V]
+  - Methodref [android/app/Activity.onPause ()V]
+  - Methodref [android/content/Context.getSharedPreferences (Ljava/lang/String;I)Landroid/content/SharedPreferences;]
+  - Methodref [android/content/pm/PackageManager$NameNotFoundException.printStackTrace ()V]
+  - Methodref [android/os/Handler.<init> ()V]
+  - Methodref [android/util/Log.v (Ljava/lang/String;Ljava/lang/String;)I]
+  - Methodref [android/webkit/WebSettings.setAllowFileAccess (Z)V]
+  - Methodref [android/webkit/WebSettings.setAppCacheEnabled (Z)V]
+  - Methodref [android/webkit/WebSettings.setJavaScriptEnabled (Z)V]
+  - Methodref [android/webkit/WebSettings.setPluginState (Landroid/webkit/WebSettings$PluginState;)V]
+  - Methodref [android/webkit/WebSettings.setPluginsEnabled (Z)V]
+  - Methodref [android/webkit/WebSettings.setSupportZoom (Z)V]
+  - Methodref [android/webkit/WebView.addJavascriptInterface (Ljava/lang/Object;Ljava/lang/String;)V]
+  - Methodref [android/webkit/WebView.getSettings ()Landroid/webkit/WebSettings;]
+  - Methodref [android/webkit/WebView.loadDataWithBaseURL (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V]
+  - Methodref [android/webkit/WebView.loadUrl (Ljava/lang/String;)V]
+  - Methodref [com/duole/priorityres/ContactJavaScript.<init> (Landroid/os/Handler;Ljava/lang/String;)V]
+  - Methodref [com/duole/priorityres/PriorityResActivity.createPackageContext (Ljava/lang/String;I)Landroid/content/Context;]
+  - Methodref [com/duole/priorityres/PriorityResActivity.findViewById (I)Landroid/view/View;]
+  - Methodref [com/duole/priorityres/PriorityResActivity.finish ()V]
+  - Methodref [com/duole/priorityres/PriorityResActivity.setContentView (I)V]
+  - Methodref [com/duole/priorityres/PriorityResActivity.setResult (I)V]
+  - Methodref [java/io/File.<init> (Ljava/lang/String;)V]
+  - Methodref [java/io/File.exists ()Z]
+  - Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
+  - Methodref [java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;]
+  - Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
+  - Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
+  - Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
+  - InterfaceMethodref [android/content/SharedPreferences.getString (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;]
+  + NameAndType [<init> ()V]
+  + NameAndType [<init> (Landroid/os/Handler;Ljava/lang/String;)V]
+  + NameAndType [<init> (Ljava/lang/String;)V]
+  + NameAndType [ON Landroid/webkit/WebSettings$PluginState;]
+  + NameAndType [a Lcom/duole/priorityres/PriorityResActivity;]
+  + NameAndType [addJavascriptInterface (Ljava/lang/Object;Ljava/lang/String;)V]
+  + NameAndType [append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
+  + NameAndType [b Landroid/webkit/WebView;]
+  + NameAndType [c Landroid/os/Handler;]
+  + NameAndType [createPackageContext (Ljava/lang/String;I)Landroid/content/Context;]
+  + NameAndType [d Ljava/lang/String;]
+  + NameAndType [equals (Ljava/lang/Object;)Z]
+  + NameAndType [exists ()Z]
+  + NameAndType [findViewById (I)Landroid/view/View;]
+  + NameAndType [finish ()V]
+  + NameAndType [getSettings ()Landroid/webkit/WebSettings;]
+  + NameAndType [getSharedPreferences (Ljava/lang/String;I)Landroid/content/SharedPreferences;]
+  + NameAndType [getString (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;]
+  + NameAndType [loadDataWithBaseURL (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V]
+  + NameAndType [loadUrl (Ljava/lang/String;)V]
+  + NameAndType [onCreate (Landroid/os/Bundle;)V]
+  + NameAndType [onPause ()V]
+  + NameAndType [printStackTrace ()V]
+  + NameAndType [setAllowFileAccess (Z)V]
+  + NameAndType [setAppCacheEnabled (Z)V]
+  + NameAndType [setContentView (I)V]
+  + NameAndType [setJavaScriptEnabled (Z)V]
+  + NameAndType [setPluginState (Landroid/webkit/WebSettings$PluginState;)V]
+  + NameAndType [setPluginsEnabled (Z)V]
+  + NameAndType [setResult (I)V]
+  + NameAndType [setSupportZoom (Z)V]
+  + NameAndType [toString ()Ljava/lang/String;]
+  + NameAndType [v (Ljava/lang/String;Ljava/lang/String;)I]
+  + NameAndType [valueOf (Ljava/lang/Object;)Ljava/lang/String;]
+  + Utf8 []
+  + Utf8 [()Landroid/webkit/WebSettings;]
+  + Utf8 [()Ljava/lang/String;]
+  + Utf8 [()V]
+  + Utf8 [()Z]
+  + Utf8 [(I)Landroid/view/View;]
+  + Utf8 [(I)V]
+  + Utf8 [(Landroid/os/Bundle;)V]
+  + Utf8 [(Landroid/os/Handler;Ljava/lang/String;)V]
+  + Utf8 [(Landroid/webkit/WebSettings$PluginState;)V]
+  + Utf8 [(Ljava/lang/Object;)Ljava/lang/String;]
+  + Utf8 [(Ljava/lang/Object;)Z]
+  + Utf8 [(Ljava/lang/Object;Ljava/lang/String;)V]
+  + Utf8 [(Ljava/lang/String;)Ljava/lang/StringBuilder;]
+  + Utf8 [(Ljava/lang/String;)V]
+  + Utf8 [(Ljava/lang/String;I)Landroid/content/Context;]
+  + Utf8 [(Ljava/lang/String;I)Landroid/content/SharedPreferences;]
+  + Utf8 [(Ljava/lang/String;Ljava/lang/String;)I]
+  + Utf8 [(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;]
+  + Utf8 [(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V]
+  + Utf8 [(Z)V]
+  + Utf8 [/index.html]
+  + Utf8 [<init>]
+  + Utf8 [Code]
+  + Utf8 [Landroid/os/Handler;]
+  + Utf8 [Landroid/webkit/WebSettings$PluginState;]
+  + Utf8 [Landroid/webkit/WebView;]
+  + Utf8 [Lcom/duole/priorityres/PriorityResActivity;]
+  + Utf8 [Ljava/lang/String;]
+  + Utf8 [ON]
+  + Utf8 [StackMapTable]
+  + Utf8 [TAG]
+  + Utf8 [a]
+  + Utf8 [addJavascriptInterface]
+  + Utf8 [android/app/Activity]
+  + Utf8 [android/content/Context]
+  + Utf8 [android/content/SharedPreferences]
+  + Utf8 [android/content/pm/PackageManager]
+  + Utf8 [android/content/pm/PackageManager$NameNotFoundException]
+  + Utf8 [android/os/Bundle]
+  + Utf8 [android/os/Handler]
+  + Utf8 [android/util/Log]
+  + Utf8 [android/webkit/WebSettings]
+  + Utf8 [android/webkit/WebSettings$PluginState]
+  + Utf8 [android/webkit/WebView]
+  + Utf8 [append]
+  + Utf8 [b]
+  + Utf8 [base]
+  + Utf8 [c]
+  + Utf8 [com.duole]
+  + Utf8 [com/duole/priorityres/ContactJavaScript]
+  + Utf8 [com/duole/priorityres/PriorityResActivity]
+  + Utf8 [createPackageContext]
+  + Utf8 [d]
+  + Utf8 [duole]
+  + Utf8 [equals]
+  + Utf8 [exists]
+  + Utf8 [file://]
+  + Utf8 [file:///mnt/sdcard/test/]
+  + Utf8 [findViewById]
+  + Utf8 [finish]
+  + Utf8 [getSettings]
+  + Utf8 [getSharedPreferences]
+  + Utf8 [getString]
+  + Utf8 [id]
+  + Utf8 [java/io/File]
+  + Utf8 [java/lang/String]
+  + Utf8 [java/lang/StringBuilder]
+  + Utf8 [loadDataWithBaseURL]
+  + Utf8 [loadUrl]
+  + Utf8 [onCreate]
+  + Utf8 [onPause]
+  + Utf8 [printStackTrace]
+  + Utf8 [setAllowFileAccess]
+  + Utf8 [setAppCacheEnabled]
+  + Utf8 [setContentView]
+  + Utf8 [setJavaScriptEnabled]
+  + Utf8 [setPluginState]
+  + Utf8 [setPluginsEnabled]
+  + Utf8 [setResult]
+  + Utf8 [setSupportZoom]
+  + Utf8 [text/html]
+  + Utf8 [toString]
+  + Utf8 [utf-8]
+  + Utf8 [v]
+  + Utf8 [valueOf]
+
+Fields (count = 4):
+  + Field:        a Lcom/duole/priorityres/PriorityResActivity;
+    Access flags: 0xa
+      = private static com.duole.priorityres.PriorityResActivity a
+  + Field:        b Landroid/webkit/WebView;
+    Access flags: 0x2
+      = private android.webkit.WebView b
+  + Field:        c Landroid/os/Handler;
+    Access flags: 0x2
+      = private android.os.Handler c
+  + Field:        d Ljava/lang/String;
+    Access flags: 0x2
+      = private java.lang.String d
+
+Methods (count = 3):
+  - Method:       <init>()V
+    Access flags: 0x1
+      = public PriorityResActivity()
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 22, locals = 1, stack = 3):
+      [0] aload_0 v0
+      [1] invokespecial #35
+        - Methodref [android/app/Activity.<init> ()V]
+      [4] aload_0 v0
+      [5] new #20
+        - Class [android/os/Handler]
+      [8] dup
+      [9] invokespecial #40
+        - Methodref [android/os/Handler.<init> ()V]
+      [12] putfield #33
+        - Fieldref [com/duole/priorityres/PriorityResActivity.c Landroid/os/Handler;]
+      [15] aload_0 v0
+      [16] ldc #10
+        - String [file:///mnt/sdcard/test/]
+      [18] putfield #34
+        - Fieldref [com/duole/priorityres/PriorityResActivity.d Ljava/lang/String;]
+      [21] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+  + Method:       onCreate(Landroid/os/Bundle;)V
+    Access flags: 0x1
+      = public void onCreate(android.os.Bundle)
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 289, locals = 3, stack = 6):
+      [0] aload_0 v0
+      [1] aload_1 v1
+      [2] invokespecial #36
+        - Methodref [android/app/Activity.onCreate (Landroid/os/Bundle;)V]
+      [5] aload_0 v0
+      [6] ldc #1
+        - Integer [2130903040]
+      [8] invokevirtual #56
+        - Methodref [com/duole/priorityres/PriorityResActivity.setContentView (I)V]
+      [11] aload_0 v0
+      [12] putstatic #31
+        - Fieldref [com/duole/priorityres/PriorityResActivity.a Lcom/duole/priorityres/PriorityResActivity;]
+      [15] aload_0 v0
+      [16] aload_0 v0
+      [17] ldc #2
+        - Integer [2131034112]
+      [19] invokevirtual #54
+        - Methodref [com/duole/priorityres/PriorityResActivity.findViewById (I)Landroid/view/View;]
+      [22] checkcast #24
+        - Class [android/webkit/WebView]
+      [25] putfield #32
+        - Fieldref [com/duole/priorityres/PriorityResActivity.b Landroid/webkit/WebView;]
+      [28] aload_0 v0
+      [29] getfield #32
+        - Fieldref [com/duole/priorityres/PriorityResActivity.b Landroid/webkit/WebView;]
+      [32] invokevirtual #49
+        - Methodref [android/webkit/WebView.getSettings ()Landroid/webkit/WebSettings;]
+      [35] iconst_1
+      [36] invokevirtual #42
+        - Methodref [android/webkit/WebSettings.setAllowFileAccess (Z)V]
+      [39] aload_0 v0
+      [40] getfield #32
+        - Fieldref [com/duole/priorityres/PriorityResActivity.b Landroid/webkit/WebView;]
+      [43] invokevirtual #49
+        - Methodref [android/webkit/WebView.getSettings ()Landroid/webkit/WebSettings;]
+      [46] iconst_1
+      [47] invokevirtual #44
+        - Methodref [android/webkit/WebSettings.setJavaScriptEnabled (Z)V]
+      [50] aload_0 v0
+      [51] getfield #32
+        - Fieldref [com/duole/priorityres/PriorityResActivity.b Landroid/webkit/WebView;]
+      [54] invokevirtual #49
+        - Methodref [android/webkit/WebView.getSettings ()Landroid/webkit/WebSettings;]
+      [57] iconst_0
+      [58] invokevirtual #47
+        - Methodref [android/webkit/WebSettings.setSupportZoom (Z)V]
+      [61] aload_0 v0
+      [62] getfield #32
+        - Fieldref [com/duole/priorityres/PriorityResActivity.b Landroid/webkit/WebView;]
+      [65] invokevirtual #49
+        - Methodref [android/webkit/WebView.getSettings ()Landroid/webkit/WebSettings;]
+      [68] iconst_0
+      [69] invokevirtual #43
+        - Methodref [android/webkit/WebSettings.setAppCacheEnabled (Z)V]
+      [72] aload_0 v0
+      [73] getfield #32
+        - Fieldref [com/duole/priorityres/PriorityResActivity.b Landroid/webkit/WebView;]
+      [76] invokevirtual #49
+        - Methodref [android/webkit/WebView.getSettings ()Landroid/webkit/WebSettings;]
+      [79] iconst_1
+      [80] invokevirtual #42
+        - Methodref [android/webkit/WebSettings.setAllowFileAccess (Z)V]
+      [83] aload_0 v0
+      [84] getfield #32
+        - Fieldref [com/duole/priorityres/PriorityResActivity.b Landroid/webkit/WebView;]
+      [87] new #25
+        - Class [com/duole/priorityres/ContactJavaScript]
+      [90] dup
+      [91] aload_0 v0
+      [92] getfield #33
+        - Fieldref [com/duole/priorityres/PriorityResActivity.c Landroid/os/Handler;]
+      [95] aload_0 v0
+      [96] getfield #34
+        - Fieldref [com/duole/priorityres/PriorityResActivity.d Ljava/lang/String;]
+      [99] invokespecial #52
+        - Methodref [com/duole/priorityres/ContactJavaScript.<init> (Landroid/os/Handler;Ljava/lang/String;)V]
+      [102] ldc #8
+        - String [duole]
+      [104] invokevirtual #48
+        - Methodref [android/webkit/WebView.addJavascriptInterface (Ljava/lang/Object;Ljava/lang/String;)V]
+      [107] aconst_null
+      [108] astore_1 v1
+      [109] aload_0 v0
+      [110] ldc #7
+        - String [com.duole]
+      [112] iconst_2
+      [113] invokevirtual #53
+        - Methodref [com/duole/priorityres/PriorityResActivity.createPackageContext (Ljava/lang/String;I)Landroid/content/Context;]
+      [116] astore_1 v1
+      [117] goto +6 (target=123)
+      [120] invokevirtual #39
+        - Methodref [android/content/pm/PackageManager$NameNotFoundException.printStackTrace ()V]
+      [123] aload_1 v1
+      [124] ldc #7
+        - String [com.duole]
+      [126] iconst_1
+      [127] invokevirtual #38
+        - Methodref [android/content/Context.getSharedPreferences (Ljava/lang/String;I)Landroid/content/SharedPreferences;]
+      [130] dup
+      [131] astore_2 v2
+      [132] ldc #11
+        - String [id]
+      [134] ldc #3
+        - String []
+      [136] invokeinterface #65
+        - InterfaceMethodref [android/content/SharedPreferences.getString (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;]
+      [141] dup
+      [142] astore_1 v1
+      [143] ldc #3
+        - String []
+      [145] invokevirtual #60
+        - Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
+      [148] ifne +17 (target=165)
+      [151] aload_0 v0
+      [152] aload_2 v2
+      [153] ldc #6
+        - String [base]
+      [155] ldc #3
+        - String []
+      [157] invokeinterface #65
+        - InterfaceMethodref [android/content/SharedPreferences.getString (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;]
+      [162] putfield #34
+        - Fieldref [com/duole/priorityres/PriorityResActivity.d Ljava/lang/String;]
+      [165] new #29
+        - Class [java/lang/StringBuilder]
+      [168] dup
+      [169] aload_0 v0
+      [170] getfield #34
+        - Fieldref [com/duole/priorityres/PriorityResActivity.d Ljava/lang/String;]
+      [173] invokestatic #61
+        - Methodref [java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;]
+      [176] invokespecial #62
+        - Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
+      [179] aload_1 v1
+      [180] invokevirtual #63
+        - Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
+      [183] ldc #4
+        - String [/index.html]
+      [185] invokevirtual #63
+        - Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
+      [188] invokevirtual #64
+        - Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
+      [191] astore_1 v1
+      [192] new #27
+        - Class [java/io/File]
+      [195] dup
+      [196] aload_1 v1
+      [197] invokespecial #58
+        - Methodref [java/io/File.<init> (Ljava/lang/String;)V]
+      [200] invokevirtual #59
+        - Methodref [java/io/File.exists ()Z]
+      [203] ifne +12 (target=215)
+      [206] aload_0 v0
+      [207] iconst_2
+      [208] invokevirtual #57
+        - Methodref [com/duole/priorityres/PriorityResActivity.setResult (I)V]
+      [211] aload_0 v0
+      [212] invokevirtual #55
+        - Methodref [com/duole/priorityres/PriorityResActivity.finish ()V]
+      [215] aload_0 v0
+      [216] getfield #34
+        - Fieldref [com/duole/priorityres/PriorityResActivity.d Ljava/lang/String;]
+      [219] astore_2 v2
+      [220] aload_0 v0
+      [221] getfield #32
+        - Fieldref [com/duole/priorityres/PriorityResActivity.b Landroid/webkit/WebView;]
+      [224] aload_2 v2
+      [225] aload_1 v1
+      [226] ldc #12
+        - String [text/html]
+      [228] ldc #13
+        - String [utf-8]
+      [230] aconst_null
+      [231] invokevirtual #50
+        - Methodref [android/webkit/WebView.loadDataWithBaseURL (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V]
+      [234] aload_0 v0
+      [235] getfield #32
+        - Fieldref [com/duole/priorityres/PriorityResActivity.b Landroid/webkit/WebView;]
+      [238] new #29
+        - Class [java/lang/StringBuilder]
+      [241] dup
+      [242] ldc #9
+        - String [file://]
+      [244] invokespecial #62
+        - Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
+      [247] aload_1 v1
+      [248] invokevirtual #63
+        - Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
+      [251] invokevirtual #64
+        - Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
+      [254] invokevirtual #51
+        - Methodref [android/webkit/WebView.loadUrl (Ljava/lang/String;)V]
+      [257] aload_0 v0
+      [258] getfield #32
+        - Fieldref [com/duole/priorityres/PriorityResActivity.b Landroid/webkit/WebView;]
+      [261] invokevirtual #49
+        - Methodref [android/webkit/WebView.getSettings ()Landroid/webkit/WebSettings;]
+      [264] iconst_1
+      [265] invokevirtual #46
+        - Methodref [android/webkit/WebSettings.setPluginsEnabled (Z)V]
+      [268] aload_0 v0
+      [269] getfield #32
+        - Fieldref [com/duole/priorityres/PriorityResActivity.b Landroid/webkit/WebView;]
+      [272] invokevirtual #49
+        - Methodref [android/webkit/WebView.getSettings ()Landroid/webkit/WebSettings;]
+      [275] getstatic #30
+        - Fieldref [android/webkit/WebSettings$PluginState.ON Landroid/webkit/WebSettings$PluginState;]
+      [278] invokevirtual #45
+        - Methodref [android/webkit/WebSettings.setPluginState (Landroid/webkit/WebSettings$PluginState;)V]
+      [281] ldc #5
+        - String [TAG]
+      [283] aload_1 v1
+      [284] invokestatic #41
+        - Methodref [android/util/Log.v (Ljava/lang/String;Ljava/lang/String;)I]
+      [287] pop
+      [288] return
+      Code attribute exceptions (count = 1):
+      - ExceptionInfo (109 -> 117: 120):
+      - Class [android/content/pm/PackageManager$NameNotFoundException]
+      Code attribute attributes (attribute count = 1):
+      + Stack map table attribute (count = 4):
+        - [120] Var: [a:com/duole/priorityres/PriorityResActivity][a:android/os/Bundle][a:android/content/Context], Stack: [a:android/content/pm/PackageManager$NameNotFoundException]
+        - [123] Var: ..., Stack: (empty)
+        - [165] Var: ...[a:android/content/SharedPreferences][a:java/lang/String], Stack: (empty)
+        - [215] Var: ...[a:java/lang/String][a:java/io/File], Stack: (empty)
+  + Method:       onPause()V
+    Access flags: 0x4
+      = protected void onPause()
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 9, locals = 1, stack = 1):
+      [0] aload_0 v0
+      [1] invokevirtual #55
+        - Methodref [com/duole/priorityres/PriorityResActivity.finish ()V]
+      [4] aload_0 v0
+      [5] invokespecial #37
+        - Methodref [android/app/Activity.onPause ()V]
+      [8] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+
+Class file attributes (count = 0):
+
