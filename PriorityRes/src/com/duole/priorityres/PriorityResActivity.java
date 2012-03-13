@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.duole.priorityres.util.PRApplication;
 import com.duole.priorityres.util.XmlUtil;
 
 import android.R.anim;
@@ -27,6 +28,7 @@ import android.widget.Button;
 public class PriorityResActivity extends Activity {
 	
 	public static PriorityResActivity appref;
+	PRApplication pra;
 	
 	private WebView webView;
 	public Handler handler = new Handler();
@@ -41,6 +43,9 @@ public class PriorityResActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
+		pra = (PRApplication) getApplication();
+		
 		appref = this;
 		webView = (WebView) this.findViewById(R.id.webView);
 		webView.getSettings().setAllowFileAccess(true);//
@@ -67,14 +72,21 @@ public class PriorityResActivity extends Activity {
 		if (!frontid.equals("")) {
 			basepath = sp.getString("base", "");
 		}
+		
 		String url = basepath + frontid + "/index.html";//
+		
+		pra.setBasePath(basepath + frontid);
 
+		pra.setBasePath("/sdcard/test/");
+		
 		File file = new File(url);
 		if(!file.exists()){
 			
+			url = "/sdcard/test/index.html";
+			
 			//If it is a new type of priority resource.
-			if(new File(basepath + frontid + "/config.xml").exists()){
-				if(XmlUtil.getTypeOfPR(basepath + frontid)){
+			if(new File(pra.getBasePath() + "/config.xml").exists()){
+				if(XmlUtil.getPR(pra.getBasePath() + "/config.xml")){
 					finish();
 				}
 			}

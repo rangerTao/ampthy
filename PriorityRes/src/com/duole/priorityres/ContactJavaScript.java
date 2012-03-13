@@ -1,19 +1,9 @@
 package com.duole.priorityres;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.R.anim;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 
 public class ContactJavaScript {
 	private Handler handler;
