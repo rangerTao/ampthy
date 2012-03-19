@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlmain"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <RelativeLayout
+        android:id="@+id/rlRebind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/rmTextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/input_username"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/rmTextView1"
+            android:layout_centerHorizontal="true"
+            android:gravity="center" >
+
+            <EditText
+                android:id="@+id/rmUsername"
+                android:layout_width="100dip"
+                android:layout_height="wrap_content"
+                android:hint="xiaoming"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/rmAt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/rmEmailDomain"
+                android:layout_width="150dip"
+                android:layout_height="wrap_content"
+                android:hint="duoleyuan.com"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/rmTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/linearLayout1"
+            android:text="@string/password"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/etRebindPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/linearLayout1"
+            android:layout_alignRight="@+id/linearLayout1"
+            android:layout_below="@+id/rmTextView2"
+            android:inputType="textPassword" >
+
+            <requestFocus />
+        </EditText>
+    </RelativeLayout>
+
+</RelativeLayout>

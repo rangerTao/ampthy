@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout1"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:text="@string/register_username"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:text="@string/input_username"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView2" >
+
+        <EditText
+            android:id="@+id/etEmailUserName"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:hint="xiaoming"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/tvAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        
+        <EditText
+            android:id="@+id/etEmailDomain"
+            android:layout_width="150dip"
+            android:layout_height="wrap_content"
+            android:hint="duoleyuan.com"
+            android:singleLine="true" />
+
+    </LinearLayout>
+
+</RelativeLayout>
