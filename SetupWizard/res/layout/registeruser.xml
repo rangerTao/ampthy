@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="@string/maybeNextTime"
+        android:background="@drawable/ignore"
         android:textSize="20sp" />
 
     <Button
@@ -20,8 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/btnNext"
+        android:background="@drawable/pre"
         android:paddingRight="20dip"
-        android:text="@string/btnPre"
         android:textSize="20sp" />
 
     <Button
@@ -30,22 +30,28 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:text="@string/btnNext"
+        android:background="@drawable/next"
         android:textSize="20sp" />
 
-    <com.duole.wizard.setup.widget.ScrollLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/mScroll"
-        android:layout_width="500dip"
-        android:layout_height="300dip"
-        android:layout_centerInParent="true" />
-
-    <TextView
-        android:id="@+id/tvAlert"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/mScroll"
         android:layout_centerHorizontal="true"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_marginTop="60dip"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tvAlert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <com.duole.wizard.setup.widget.ScrollLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/mScroll"
+            android:layout_width="500dip"
+            android:layout_height="300dip" />
+    </LinearLayout>
 
 </RelativeLayout>

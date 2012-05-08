@@ -13,7 +13,7 @@
         android:layout_centerHorizontal="true"
         android:padding="100dp"
         android:text="@string/welcome"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         android:textSize="24sp" />
 
     <TextView
@@ -30,7 +30,7 @@
         android:layout_below="@+id/tvIntro"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
-        android:text="@string/start"
+        android:background="@drawable/p_wifi"
         android:textSize="16sp"
         android:typeface="monospace" />
 
@@ -40,16 +40,46 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:textSize="20sp"
-        android:text="@string/maybeNextTime" />
+        android:background="@drawable/ignore"
+        android:textSize="20sp" />
 
     <Button
-        android:textSize="20sp"
         android:id="@+id/btnNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:text="@string/btnNext" />
+        android:background="@drawable/next"
+        android:textSize="20sp" />
+    
+    <LinearLayout
+        android:id="@+id/llTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_below="@+id/btnStart"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" 
+        android:visibility="gone"
+        android:padding="120dp" >
+
+        <ImageView
+            android:id="@+id/iv_bulb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/lamp" />
+
+        <TextView
+            android:id="@+id/tvTip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/network_tip"
+            android:textColor="#FFFFFF"
+            android:textSize="18dip"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </RelativeLayout>

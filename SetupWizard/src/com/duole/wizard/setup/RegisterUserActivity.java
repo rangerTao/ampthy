@@ -9,17 +9,14 @@ import com.duole.wizard.setup.utils.SetupUtils;
 import com.duole.wizard.setup.widget.OnScrolledListener;
 import com.duole.wizard.setup.widget.ScrollLayout;
 
-import android.R.anim;
-import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.ColorStateList;
+import android.content.Intent;
 import android.graphics.Color;
-import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,7 +32,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -80,6 +76,7 @@ public class RegisterUserActivity extends Activity {
 	TextView tvInfo_user;
 	TextView tvInfo_birth;
 	TextView tvInfo_phone;
+	TextView tvInfo_androidid;
 	
 	ProgressBar pbRegister;
 	
@@ -87,6 +84,8 @@ public class RegisterUserActivity extends Activity {
 	EditText etRebindUsernam;
 	EditText etRebindDomain;
 	EditText etRebindPasswd;
+	
+	AlertDialog adBindAndroidId;
 	
 	public final static int SHOW_ALERT = 1;
 	public final static int HIDE_ALERT = 2;
@@ -144,7 +143,6 @@ public class RegisterUserActivity extends Activity {
 		mInflater = LayoutInflater.from(getApplicationContext());
 		
 		setContentView(R.layout.registeruser);
-		
 		
 		tvAlert = (TextView) findViewById(R.id.tvAlert);
 		tvAlert.setTextColor(Color.RED);
@@ -242,6 +240,8 @@ public class RegisterUserActivity extends Activity {
 					});
 					
 				}else{
+					Intent intent = new Intent(appref,SetupWizardMainActivity.class);
+					startActivity(intent);
 					appref.finish();
 				}
 			}
@@ -258,17 +258,97 @@ public class RegisterUserActivity extends Activity {
 		etRebindDomain = (EditText) rebindView.findViewById(R.id.rmEmailDomain);
 		etRebindPasswd = (EditText) rebindView.findViewById(R.id.etRebindPassword);
 		
-		btnNextStep.setText(R.string.btn_bind);
+		etRebindUsernam.requestFocus();
+		
+//		btnNextStep.setText(R.string.btn_bind);
+		btnNextStep.setBackgroundResource(R.drawable.next);
 		btnNextStep.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				hideIme();
-				
-				if(valueRebindCheck()){
-					
-					
-					
+
+				if (valueRebindCheck()) {
+
+					View bindView = mInflater.inflate(R.layout.bind_android_id,
+							null);
+					TextView tvResult = (TextView) bindView
+							.findViewById(R.id.tvResult);
+					adBindAndroidId = new AlertDialog.Builder(appref)
+							.setTitle(R.string.machine_binding)
+							.setView(bindView)
+							.setNegativeButton(R.string.btnPositive, null)
+							.create();
+
+					adBindAndroidId.show();
+
+					try {
+						String result = SetupUtils.dopost(
+								getApplicationContext(),
+								"http://wvw.duoleyuan.com/e/enews/",
+								etRebindUsernam.getText().toString() + "@"
+										+ etRebindDomain.getText().toString(),
+								etRebindPasswd.getText().toString());
+
+						JSONObject jsonObject = new JSONObject(result);
+
+						String status = jsonObject.getString("status");
+						String stastr = jsonObject.getString("stastr");
+
+						if (status.equals("1")) {
+							adBindAndroidId.dismiss();
+							new AlertDialog.Builder(appref)
+									.setTitle("")
+									.setMessage(R.string.bind_successful)
+									.setNegativeButton(
+											R.string.btnPositive,
+											new DialogInterface.OnClickListener() {
+
+												@Override
+												public void onClick(
+														DialogInterface dialog,
+														int which) {
+													try {
+														ContentResolver cr = appref
+																.getContentResolver();
+														Uri config = Uri
+																.parse("content://com.duole.provider/config");
+														ContentValues cv = new ContentValues();
+														cv.put("name", "setup");
+														cv.put("value", "1");
+														cr.insert(config, cv);
+													} catch (Exception e) {
+														e.printStackTrace();
+													}
+
+													android.os.Process
+															.killProcess(android.os.Process
+																	.myPid());
+												}
+											}).create().show();
+						}
+						if (status.equals("0")) {
+							adBindAndroidId.dismiss();
+							new AlertDialog.Builder(appref)
+									.setTitle("")
+									.setMessage(stastr + getString(R.string.contact_cc) + getString(R.string.device_id) + ":" + SetupUtils.getAndroidId(appref))
+									.setNegativeButton(
+											R.string.btnPositive,
+											new DialogInterface.OnClickListener() {
+
+												@Override
+												public void onClick(
+														DialogInterface dialog,
+														int which) {
+												}
+											}).create().show();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						tvAlert.setText(R.string.bind_failed);
+						adBindAndroidId.dismiss();
+					}
+
 				}
 			}
 		});
@@ -281,6 +361,7 @@ public class RegisterUserActivity extends Activity {
 		tvEmail_at.setText("@");
 		
 		tvEmail_user = (EditText) uView.findViewById(R.id.etEmailUserName);
+		tvEmail_user.setOnEditorActionListener(emailOnEditorActionListener);
 //		tvEmail_user.setOnEditorActionListener(enterActionListener);
 		tvEmail_domain = (EditText) uView.findViewById(R.id.etEmailDomain);
 		tvEmail_domain.setOnEditorActionListener(emailOnEditorActionListener);
@@ -337,7 +418,7 @@ public class RegisterUserActivity extends Activity {
 			public void scrolled(int last, int mCurScreen) {
 
 				if(mCurScreen == mScrollLayout.getChildCount() - 1){
-					btnNextStep.setText(getString(R.string.btnRegister));
+					btnNextStep.setBackgroundResource(R.drawable.register);
 					btnNextStep.setOnClickListener(new OnClickListener() {
 						
 						@Override
@@ -352,12 +433,14 @@ public class RegisterUserActivity extends Activity {
 								tvInfo_user = (TextView) infoDetailView.findViewById(R.id.tvUserName);
 								tvInfo_birth = (TextView) infoDetailView.findViewById(R.id.tvBirth);
 								tvInfo_phone = (TextView) infoDetailView.findViewById(R.id.tvMobilePhone);
+								tvInfo_androidid = (TextView) infoDetailView.findViewById(R.id.tvAndroidId);
 								
 								pbRegister = (ProgressBar) infoDetailView.findViewById(R.id.pbRegister);
 								
 								tvInfo_user.setText(tvEmail_user.getText().toString() + "@" + tvEmail_domain.getText().toString());
 								tvInfo_birth.setText(dpBabyBirthday.getYear() + "-" + dpBabyBirthday.getMonth() + "-" + dpBabyBirthday.getDayOfMonth());
 								tvInfo_phone.setText(etPhoneNum.getText().toString());
+								tvInfo_androidid.setText(getString(R.string.device_id) + ":" + SetupUtils.getAndroidId(appref));
 								
 								new AlertDialog.Builder(appref)
 										.setTitle(R.string.userInfo)
@@ -373,6 +456,7 @@ public class RegisterUserActivity extends Activity {
 														tvInfo_birth.setVisibility(View.INVISIBLE);
 														tvInfo_phone.setVisibility(View.INVISIBLE);
 														tvInfo_user.setVisibility(View.INVISIBLE);
+														tvInfo_androidid.setVisibility(View.INVISIBLE);
 														
 														pbRegister.setVisibility(View.VISIBLE);
 														
@@ -385,7 +469,7 @@ public class RegisterUserActivity extends Activity {
 															String stastr = jsonObject.getString("stastr");
 															
 															if(status.equals("1")){
-																new AlertDialog.Builder(appref).setTitle("").setMessage("").setNegativeButton(R.string.btnPositive, new DialogInterface.OnClickListener() {
+																new AlertDialog.Builder(appref).setTitle("").setMessage(stastr).setNegativeButton(R.string.btnPositive, new DialogInterface.OnClickListener() {
 																	
 																	@Override
 																	public void onClick(DialogInterface dialog, int which) {
@@ -410,7 +494,7 @@ public class RegisterUserActivity extends Activity {
 															if(status.equals("0")){
 																new AlertDialog.Builder(appref)
 																		.setTitle(R.string.register_fail)
-																		.setMessage(stastr)
+																		.setMessage(stastr + getString(R.string.contact_cc) + "\n" + getText(R.string.device_id) + ":" + SetupUtils.getAndroidId(appref))
 																		.setNegativeButton(R.string.btnPositive,
 																				new DialogInterface.OnClickListener() {
 
@@ -448,7 +532,9 @@ public class RegisterUserActivity extends Activity {
 						}
 					});
 				}else{
-					btnNextStep.setText(getString(R.string.btnNext));
+//					hideIme();
+//					btnNextStep.setText(getString(R.string.btnNext));
+					btnNextStep.setBackgroundResource(R.drawable.next);
 					btnNextStep.setOnClickListener(new OnClickListener() {
 						
 						@Override
@@ -603,6 +689,7 @@ public class RegisterUserActivity extends Activity {
 					if(tvEmail_user.getText().toString().equals("")){
 						tvEmail_user.requestFocus();
 					}
+					showAlert(getString(R.string.email_incorrect));
 				}
 			}
 			if(tvEmail_user.hasFocus()){

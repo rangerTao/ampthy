@@ -29,7 +29,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:startYear="2009" />
+        android:layout_marginTop="20dp" />
 
 </RelativeLayout>

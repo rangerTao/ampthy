@@ -37,6 +37,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -46,6 +47,8 @@ public class SetupWizardMainActivity extends Activity implements
 		OnClickListener, OnItemClickListener {
 
 	private static Button btnStartWizard;
+	
+	LinearLayout llTip;
 
 	Button btnMayBeNextTime;
 	Button btnNextStep;
@@ -66,6 +69,8 @@ public class SetupWizardMainActivity extends Activity implements
 	List<ScanResult> scanResults;
 
 	TextView tvWifiStatus;
+	static TextView tvTip;
+	static TextView tvIntro;
 
 	Handler mHandler;
 
@@ -83,6 +88,9 @@ public class SetupWizardMainActivity extends Activity implements
 		setContentView(R.layout.main);
 		appref = this;
 		mHandler = new Handler();
+		tvTip = (TextView) findViewById(R.id.tvTip);
+		tvIntro = (TextView) findViewById(R.id.tvIntro);
+		llTip = (LinearLayout) findViewById(R.id.llTip);
 		layoutInflater = LayoutInflater.from(appref);
 		wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
@@ -165,9 +173,28 @@ public class SetupWizardMainActivity extends Activity implements
 		});
 
 		lvWifiConnections.setOnItemClickListener(this);
+		
+		refreshButtonState();
+		
+		mHandler.postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				tvIntro.setVisibility(View.INVISIBLE);
+				
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				llTip.setVisibility(View.VISIBLE);
+			}
+		}, 2000);
 	}
 	
-	private void startUserRegister(){
+	private static void startUserRegister(){
 
 		new AlertDialog.Builder(appref)
 				.setTitle(R.string.register_user)
@@ -181,8 +208,9 @@ public class SetupWizardMainActivity extends Activity implements
 
 								Intent intent = new Intent(appref,
 										RegisterUserActivity.class);
-								intent.putExtra("exists", "1");
-								startActivity(intent);
+								intent.putExtra("exists", "0");
+								appref.startActivity(intent);
+								appref.finish();
 
 							}
 						})
@@ -192,14 +220,37 @@ public class SetupWizardMainActivity extends Activity implements
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								
+
 								Intent intent = new Intent(appref,
 										RegisterUserActivity.class);
-								intent.putExtra("exists", "0");
-								startActivity(intent);
+								intent.putExtra("exists", "1");
+								appref.startActivity(intent);
+								appref.finish();
 							}
 						}).create().show();
 
+	}
+	
+	@Override
+	protected void onDestroy() {
+		
+		try{
+			unregisterReceiver(wifiReceiver);
+		}catch (Exception e) {
+		}
+		
+		super.onDestroy();
+	}
+
+	
+	
+	
+	@Override
+	protected void onResume() {
+		
+		refreshButtonState();
+		
+		super.onResume();
 	}
 
 	@Override
@@ -308,7 +359,7 @@ public class SetupWizardMainActivity extends Activity implements
 			} else {
 
 				wifiPass = new AlertDialog.Builder(appref)
-						.setTitle(R.string.password)
+						.setTitle(R.string.input_wifi_pass)
 						.setView(etPassword)
 						.setNegativeButton(R.string.btnNegative,
 								new AlertDialog.OnClickListener() {
@@ -392,29 +443,29 @@ public class SetupWizardMainActivity extends Activity implements
 					.getAction())) {
 				switch (wifiManager.getWifiState()) {
 				case WifiManager.WIFI_STATE_DISABLED:
-					btnStartWizard.setText(appref
-							.getString(R.string.wifi_closed));
+//					btnStartWizard.setText(appref
+//							.getString(R.string.wifi_closed));
 					break;
 				case WifiManager.WIFI_STATE_DISABLING:
-					btnStartWizard.setText(appref
-							.getString(R.string.wifi_closing));
+//					btnStartWizard.setText(appref
+//							.getString(R.string.wifi_closing));
 					break;
 				case WifiManager.WIFI_STATE_ENABLED:
 					wifiInfo = wifiManager.getConnectionInfo();
 					if (wifiInfo.getNetworkId() != -1) {
 
-						btnStartWizard.setText(getString(R.string.wifi_enabled)
-								+ wifiInfo.getSSID());
+//						btnStartWizard.setText(getString(R.string.wifi_enabled)
+//								+ wifiInfo.getSSID());
 
 					} else {
-						btnStartWizard.setText(getString(R.string.wifi_opened));
+//						btnStartWizard.setText(getString(R.string.wifi_opened));
 					}
 					break;
 				case WifiManager.WIFI_STATE_ENABLING:
 					wifiInfo = wifiManager.getConnectionInfo();
-					btnStartWizard.setText(appref
-							.getString(R.string.wifi_enabling)
-							+ wifiInfo.getSSID());
+//					btnStartWizard.setText(appref
+//							.getString(R.string.wifi_enabling)
+//							+ wifiInfo.getSSID());
 					break;
 				case WifiManager.WIFI_STATE_UNKNOWN:
 					break;
@@ -431,16 +482,41 @@ public class SetupWizardMainActivity extends Activity implements
 	};
 
 	public static void refreshButtonState() {
-		btnStartWizard.setOnClickListener(new OnClickListener() {
+		
+		if(WifiUtils.isNetworkAvailable(appref)){
+			btnStartWizard.setBackgroundResource(R.drawable.p_user);
+			tvTip.setText(R.string.useregister_tip);
+			
+			btnStartWizard.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
+				@Override
+				public void onClick(View v) {
 
-				Intent intent = new Intent(appref,RegisterUserActivity.class);
-				appref.startActivity(intent);
+					if (!WifiUtils.isNetworkAvailable(appref)) {
+						new AlertDialog.Builder(appref)
+								.setTitle(R.string.wifi_config)
+								.setMessage(R.string.wifi_notconfigured)
+								.setNegativeButton(R.string.btnNegative, null)
+								.setPositiveButton(R.string.btnPositive,
+										new DialogInterface.OnClickListener() {
 
-			}
-		});
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+												startUserRegister();
+											}
+										}).create().show();
+					}else{
+						startUserRegister();
+					}
+
+				}
+			});
+			
+		}
+		
+		
 	}
 
 	private void handleStateChanged(NetworkInfo.DetailedState state) {
@@ -449,8 +525,9 @@ public class SetupWizardMainActivity extends Activity implements
 		if (state != null) {
 			WifiInfo info = wifiManager.getConnectionInfo();
 			if (info != null) {
-				btnStartWizard.setText(Summary.get(appref, info.getSSID(),
-						state));
+//				btnStartWizard.setText();
+				Summary.get(appref, info.getSSID(),
+						state);
 			}
 		}
 	}
@@ -469,8 +546,6 @@ class Summary {
 		}
 		
 		if (index == 5 && WifiUtils.isNetworkAvailable(context)) {
-			// Intent reIntent = new Intent(context,RegisterOnWeb.class);
-			// context.startActivity(reIntent);
 
 			SetupWizardMainActivity.refreshButtonState();
 

@@ -30,7 +30,16 @@
         android:layout_below="@+id/tvBirth"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
+    
+    <TextView
+        android:id="@+id/tvAndroidId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvMobilePhone"
+        android:layout_below="@+id/tvMobilePhone"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
     <ProgressBar
         android:id="@+id/pbRegister"
         style="?android:attr/progressBarStyleLarge"
@@ -39,5 +48,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:visibility="invisible" />
+
 
 </RelativeLayout>

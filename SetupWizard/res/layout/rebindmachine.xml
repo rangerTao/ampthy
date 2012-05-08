@@ -33,7 +33,8 @@
                 android:layout_width="100dip"
                 android:layout_height="wrap_content"
                 android:hint="xiaoming"
-                android:singleLine="true" />
+                android:singleLine="true" 
+                />
 
             <TextView
                 android:id="@+id/rmAt"

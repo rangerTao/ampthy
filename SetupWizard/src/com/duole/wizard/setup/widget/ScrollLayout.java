@@ -75,6 +75,12 @@ public class ScrollLayout extends ViewGroup {
 		}
 	}
 	
+	
+	@Override
+	public void scrollBy(int x, int y) {
+		super.scrollBy(x, y);
+	}
+
 	public void setOnScrolledListener(OnScrolledListener scrolledListener){
 		mScrolledListener = scrolledListener;
 	}
