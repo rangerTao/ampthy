@@ -8,6 +8,7 @@ import com.duole.pres.util.Constants;
 import com.duole.pres.util.PRApplication;
 import com.duole.pres.util.XmlUtil;
 
+import android.R.anim;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -30,27 +31,26 @@ public class PriorityResActivity extends Activity {
 	PRApplication pra;
 
 	private WebView webView;
-	public Handler handler = new Handler(){
+	public Handler handler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
-			
+
 			switch (msg.what) {
 			case Constants.FINISH_ALL:
-				
+
 				Log.d("TAG", "exit when right");
 				String pkgname = "";
-				
-				if(PriorityResActivity.appref != null){
+
+				if (PriorityResActivity.appref != null) {
 					pkgname = PriorityResActivity.appref.pkgname;
-				}else if(PResViewActivity.appref != null){
+				} else if (PResViewActivity.appref != null) {
 					pkgname = PResViewActivity.appref.pkgname;
 				}
-				
+
 				if (pkgname != null && !pkgname.trim().equals("")) {
 					if (PriorityResActivity.appref != null) {
-						PriorityResActivity.appref
-								.startActivityByPkgName(pkgname);
+						PriorityResActivity.appref.startActivityByPkgName(pkgname);
 					} else if (PResViewActivity.appref != null) {
 						PResViewActivity.appref.startActivityByPkgName(pkgname);
 					}
@@ -62,18 +62,16 @@ public class PriorityResActivity extends Activity {
 					}
 				}
 				android.os.Process.killProcess(android.os.Process.myPid());
-				
+
 				break;
 
 			default:
 				break;
 			}
-			
+
 			super.handleMessage(msg);
 		}
-		
-		
-		
+
 	};
 	String basepath = "file:///mnt/sdcard/test/";
 
@@ -96,48 +94,43 @@ public class PriorityResActivity extends Activity {
 		webView.getSettings().setSupportZoom(false);
 		webView.getSettings().setAppCacheEnabled(false);
 		webView.getSettings().setAllowFileAccess(true);
-		webView.addJavascriptInterface(new ContactJavaScript(this, handler,
-				basepath), "duole");// js
+		webView.addJavascriptInterface(new ContactJavaScript(this, handler, basepath), "duole");// js
 		// java-->js
 
 		Context otherContext = null;
 		try {
-			otherContext = createPackageContext("com.duole",
-					Context.CONTEXT_IGNORE_SECURITY);
+			otherContext = createPackageContext("com.duole", Context.CONTEXT_IGNORE_SECURITY);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
 
-		SharedPreferences sp = otherContext.getSharedPreferences("com.duole",
-				MODE_WORLD_READABLE);
+		SharedPreferences sp = otherContext.getSharedPreferences("com.duole", MODE_WORLD_READABLE);
 		String frontid = sp.getString("id", "");
 		pkgname = sp.getString("package", "");
 		if (!frontid.equals("")) {
 			basepath = sp.getString("base", "");
 		}
-		
+
 		Editor editor = sp.edit();
 		editor.remove("base");
 
-//		String url = basepath + frontid + "/index.html";//
-		
+		// String url = basepath + frontid + "/index.html";//
+
 		String url = getIntent().getStringExtra("path");
-		
+
 		pkgname = getIntent().getStringExtra("packagename");
 
-
 		// File file = new File(url + " dsfdsf");
-		try{
+		try {
 			File file = new File(url);
-			
+
 			if (!file.exists()) {
 
 				// pra.setBasePath("/sdcard/test/");
 
 				// If it is a new type of priority resource.
 				if (new File(pra.getBasePath() + "/config.xml").exists()) {
-					if (XmlUtil.getPR(getApplicationContext(), pra,
-							pra.getBasePath() + "/config.xml")) {
+					if (XmlUtil.getPR(getApplicationContext(), pra, pra.getBasePath() + "/config.xml")) {
 						finish();
 					}
 				}
@@ -148,11 +141,10 @@ public class PriorityResActivity extends Activity {
 				}
 				finish();
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			finish();
 		}
-		
 
 		String baseUrl = basepath;
 
@@ -181,13 +173,11 @@ public class PriorityResActivity extends Activity {
 		intent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 
 		try {
-			List<ResolveInfo> lri = findActivitiesForPackage(
-					PriorityResActivity.appref, pkgname);
+			List<ResolveInfo> lri = findActivitiesForPackage(PriorityResActivity.appref, pkgname);
 
 			if (lri.size() > 0) {
 				for (ResolveInfo ri : lri) {
-					intent.setComponent(new ComponentName(pkgname,
-							ri.activityInfo.name));
+					intent.setComponent(new ComponentName(pkgname, ri.activityInfo.name));
 					PriorityResActivity.appref.startActivity(intent);
 				}
 			}
@@ -201,17 +191,21 @@ public class PriorityResActivity extends Activity {
 	 * Query the package manager for MAIN/LAUNCHER activities in the supplied
 	 * package.
 	 */
-	public List<ResolveInfo> findActivitiesForPackage(Context context,
-			String packageName) {
+	public List<ResolveInfo> findActivitiesForPackage(Context context, String packageName) {
 		final PackageManager packageManager = context.getPackageManager();
 
 		final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
 		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 		mainIntent.setPackage(packageName);
 
-		final List<ResolveInfo> apps = packageManager.queryIntentActivities(
-				mainIntent, 0);
+		final List<ResolveInfo> apps = packageManager.queryIntentActivities(mainIntent, 0);
 		return apps != null ? apps : new ArrayList<ResolveInfo>();
+	}
+
+	@Override
+	protected void onStop() {
+		android.os.Process.killProcess(android.os.Process.myPid());
+		super.onStop();
 	}
 
 }

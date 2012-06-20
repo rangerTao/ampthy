@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.SyncStateContract.Constants;
@@ -57,6 +58,8 @@ public class BaseActivity extends Activity {
 
 				path = (String) msg.obj;
 				try {
+//					mp = MediaPlayer.create(getApplicationContext(), Uri.parse(pra.getBasePath() + "/" +path));
+//					mp.start();
 					mp.reset();
 					mp.setDataSource(pra.getBasePath() + "/" +path);
 					mp.prepare();

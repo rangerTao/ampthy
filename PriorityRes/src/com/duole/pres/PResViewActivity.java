@@ -40,39 +40,40 @@ public class PResViewActivity extends BaseActivity {
 		pra = (PRApplication) getApplication();
 
 		appref = this;
-//		webView = (WebView) this.findViewById(R.id.webView);
-//		webView.getSettings().setAllowFileAccess(true);//
-//		webView.getSettings().setJavaScriptEnabled(true);
-//		webView.getSettings().setSupportZoom(false);
-//		webView.getSettings().setAppCacheEnabled(false);
-//		webView.getSettings().setAllowFileAccess(true);
-//		webView.addJavascriptInterface(new ContactJavaScript(this, handler,
-//		basepath), "duole");// js
-//		webView.loadDataWithBaseURL(baseUrl, url, "text/html", "utf-8", null);
-//		webView.loadUrl("file://" + url);
-//		webView.getSettings().setPluginsEnabled(true);
-//		webView.getSettings().setPluginState(PluginState.ON);
-//
-//		webView.getSettings().setLightTouchEnabled(true);
+		// webView = (WebView) this.findViewById(R.id.webView);
+		// webView.getSettings().setAllowFileAccess(true);//
+		// webView.getSettings().setJavaScriptEnabled(true);
+		// webView.getSettings().setSupportZoom(false);
+		// webView.getSettings().setAppCacheEnabled(false);
+		// webView.getSettings().setAllowFileAccess(true);
+		// webView.addJavascriptInterface(new ContactJavaScript(this, handler,
+		// basepath), "duole");// js
+		// webView.loadDataWithBaseURL(baseUrl, url, "text/html", "utf-8",
+		// null);
+		// webView.loadUrl("file://" + url);
+		// webView.getSettings().setPluginsEnabled(true);
+		// webView.getSettings().setPluginState(PluginState.ON);
+		//
+		// webView.getSettings().setLightTouchEnabled(true);
 		// java-->js
 
 		Intent intent = getIntent();
 		String action = intent.getAction();
 		if (intent.ACTION_VIEW.equals(action)) {
 			String input = intent.getDataString();
-			
+
 			basepath = input.split(",")[0];
 			frontid = input.split(",")[1];
 			pkgname = input.split(",")[2];
-			
+
 		}
-		
+
 		String url = basepath + frontid + "/index.html";//
 
 		pra.setBasePath(basepath + frontid);
 
 		pra.setPkgname(pkgname);
-		
+
 		Log.d("TAG", "base path is :" + pra.getBasePath());
 
 		// File file = new File(url + " dsfdsf");
@@ -81,23 +82,24 @@ public class PResViewActivity extends BaseActivity {
 
 			// If it is a new type of priority resource.
 			if (new File(pra.getBasePath() + "/config.xml").exists()) {
-				if (XmlUtil.getPR(getApplicationContext(),pra,pra.getBasePath() + "/config.xml")) {
+				if (XmlUtil.getPR(getApplicationContext(), pra, pra.getBasePath() + "/config.xml")) {
 					finish();
 				}
-			}
-			if (pkgname != null && !pkgname.equals("")) {
+			} else if (pkgname != null && !pkgname.equals("")) {
 				startActivityByPkgName(pkgname);
+				finish();
 			} else {
 				setResult(2);
+				finish();
 			}
-			finish();
-		}else{
-			
-			Intent intent2 = new Intent(this,PriorityResActivity.class);
-			
+
+		} else {
+
+			Intent intent2 = new Intent(this, PriorityResActivity.class);
+
 			intent2.putExtra("path", url);
 			intent2.putExtra("packagename", pkgname);
-			
+
 			startActivity(intent2);
 		}
 
@@ -117,16 +119,15 @@ public class PResViewActivity extends BaseActivity {
 		intent.addCategory(Intent.CATEGORY_LAUNCHER);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
 		try {
-			List<ResolveInfo> lri = findActivitiesForPackage(
-					PResViewActivity.appref, pkgname);
+			List<ResolveInfo> lri = findActivitiesForPackage(PResViewActivity.appref, pkgname);
 
 			Log.d("TAG", pkgname);
 			if (lri.size() > 0) {
 				for (ResolveInfo ri : lri) {
-					intent.setComponent(new ComponentName(pkgname,
-							ri.activityInfo.name));
+					intent.setComponent(new ComponentName(pkgname, ri.activityInfo.name));
 					PResViewActivity.appref.startActivity(intent);
 				}
 			}
@@ -140,16 +141,14 @@ public class PResViewActivity extends BaseActivity {
 	 * Query the package manager for MAIN/LAUNCHER activities in the supplied
 	 * package.
 	 */
-	public List<ResolveInfo> findActivitiesForPackage(Context context,
-			String packageName) {
+	public List<ResolveInfo> findActivitiesForPackage(Context context, String packageName) {
 		final PackageManager packageManager = context.getPackageManager();
 
 		final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
 		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 		mainIntent.setPackage(packageName);
 
-		final List<ResolveInfo> apps = packageManager.queryIntentActivities(
-				mainIntent, 0);
+		final List<ResolveInfo> apps = packageManager.queryIntentActivities(mainIntent, 0);
 		return apps != null ? apps : new ArrayList<ResolveInfo>();
 	}
 

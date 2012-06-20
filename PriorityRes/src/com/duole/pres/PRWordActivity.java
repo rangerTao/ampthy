@@ -36,115 +36,116 @@ import com.duole.pres.widget.RelativeLayoutNoRedraw;
 public class PRWordActivity extends BaseActivity {
 
 	RelativeLayout main;
-	
+
 	DisplayMetrics dm = new DisplayMetrics();
-	
+
 	Question question;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
+
 		pra = (PRApplication) getApplication();
-		
+
 		getWindow().getWindowManager().getDefaultDisplay().getMetrics(dm);
-		
+
 		ps = pra.getPs();
-		
+
 		main = new RelativeLayoutNoRedraw(getApplicationContext());
-		RelativeLayout.LayoutParams lpmain = new RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
+		RelativeLayout.LayoutParams lpmain = new RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
+				android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
 		main.setLayoutParams(lpmain);
-		
+
 		main.addView(getBgView());
-		
-		
-		for(TargetZone tz : ps.getAlTarZone()){
-			
-			RelativeLayout.LayoutParams lpri = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+
+		for (TargetZone tz : ps.getAlTarZone()) {
+
+			RelativeLayout.LayoutParams lpri = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			ImageView iv = new ImageView(getApplicationContext());
-			
-			if(!tz.getPic().equals("")){
-				
-				Bitmap bmp = BitmapFactory.decodeFile(pra.getBasePath() +"/" + tz.getPic());
+
+			if (!tz.getPic().equals("")) {
+
+				Bitmap bmp = BitmapFactory.decodeFile(pra.getBasePath() + "/" + tz.getPic());
 				iv.setImageBitmap(bmp);
-				
+
 				int x = Integer.parseInt(tz.getPosx());
 				int y = Integer.parseInt(tz.getPosy());
-				if(bmp != null){
+				if (bmp != null) {
 					tz.setWidth(bmp.getWidth() + "");
 					tz.setHeight(bmp.getHeight() + "");
-				}else{
+				} else {
 					Toast.makeText(getApplicationContext(), pra.getBasePath() + tz.getPic() + " is null", 2000).show();
 				}
-				
+
 				lpri.setMargins(x, y, 0, 0);
-				
+
 				iv.setTag(tz);
-				
-				main.addView(iv,lpri);
+
+				main.addView(iv, lpri);
 			}
-			
+
 		}
-		
+
 		getRandomPositionRI();
-		
-		for(ResourceItem ri : ps.getAlResItems()){
-			
-			RelativeLayout.LayoutParams lpri = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+
+		for (ResourceItem ri : ps.getAlResItems()) {
+
+			RelativeLayout.LayoutParams lpri = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			ImageView iv = new ImageView(getApplicationContext());
-			
+
 			Bitmap bmp = BitmapFactory.decodeFile(pra.getBasePath() + "/" + ri.getPic());
 			iv.setImageBitmap(bmp);
-			
+
 			int x = Integer.parseInt(ri.getPosx());
 			int y = Integer.parseInt(ri.getPosy());
-			
+
 			lpri.setMargins(x, y, 0, 0);
-			
+
 			iv.setTag(ri);
-			
-			if(Boolean.parseBoolean(ri.isDragable())){
+
+			if (Boolean.parseBoolean(ri.isDragable())) {
 				iv.setOnTouchListener(thumbOnTouchListener);
 			}
-			
+
 			iv.setOnClickListener(thumbOnClickListener);
 
-			main.addView(iv,lpri);
-			
+			main.addView(iv, lpri);
+
 		}
 
 		question = ps.getQuestion();
-		
-		if(ps.getQuestion() != null){
+
+		if (ps.getQuestion() != null) {
 			initPlayButton();
 		}
-		
+
 		setContentView(main);
 
 		if (question != null && !question.getSound().equals("")) {
 			Utils.sendMessage(ps.getQuestion().getSound(), mHandler, PLAY_MUSIC);
 		}
-		
+
 	}
-	
-	private void initPlayButton(){
-		
-		if(question != null && !question.getThumb().equals("")){
-			
+
+	private void initPlayButton() {
+
+		if (question != null && !question.getThumb().equals("")) {
+
 			Button btnPlayQuestion = new Button(getApplicationContext());
-			Bitmap bmp = BitmapFactory.decodeFile(pra.getBasePath() + "/" +question.getThumb());
+			Bitmap bmp = BitmapFactory.decodeFile(pra.getBasePath() + "/" + question.getThumb());
 			btnPlayQuestion.setBackgroundDrawable(Drawable.createFromPath(pra.getBasePath() + question.getThumb()));
-			RelativeLayout.LayoutParams lpri = new RelativeLayout.LayoutParams(bmp.getWidth(),bmp.getHeight());
+			RelativeLayout.LayoutParams lpri = new RelativeLayout.LayoutParams(bmp.getWidth(), bmp.getHeight());
 			bmp = null;
-			try{
+			try {
 				lpri.setMargins(Integer.parseInt(question.getPosx()), Integer.parseInt(question.getPosy()), 0, 0);
-			}catch (Exception e) {
+			} catch (Exception e) {
 				lpri.setMargins(20, 20, 0, 0);
 			}
-			main.addView(btnPlayQuestion,lpri);
-			
+			main.addView(btnPlayQuestion, lpri);
+
 			btnPlayQuestion.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					if (question != null && !question.getSound().equals("")) {
@@ -153,52 +154,52 @@ public class PRWordActivity extends BaseActivity {
 				}
 			});
 		}
-		
+
 	}
-	
-	private boolean getRandomPositionRI(){
-		
-		if(ps.getRandom()== null || ps.getRandom().equals("false")){
+
+	private boolean getRandomPositionRI() {
+
+		if (ps.getRandom() == null || ps.getRandom().equals("false")) {
 			return false;
 		}
-		
+
 		ArrayList<String[]> alPos = new ArrayList<String[]>();
-		
-		for(ResourceItem ri : pra.getPs().getAlResItems()){
-			String[] pos = {ri.getPosx(),ri.getPosy()};
+
+		for (ResourceItem ri : pra.getPs().getAlResItems()) {
+			String[] pos = { ri.getPosx(), ri.getPosy() };
 			alPos.add(pos);
 		}
-		
+
 		Random random = new Random();
-		for(ResourceItem ri : pra.getPs().getAlResItems()){
+		for (ResourceItem ri : pra.getPs().getAlResItems()) {
 			int index = 0;
-			if(alPos.size() > 1){
+			if (alPos.size() > 1) {
 				index = Math.abs(random.nextInt() % (alPos.size() - 1));
 			}
-			
+
 			ri.setPosx(alPos.get(index)[0]);
 			ri.setPosy(alPos.get(index)[1]);
 			alPos.remove(index);
 		}
-		
+
 		return true;
-		
+
 	}
 
 	OnClickListener thumbOnClickListener = new OnClickListener() {
-		
+
 		@Override
 		public void onClick(View v) {
 
 			ResourceItem ri = (ResourceItem) v.getTag();
-			
-			if(ri.getIsAnswer().equals("true")){
-				
+
+			if (ri.getIsAnswer().equals("true")) {
+
 				playVictorySoundAndTip(main);
-				
-			}else{
-				
-				if(!ri.getAudio().equals("")){
+
+			} else {
+
+				if (!ri.getAudio().equals("")) {
 					Message msg = new Message();
 					msg.obj = ri.getAudio();
 					msg.what = PLAY_MUSIC;
@@ -206,26 +207,25 @@ public class PRWordActivity extends BaseActivity {
 				}
 			}
 
-			
-			if(!ri.getPicClicked().equals("")){
+			if (!ri.getPicClicked().equals("")) {
 				ImageView iv = (ImageView) v;
 				iv.setImageDrawable(Drawable.createFromPath(pra.getBasePath() + "/" + ri.getPicClicked()));
 			}
 		}
 	};
-	
+
 	OnTouchListener thumbOnTouchListener = new OnTouchListener() {
 
 		int lastX, lastY;
-		int orginalL,orginalT,orginalR,orginalB;
+		int orginalL, orginalT, orginalR, orginalB;
 		int disX = 0;
 		boolean isClick = false;
-		
+
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 			// TODO Auto-generated method stub
 			switch (event.getAction()) {
-			
+
 			case MotionEvent.ACTION_DOWN:
 				lastX = (int) event.getRawX();
 				lastY = (int) event.getRawY();
@@ -235,17 +235,16 @@ public class PRWordActivity extends BaseActivity {
 				orginalB = v.getBottom();
 				disX = lastX;
 				isClick = false;
-				
+
 				ResourceItem ri = (ResourceItem) v.getTag();
 				if (ri != null) {
 					if (ri.getAudio() != null && !ri.getAudio().equals("")) {
-						Utils.sendMessageTopOfQueue(ri.getAudio(), mHandler,
-								PLAY_MUSIC);
+						Utils.sendMessageTopOfQueue(ri.getAudio(), mHandler, PLAY_MUSIC);
 					}
 				}
 				break;
 			case MotionEvent.ACTION_MOVE:
-				
+
 				int dx = (int) event.getRawX() - lastX;
 				int dy = (int) event.getRawY() - lastY;
 
@@ -278,28 +277,26 @@ public class PRWordActivity extends BaseActivity {
 				lastX = (int) event.getRawX();
 				lastY = (int) event.getRawY();
 				v.postInvalidate();
-				
+
 				break;
 			case MotionEvent.ACTION_UP:
-				
+
 				disX = Math.abs(lastX - disX);
-				
+
 				if (disX > 5) {
 					isClick = true;
 					if (!verifyTargetZone(v, event.getRawX(), event.getRawY())) {
-						
-						v.layout(orginalL, orginalT,orginalR ,
-								orginalB);
-						
+
+						v.layout(orginalL, orginalT, orginalR, orginalB);
+
 						v.postInvalidate();
-						
-						RelativeLayout.LayoutParams lpri = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-						lpri.setMargins(orginalL, orginalT,orginalR ,
-								orginalB);
+
+						RelativeLayout.LayoutParams lpri = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+						lpri.setMargins(orginalL, orginalT, orginalR, orginalB);
 						v.setLayoutParams(lpri);
 					}
 				}
-				
+
 				break;
 
 			default:
@@ -309,119 +306,121 @@ public class PRWordActivity extends BaseActivity {
 		}
 	};
 
-	private boolean verifyTargetZone(View v,float f,float g){
-		
+	private boolean verifyTargetZone(View v, float f, float g) {
+
 		ResourceItem ri = (ResourceItem) v.getTag();
 		boolean isIn = false;
-		
-		if(!ri.gettIndex().equals("")){
-			
+
+		if (!ri.gettIndex().equals("")) {
+
 			for (TargetZone tz : ps.getAlTarZone()) {
 
 				int tzx = Integer.parseInt(tz.getPosx());
 				int tzy = Integer.parseInt(tz.getPosy());
 				int width = 0;
 				int height = 0;
-				if(!tz.getWidth().equals("") || !tz.getHeight().equals("")){
+				if (!tz.getWidth().equals("") || !tz.getHeight().equals("")) {
 					width = Integer.parseInt(tz.getWidth());
 					height = Integer.parseInt(tz.getHeight());
-				}else{
-					Bitmap bmp = BitmapFactory.decodeFile(pra.getBasePath() + "/" +tz.getPic());
-					if(bmp != null){
+				} else {
+					Bitmap bmp = BitmapFactory.decodeFile(pra.getBasePath() + "/" + tz.getPic());
+					if (bmp != null) {
 						width = bmp.getWidth();
 						height = bmp.getHeight();
-					}else{
+					} else {
 						Toast.makeText(getApplicationContext(), pra.getBasePath() + tz.getPic() + " is lost.", 2000).show();
 					}
 				}
-				
 
-				if (ri.gettIndex().equals(tz.getIndex()) && (tzx < (int) f && (int) f < (tzx + width))
-						&& (tzy < (int) g && (int) g < (tzy + height))) {
+				if (ri.gettIndex().equals(tz.getIndex()) && (tzx < (int) f && (int) f < (tzx + width)) && (tzy < (int) g && (int) g < (tzy + height))) {
 					tz.setItemCount(tz.getItemCount() + 1);
 
-					if(!tz.getAudio().equals("")){
+					if (!tz.getAudio().equals("")) {
 						Message msg = new Message();
 						msg.obj = tz.getAudio();
 						msg.what = PLAY_MUSIC;
 						mHandler.sendMessage(msg);
 					}
-					
+
 					isIn = true;
-				}else if(!ri.gettIndex().equals(tz.getIndex()) && (tzx < (int) f && (int) f < (tzx + width))
-						&& (tzy < (int) g && (int) g < (tzy + height))){
-					if(!tz.getW_audio().equals("")){
+				} else if (!ri.gettIndex().equals(tz.getIndex()) && (tzx < (int) f && (int) f < (tzx + width))
+						&& (tzy < (int) g && (int) g < (tzy + height))) {
+					if (!tz.getW_audio().equals("")) {
 						Message msg = new Message();
 						msg.obj = tz.getW_audio();
 						msg.what = PLAY_MUSIC;
 						mHandler.sendMessage(msg);
 					}
 				}
-				
+
 			}
-			
+
 			boolean flag = true;
-			for(TargetZone tz : ps.getAlTarZone()){
+			for (TargetZone tz : ps.getAlTarZone()) {
 				flag = flag && tz.getItemCount() == tz.getCount();
 			}
-			
-			if(flag){
+
+			if (flag) {
 				playVictorySoundAndTip(main);
 			}
-			
+
 			return isIn;
-		}else{
+		} else {
 			return true;
 		}
-		
-		
-		
+
 	}
-	
-	
-	private View getBgView(){
-		
+
+	private View getBgView() {
+
 		String bg = null;
-		if(ps != null){
+		if (ps != null) {
 			bg = ps.getBg();
 		}
-		
-		if(bg != null && !bg.equals("")){
-			
-			LayoutParams lp = new LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,RelativeLayout.LayoutParams.FILL_PARENT);
-			
-			if(bg.toLowerCase().endsWith("gif")){
+
+		if (bg != null && !bg.equals("")) {
+
+			LayoutParams lp = new LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+
+			if (bg.toLowerCase().endsWith("gif")) {
 				FileInputStream fis;
 				try {
-					fis = new FileInputStream(new File(pra.getBasePath() + bg ));
-					
+					fis = new FileInputStream(new File(pra.getBasePath() + bg));
+
 					GifView gv = new GifView(getApplicationContext());
 					gv.setGifImage(fis);
 					gv.setShowDimension(dm.widthPixels, dm.heightPixels);
 					gv.setLayoutParams(lp);
-					
+
 					return gv;
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
-					
+
 					return null;
 				}
-				
-			}else{
-				
+
+			} else {
+
 				ImageView iv = new ImageView(getApplicationContext());
 
 				Bitmap bmp = BitmapFactory.decodeFile(pra.getBasePath() + "/" + bg);
-				
+
 				iv.setImageBitmap(bmp);
 				iv.setLayoutParams(lp);
-				
+
 				return iv;
-				
+
 			}
-			
+
 		}
-		
+
 		return null;
 	}
+
+	@Override
+	protected void onStop() {
+		android.os.Process.killProcess(android.os.Process.myPid());
+		super.onStop();
+	}
+
 }
