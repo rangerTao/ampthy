@@ -40,18 +40,18 @@ import com.duole.pres.widget.RelativeLayoutNoRedraw;
 
 public class PRWordActivity extends BaseActivity {
 
-	private static MediaPlayer mp;
-
-	static {
-		mp = new MediaPlayer();
-		mp.setOnPreparedListener(new OnPreparedListener() {
-
-			@Override
-			public void onPrepared(MediaPlayer mp) {
-				mp.start();
-			}
-		});
-	}
+	// private static MediaPlayer mp;
+	//
+	// static {
+	// mp = new MediaPlayer();
+	// mp.setOnPreparedListener(new OnPreparedListener() {
+	//
+	// @Override
+	// public void onPrepared(MediaPlayer mp) {
+	// mp.start();
+	// }
+	// });
+	// }
 
 	RelativeLayout main;
 
@@ -60,61 +60,61 @@ public class PRWordActivity extends BaseActivity {
 
 	Question question;
 
-	public final static int PLAY_MUSIC = 1;
-	public final static int PREPARE_MP = 2;
-	public final static int VICTORY = 3;
-
-	Handler mHandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			String path;
-			switch (msg.what) {
-			case PLAY_MUSIC:
-
-				path = (String) msg.obj;
-				try {
-					mp.reset();
-					mp.setDataSource(pra.getBasePath() + "/" + path);
-					mp.prepare();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-				break;
-			case VICTORY:
-
-				path = (String) msg.obj;
-
-				if (path != null && !path.equals("")) {
-					try {
-						mp.reset();
-						mp.setDataSource(pra.getBasePath() + "/" + path);
-						mp.prepare();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-
-					mp.setOnCompletionListener(new OnCompletionListener() {
-
-						@Override
-						public void onCompletion(MediaPlayer mp) {
-							exitwhenright();
-						}
-					});
-				} else {
-					exitwhenright();
-				}
-
-				break;
-			default:
-				break;
-			}
-
-			super.handleMessage(msg);
-		}
-
-	};
+	// public final static int PLAY_MUSIC = 1;
+	// public final static int PREPARE_MP = 2;
+	// public final static int VICTORY = 3;
+	//
+	// Handler mHandler = new Handler() {
+	//
+	// @Override
+	// public void handleMessage(Message msg) {
+	// String path;
+	// switch (msg.what) {
+	// case PLAY_MUSIC:
+	//
+	// path = (String) msg.obj;
+	// try {
+	// mp.reset();
+	// mp.setDataSource(pra.getBasePath() + "/" + path);
+	// mp.prepare();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// break;
+	// case VICTORY:
+	//
+	// path = (String) msg.obj;
+	//
+	// if (path != null && !path.equals("")) {
+	// try {
+	// mp.reset();
+	// mp.setDataSource(pra.getBasePath() + "/" + path);
+	// mp.prepare();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// mp.setOnCompletionListener(new OnCompletionListener() {
+	//
+	// @Override
+	// public void onCompletion(MediaPlayer mp) {
+	// exitwhenright();
+	// }
+	// });
+	// } else {
+	// exitwhenright();
+	// }
+	//
+	// break;
+	// default:
+	// break;
+	// }
+	//
+	// super.handleMessage(msg);
+	// }
+	//
+	// };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -515,108 +515,110 @@ public class PRWordActivity extends BaseActivity {
 		return null;
 	}
 
-	public void exitwhenright() {
+	// public void exitwhenright() {
+	//
+	// new Thread() {
+	//
+	// @Override
+	// public void run() {
+	// try {
+	// Thread.sleep(3500);
+	// } catch (InterruptedException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	//
+	// PRApplication pra = (PRApplication) getApplication();
+	// String pkgname = pra.getPkgname();
+	//
+	// if (pkgname != null && !pkgname.trim().equals("")) {
+	// if (PriorityResActivity.appref != null) {
+	// PriorityResActivity.appref.startActivityByPkgName(pkgname);
+	// } else if (PResViewActivity.appref != null) {
+	// PResViewActivity.appref.startActivityByPkgName(pkgname);
+	// }
+	// } else {
+	// if (PRWordActivity.appref != null) {
+	// exitwithValue();
+	// setResult(2);
+	// finish();
+	// }
+	// // if (PResViewActivity.appref != null) {
+	// // PResViewActivity.appref.setResult(3);
+	// // PResViewActivity.appref.finish();
+	// // }
+	// }
+	// // android.os.Process.killProcess(android.os.Process.myPid());
+	// super.run();
+	// }
+	//
+	// }.start();
+	//
+	// }
+	//
+	// private void exitwithValue() {
+	// Log.d("TAG", "exit with value");
+	// }
 
-		new Thread() {
-
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(3500);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				PRApplication pra = (PRApplication) getApplication();
-				String pkgname = pra.getPkgname();
-
-				if (pkgname != null && !pkgname.trim().equals("")) {
-					if (PriorityResActivity.appref != null) {
-						PriorityResActivity.appref.startActivityByPkgName(pkgname);
-					} else if (PResViewActivity.appref != null) {
-						PResViewActivity.appref.startActivityByPkgName(pkgname);
-					}
-				} else {
-					if (PRWordActivity.appref != null) {
-						exitwithValue();
-						setResult(2);
-						finish();
-					}
-					// if (PResViewActivity.appref != null) {
-					// PResViewActivity.appref.setResult(3);
-					// PResViewActivity.appref.finish();
-					// }
-				}
-				// android.os.Process.killProcess(android.os.Process.myPid());
-				super.run();
-			}
-
-		}.start();
-
-	}
-
-	private void exitwithValue() {
-		Log.d("TAG", "exit with value");
-	}
-
-	public void playVictorySoundAndTip(View parent) {
-
-		Message msg = new Message();
-		msg.what = VICTORY;
-		msg.obj = ps.getAudio();
-		mHandler.sendMessage(msg);
-
-		String path = ps.getAudio();
-
-		if (path != null && !path.equals("")) {
-			try {
-				mp.reset();
-				mp.setDataSource(pra.getBasePath() + "/" + path);
-				mp.prepare();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			mp.setOnCompletionListener(new OnCompletionListener() {
-
-				@Override
-				public void onCompletion(MediaPlayer mp) {
-					exitwhenright();
-				}
-			});
-		} else {
-			exitwhenright();
-		}
-
-		if (ps.getvPic() != null && !ps.getvPic().equals("")) {
-			String path1 = ps.getvPic();
-			GifView gv = null;
-			ImageView iv = null;
-			if (path1.toLowerCase().endsWith("gif")) {
-				gv = new GifView(getApplicationContext());
-				try {
-					gv.setGifImage(new FileInputStream(new File(pra.getBasePath() + path1)));
-
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-			} else {
-				iv = new ImageView(getApplicationContext());
-				iv.setImageDrawable(Drawable.createFromPath(pra.getBasePath() + path1));
-			}
-
-			LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-			View view = inflater.inflate(R.layout.vpopup, null);
-			RelativeLayout rlmain = (RelativeLayout) view.findViewById(R.id.llMain);
-
-			LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			((android.widget.RelativeLayout.LayoutParams) lp).addRule(RelativeLayout.CENTER_IN_PARENT);
-
-			rlmain.addView(gv == null ? iv : gv, lp);
-
-			PopupWindow popup = new PopupWindow(view, 800, 600, false);
-			popup.showAtLocation(parent, Gravity.CENTER, 0, 0);
-		}
-	}
+	// public void playVictorySoundAndTip(View parent) {
+	//
+	// Message msg = new Message();
+	// msg.what = VICTORY;
+	// msg.obj = ps.getAudio();
+	// mHandler.sendMessage(msg);
+	//
+	// String path = ps.getAudio();
+	//
+	// if (path != null && !path.equals("")) {
+	// try {
+	// mp.reset();
+	// mp.setDataSource(pra.getBasePath() + "/" + path);
+	// mp.prepare();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// mp.setOnCompletionListener(new OnCompletionListener() {
+	//
+	// @Override
+	// public void onCompletion(MediaPlayer mp) {
+	// exitwhenright();
+	// }
+	// });
+	// } else {
+	// exitwhenright();
+	// }
+	//
+	// if (ps.getvPic() != null && !ps.getvPic().equals("")) {
+	// String path1 = ps.getvPic();
+	// GifView gv = null;
+	// ImageView iv = null;
+	// if (path1.toLowerCase().endsWith("gif")) {
+	// gv = new GifView(getApplicationContext());
+	// try {
+	// gv.setGifImage(new FileInputStream(new File(pra.getBasePath() + path1)));
+	//
+	// } catch (FileNotFoundException e) {
+	// e.printStackTrace();
+	// }
+	// } else {
+	// iv = new ImageView(getApplicationContext());
+	// iv.setImageDrawable(Drawable.createFromPath(pra.getBasePath() + path1));
+	// }
+	//
+	// LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+	// View view = inflater.inflate(R.layout.vpopup, null);
+	// RelativeLayout rlmain = (RelativeLayout) view.findViewById(R.id.llMain);
+	//
+	// LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
+	// LayoutParams.WRAP_CONTENT);
+	// ((android.widget.RelativeLayout.LayoutParams)
+	// lp).addRule(RelativeLayout.CENTER_IN_PARENT);
+	//
+	// rlmain.addView(gv == null ? iv : gv, lp);
+	//
+	// PopupWindow popup = new PopupWindow(view, 800, 600, false);
+	// popup.showAtLocation(parent, Gravity.CENTER, 0, 0);
+	// }
+	// }
 }
