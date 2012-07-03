@@ -6,15 +6,19 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import android.R.integer;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,6 +26,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -35,97 +40,190 @@ import com.duole.pres.widget.RelativeLayoutNoRedraw;
 
 public class PRWordActivity extends BaseActivity {
 
+	private static MediaPlayer mp;
+
+	static {
+		mp = new MediaPlayer();
+		mp.setOnPreparedListener(new OnPreparedListener() {
+
+			@Override
+			public void onPrepared(MediaPlayer mp) {
+				mp.start();
+			}
+		});
+	}
+
 	RelativeLayout main;
 
 	DisplayMetrics dm = new DisplayMetrics();
+	public static PRWordActivity appref;
 
 	Question question;
+
+	public final static int PLAY_MUSIC = 1;
+	public final static int PREPARE_MP = 2;
+	public final static int VICTORY = 3;
+
+	Handler mHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			String path;
+			switch (msg.what) {
+			case PLAY_MUSIC:
+
+				path = (String) msg.obj;
+				try {
+					mp.reset();
+					mp.setDataSource(pra.getBasePath() + "/" + path);
+					mp.prepare();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				break;
+			case VICTORY:
+
+				path = (String) msg.obj;
+
+				if (path != null && !path.equals("")) {
+					try {
+						mp.reset();
+						mp.setDataSource(pra.getBasePath() + "/" + path);
+						mp.prepare();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					mp.setOnCompletionListener(new OnCompletionListener() {
+
+						@Override
+						public void onCompletion(MediaPlayer mp) {
+							exitwhenright();
+						}
+					});
+				} else {
+					exitwhenright();
+				}
+
+				break;
+			default:
+				break;
+			}
+
+			super.handleMessage(msg);
+		}
+
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-
+		appref = this;
 		pra = (PRApplication) getApplication();
-
 		getWindow().getWindowManager().getDefaultDisplay().getMetrics(dm);
 
 		ps = pra.getPs();
 
-		main = new RelativeLayoutNoRedraw(getApplicationContext());
-		RelativeLayout.LayoutParams lpmain = new RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
-				android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
-		main.setLayoutParams(lpmain);
+		if (ps != null) {
+			main = new RelativeLayoutNoRedraw(getApplicationContext());
+			RelativeLayout.LayoutParams lpmain = new RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
+					android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
+			main.setLayoutParams(lpmain);
 
-		main.addView(getBgView());
+			View bgView = getBgView();
+			if (bgView != null) {
+				main.addView(bgView);
+			} else {
+				finish();
+			}
 
-		for (TargetZone tz : ps.getAlTarZone()) {
+			for (TargetZone tz : ps.getAlTarZone()) {
 
-			RelativeLayout.LayoutParams lpri = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			ImageView iv = new ImageView(getApplicationContext());
+				RelativeLayout.LayoutParams lpri = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				ImageView iv = new ImageView(getApplicationContext());
 
-			if (!tz.getPic().equals("")) {
+				if (!tz.getPic().equals("")) {
 
-				Bitmap bmp = BitmapFactory.decodeFile(pra.getBasePath() + "/" + tz.getPic());
+					Bitmap bmp = BitmapFactory.decodeFile(pra.getBasePath() + "/" + tz.getPic());
+					iv.setImageBitmap(bmp);
+
+					int x = Integer.parseInt(tz.getPosx());
+					int y = Integer.parseInt(tz.getPosy());
+					if (bmp != null) {
+						tz.setWidth(bmp.getWidth() + "");
+						tz.setHeight(bmp.getHeight() + "");
+					} else {
+						Toast.makeText(getApplicationContext(), pra.getBasePath() + tz.getPic() + " is null", 2000).show();
+					}
+
+					lpri.setMargins(x, y, 0, 0);
+
+					iv.setTag(tz);
+
+					main.addView(iv, lpri);
+				}
+
+			}
+
+			getRandomPositionRI();
+
+			for (ResourceItem ri : ps.getAlResItems()) {
+
+				RelativeLayout.LayoutParams lpri = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				ImageView iv = new ImageView(getApplicationContext());
+
+				Bitmap bmp = BitmapFactory.decodeFile(pra.getBasePath() + "/" + ri.getPic());
 				iv.setImageBitmap(bmp);
 
-				int x = Integer.parseInt(tz.getPosx());
-				int y = Integer.parseInt(tz.getPosy());
-				if (bmp != null) {
-					tz.setWidth(bmp.getWidth() + "");
-					tz.setHeight(bmp.getHeight() + "");
-				} else {
-					Toast.makeText(getApplicationContext(), pra.getBasePath() + tz.getPic() + " is null", 2000).show();
-				}
+				int x = Integer.parseInt(ri.getPosx());
+				int y = Integer.parseInt(ri.getPosy());
 
 				lpri.setMargins(x, y, 0, 0);
 
-				iv.setTag(tz);
+				iv.setTag(ri);
+
+				if (Boolean.parseBoolean(ri.isDragable())) {
+					iv.setOnTouchListener(thumbOnTouchListener);
+				}
+
+				iv.setOnClickListener(thumbOnClickListener);
 
 				main.addView(iv, lpri);
+
 			}
 
-		}
+			question = ps.getQuestion();
 
-		getRandomPositionRI();
-
-		for (ResourceItem ri : ps.getAlResItems()) {
-
-			RelativeLayout.LayoutParams lpri = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			ImageView iv = new ImageView(getApplicationContext());
-
-			Bitmap bmp = BitmapFactory.decodeFile(pra.getBasePath() + "/" + ri.getPic());
-			iv.setImageBitmap(bmp);
-
-			int x = Integer.parseInt(ri.getPosx());
-			int y = Integer.parseInt(ri.getPosy());
-
-			lpri.setMargins(x, y, 0, 0);
-
-			iv.setTag(ri);
-
-			if (Boolean.parseBoolean(ri.isDragable())) {
-				iv.setOnTouchListener(thumbOnTouchListener);
+			if (ps.getQuestion() != null) {
+				initPlayButton();
 			}
 
-			iv.setOnClickListener(thumbOnClickListener);
+			setContentView(main);
 
-			main.addView(iv, lpri);
+			if (question != null && !question.getSound().equals("")) {
+				Utils.sendMessage(ps.getQuestion().getSound(), mHandler, PLAY_MUSIC);
+			}
 
+		} else {
+			finish();
 		}
+	}
 
-		question = ps.getQuestion();
+	@Override
+	protected void onPause() {
+		Log.d("TAG", "on pause");
+		// appref.setResult(2);
+		// android.os.Process.killProcess(android.os.Process.myPid());
+		super.onPause();
+	}
 
-		if (ps.getQuestion() != null) {
-			initPlayButton();
-		}
-
-		setContentView(main);
-
-		if (question != null && !question.getSound().equals("")) {
-			Utils.sendMessage(ps.getQuestion().getSound(), mHandler, PLAY_MUSIC);
-		}
-
+	@Override
+	protected void onStop() {
+		Log.d("TAG", "on stop");
+		// android.os.Process.killProcess(android.os.Process.myPid());
+		super.onStop();
 	}
 
 	private void initPlayButton() {
@@ -417,10 +515,108 @@ public class PRWordActivity extends BaseActivity {
 		return null;
 	}
 
-	@Override
-	protected void onStop() {
-		android.os.Process.killProcess(android.os.Process.myPid());
-		super.onStop();
+	public void exitwhenright() {
+
+		new Thread() {
+
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(3500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				PRApplication pra = (PRApplication) getApplication();
+				String pkgname = pra.getPkgname();
+
+				if (pkgname != null && !pkgname.trim().equals("")) {
+					if (PriorityResActivity.appref != null) {
+						PriorityResActivity.appref.startActivityByPkgName(pkgname);
+					} else if (PResViewActivity.appref != null) {
+						PResViewActivity.appref.startActivityByPkgName(pkgname);
+					}
+				} else {
+					if (PRWordActivity.appref != null) {
+						exitwithValue();
+						setResult(2);
+						finish();
+					}
+					// if (PResViewActivity.appref != null) {
+					// PResViewActivity.appref.setResult(3);
+					// PResViewActivity.appref.finish();
+					// }
+				}
+				// android.os.Process.killProcess(android.os.Process.myPid());
+				super.run();
+			}
+
+		}.start();
+
 	}
 
+	private void exitwithValue() {
+		Log.d("TAG", "exit with value");
+	}
+
+	public void playVictorySoundAndTip(View parent) {
+
+		Message msg = new Message();
+		msg.what = VICTORY;
+		msg.obj = ps.getAudio();
+		mHandler.sendMessage(msg);
+
+		String path = ps.getAudio();
+
+		if (path != null && !path.equals("")) {
+			try {
+				mp.reset();
+				mp.setDataSource(pra.getBasePath() + "/" + path);
+				mp.prepare();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			mp.setOnCompletionListener(new OnCompletionListener() {
+
+				@Override
+				public void onCompletion(MediaPlayer mp) {
+					exitwhenright();
+				}
+			});
+		} else {
+			exitwhenright();
+		}
+
+		if (ps.getvPic() != null && !ps.getvPic().equals("")) {
+			String path1 = ps.getvPic();
+			GifView gv = null;
+			ImageView iv = null;
+			if (path1.toLowerCase().endsWith("gif")) {
+				gv = new GifView(getApplicationContext());
+				try {
+					gv.setGifImage(new FileInputStream(new File(pra.getBasePath() + path1)));
+
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+			} else {
+				iv = new ImageView(getApplicationContext());
+				iv.setImageDrawable(Drawable.createFromPath(pra.getBasePath() + path1));
+			}
+
+			LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+			View view = inflater.inflate(R.layout.vpopup, null);
+			RelativeLayout rlmain = (RelativeLayout) view.findViewById(R.id.llMain);
+
+			LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			((android.widget.RelativeLayout.LayoutParams) lp).addRule(RelativeLayout.CENTER_IN_PARENT);
+
+			rlmain.addView(gv == null ? iv : gv, lp);
+
+			PopupWindow popup = new PopupWindow(view, 800, 600, false);
+			popup.showAtLocation(parent, Gravity.CENTER, 0, 0);
+		}
+	}
 }

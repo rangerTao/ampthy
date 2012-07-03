@@ -7,6 +7,8 @@ import java.util.List;
 import com.duole.pres.util.PRApplication;
 import com.duole.pres.util.XmlUtil;
 
+import android.R.anim;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +20,7 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebSettings.PluginState;
 
-public class PResViewActivity extends BaseActivity {
+public class PResViewActivity extends Activity {
 
 	public static PResViewActivity appref;
 	PRApplication pra;
@@ -40,22 +42,6 @@ public class PResViewActivity extends BaseActivity {
 		pra = (PRApplication) getApplication();
 
 		appref = this;
-		// webView = (WebView) this.findViewById(R.id.webView);
-		// webView.getSettings().setAllowFileAccess(true);//
-		// webView.getSettings().setJavaScriptEnabled(true);
-		// webView.getSettings().setSupportZoom(false);
-		// webView.getSettings().setAppCacheEnabled(false);
-		// webView.getSettings().setAllowFileAccess(true);
-		// webView.addJavascriptInterface(new ContactJavaScript(this, handler,
-		// basepath), "duole");// js
-		// webView.loadDataWithBaseURL(baseUrl, url, "text/html", "utf-8",
-		// null);
-		// webView.loadUrl("file://" + url);
-		// webView.getSettings().setPluginsEnabled(true);
-		// webView.getSettings().setPluginState(PluginState.ON);
-		//
-		// webView.getSettings().setLightTouchEnabled(true);
-		// java-->js
 
 		Intent intent = getIntent();
 		String action = intent.getAction();
@@ -76,13 +62,17 @@ public class PResViewActivity extends BaseActivity {
 
 		Log.d("TAG", "base path is :" + pra.getBasePath());
 
-		// File file = new File(url + " dsfdsf");
 		File file = new File(url);
 		if (!file.exists()) {
 
 			// If it is a new type of priority resource.
 			if (new File(pra.getBasePath() + "/config.xml").exists()) {
 				if (XmlUtil.getPR(getApplicationContext(), pra, pra.getBasePath() + "/config.xml")) {
+
+					// Start the activity of word.
+					Intent intentWrod = new Intent(appref, PRWordActivity.class);
+					intentWrod.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+					startActivity(intentWrod);
 					finish();
 				}
 			} else if (pkgname != null && !pkgname.equals("")) {
@@ -96,19 +86,31 @@ public class PResViewActivity extends BaseActivity {
 		} else {
 
 			Intent intent2 = new Intent(this, PriorityResActivity.class);
-
+			intent2.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
 			intent2.putExtra("path", url);
 			intent2.putExtra("packagename", pkgname);
 
 			startActivity(intent2);
+			finish();
 		}
 
 	}
 
+	//
+	// @Override
+	// protected void onActivityResult(int requestCode, int resultCode, Intent
+	// data) {
+	//
+	// Log.d("TAG", "result " + resultCode);
+	// if (resultCode == 2) {
+	// setResult(resultCode);
+	// }
+	// super.onActivityResult(requestCode, resultCode, data);
+	// finish();
+	// }
+
 	@Override
 	protected void onPause() {
-
-		android.os.Process.killProcess(android.os.Process.myPid());
 		super.onPause();
 	}
 

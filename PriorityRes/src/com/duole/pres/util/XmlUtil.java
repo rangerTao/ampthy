@@ -38,9 +38,10 @@ public class XmlUtil {
 			if (pra.getPs().getType().equals(PRType.en_word)) {
 
 				// Start the activity of word.
-				Intent intent = new Intent(context, PRWordActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				context.startActivity(intent);
+				// Intent intent = new Intent(context, PRWordActivity.class);
+				// intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+				// intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				// context.startActivity(intent);
 				return true;
 			}
 

@@ -155,6 +155,7 @@ public class PriorityResActivity extends Activity {
 
 		webView.getSettings().setLightTouchEnabled(true);
 
+		setResult(2);
 	}
 
 	@Override

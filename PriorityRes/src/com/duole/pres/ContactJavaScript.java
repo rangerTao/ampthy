@@ -11,17 +11,17 @@ public class ContactJavaScript {
 
 	private MediaPlayer mp;
 	private String basepath;
-	
+
 	public ContactJavaScript(Context context, Handler handler, String basepath) {
 		this.handler = handler;
 		this.basepath = basepath;
 	}
-	
-	public void exitwhenright(){
-		
+
+	public void exitwhenright() {
+
 		Log.d("TAG", "exit when right start");
-		
-		new Thread(){
+
+		new Thread() {
 
 			@Override
 			public void run() {
@@ -31,40 +31,42 @@ public class ContactJavaScript {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				Log.d("TAG", "exit when right");
+
 				String pkgname = "";
-				
-				if(PriorityResActivity.appref != null){
+
+				if (PriorityResActivity.appref != null) {
 					pkgname = PriorityResActivity.appref.pkgname;
-				}else if(PResViewActivity.appref != null){
+				} else if (PResViewActivity.appref != null) {
 					pkgname = PResViewActivity.appref.pkgname;
 				}
-				
+
 				if (pkgname != null && !pkgname.trim().equals("")) {
 					if (PriorityResActivity.appref != null) {
-						PriorityResActivity.appref
-								.startActivityByPkgName(pkgname);
+						PriorityResActivity.appref.startActivityByPkgName(pkgname);
 					} else if (PResViewActivity.appref != null) {
 						PResViewActivity.appref.startActivityByPkgName(pkgname);
 					}
 				} else {
 					if (PriorityResActivity.appref != null) {
-						PriorityResActivity.appref.setResult(2);
-					} else if (PResViewActivity.appref != null) {
+						// PriorityResActivity.appref.setResult(2);
+						PriorityResActivity.appref.finish();
+					}
+
+					if (PResViewActivity.appref != null) {
 						PResViewActivity.appref.setResult(2);
+						PResViewActivity.appref.finish();
 					}
 				}
 				android.os.Process.killProcess(android.os.Process.myPid());
 				super.run();
 			}
-			
+
 		}.start();
-		
+
 	}
 
-	public void playMusic(final String path){
-		handler.post(new Runnable(){
+	public void playMusic(final String path) {
+		handler.post(new Runnable() {
 
 			@Override
 			public void run() {
@@ -76,23 +78,22 @@ public class ContactJavaScript {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				mp.setOnPreparedListener(new OnPreparedListener(){
+
+				mp.setOnPreparedListener(new OnPreparedListener() {
 
 					@Override
 					public void onPrepared(MediaPlayer mp) {
 						mp.start();
 					}
-					
+
 				});
 			}
-			
+
 		});
 	}
-	
-	public void setReturnValue(int clicks){
-		
+
+	public void setReturnValue(int clicks) {
+
 	}
-	
 
 }
