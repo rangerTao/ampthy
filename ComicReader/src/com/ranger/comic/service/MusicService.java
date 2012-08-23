@@ -1,4 +1,4 @@
-package com.comic;
+package com.ranger.comic.service;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,6 @@ public class MusicService extends Service{
 	
 	MediaPlayer.OnCompletionListener CompleteListener= new MediaPlayer.OnCompletionListener(){
 
-		@Override
 		public void onCompletion(MediaPlayer mp) {
 			Intent i = new Intent(Music_Complete);
 			sendBroadcast(i);
